@@ -203,9 +203,11 @@ dependencies {
 
     implementation rfg.deobf("curse.maven:ae2-extended-life-570458:5378163")
     implementation rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5504001")
-    implementation rfg.deobf("curse.maven:MekanismEnergistics-1027681:5775101")
     implementation rfg.deobf("curse.maven:baubles-227083:2518667")
+    implementation rfg.deobf("curse.maven:baubles-227083:2518667")
+    implementation rfg.deobf("curse.maven:not-enough-energistics-515565:5234732")
     implementation rfg.deobf('_0xc4de:ae2exttable-dev')
+
     compileOnlyApi rfg.deobf("curse.maven:had-enough-items-557549:4810661")
 }
 

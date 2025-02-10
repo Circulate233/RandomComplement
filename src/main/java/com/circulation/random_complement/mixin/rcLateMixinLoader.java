@@ -16,7 +16,13 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BooleanSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        addModdedMixinCFG("mixins.novaeng_core_nee.json",                 "neenergistics");
+        if (Loader.isModLoaded("neenergistics")){
+            addMixinCFG("mixins.random_complement.nee.json");
+            addModdedMixinCFG("mixins.random_complement.nee.baubles.json","baubles");
+            addModdedMixinCFG("mixins.random_complement.nee.ae2e.json","ae2exttable");
+        }
+        addModdedMixinCFG("mixins.random_complement.ae2fc.json","ae2fc");
+        addModdedMixinCFG("mixins.random_complement.ae2e.json","ae2exttable");
     }
 
     @Override

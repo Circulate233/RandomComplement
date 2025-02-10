@@ -1,0 +1,15 @@
+{
+  "package": "com.circulation.random_complement.mixin.ae2e",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ContainerCraftConfirmMixin"
+  ],
+  "server": [],
+  "client": [
+    "GuiCraftingStatusMixin"
+  ]
+}
