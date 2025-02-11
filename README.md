@@ -9,6 +9,6 @@ Some fixes and content expansion
    - The compatibility with [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) has been added. Now you can use Ctrl+click on [+] to request the items.
    - Fixed an issue where the [AE2UEL](https://github.com/AE2-UEL/Applied-Energistics-2) Wireless Crafting Terminal placed in the bauble slot could not request items when opened with the hotkey and using Ctrl+click [+], (this might have broken compatibility with the Wireless Crafting Terminal from WCT, not yet tested).
  - Set the Package Crafter in the extension of [PackagedAuto](https://github.com/TheLMiffy1111/PackagedAuto) (such as [PackagedExCrafting](https://github.com/TheLMiffy1111/PackagedExCrafting)) to the corresponding Recipe Catalyst of JEIRecipe.
- - Set the Terminal in the [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) to the corresponding Recipe Catalyst of JEIRecipe.
+ - Set the Terminal in the [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) to the corresponding Recipe Catalyst of JEIRecipe.(1.0.1)
 
 You can freely add it to your modpack，as long as you indicate the source
