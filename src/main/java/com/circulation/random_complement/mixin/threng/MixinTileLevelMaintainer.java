@@ -21,6 +21,8 @@ import io.github.phantamanta44.threng.util.ThrEngCraftingTracker;
 import org.spongepowered.asm.mixin.*;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Mixin(value = TileLevelMaintainer.class, remap = false)
@@ -111,30 +113,32 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
             if (slot == -1) {
                 return stack;
             } else if (mode == Actionable.SIMULATE) {
-                final IAEItemStack[] rem = new IAEItemStack[1];
+                final List<IAEItemStack> rem = new ArrayList<>();
                 this.aeGrid().ifPresent(grid -> {
                     IAEItemStack aeStack = Objects.requireNonNull(stack);
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid)grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
-                    rem[0] = Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.SIMULATE);
+                    rem.add(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.SIMULATE));
                 });
-                return rem[0];
+                if (rem.isEmpty())return stack;
+                return rem.get(0);
             } else {
-                final IAEItemStack[] rem = new IAEItemStack[1];
+                final List<IAEItemStack> rem = new ArrayList<>();
                 this.aeGrid().ifPresent(grid -> {
                     IAEItemStack aeStack = Objects.requireNonNull(stack);
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid)grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
-                    rem[0] = Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.MODULATE);
+                    rem.add(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.MODULATE));
 
-                    if (rem[0] == null || rem[0].getStackSize() < stack.getStackSize()) {
+                    if (rem.get(0) == null || rem.get(0).getStackSize() < stack.getStackSize()) {
                         this.sleepIncrement = ThrEngConfig.networkDevices.levelMaintainerSleepMin;
                         this.sleepTicks = 0;
                     }
                 });
-                return rem[0];
+                if (rem.isEmpty())return stack;
+                return rem.get(0);
             }
         }
     }
