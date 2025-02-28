@@ -10,5 +10,7 @@ Some fixes and content expansion
    - Fixed an issue where the [AE2UEL](https://github.com/AE2-UEL/Applied-Energistics-2) Wireless Crafting Terminal placed in the bauble slot could not request items when opened with the hotkey and using Ctrl+click [+], (this might have broken compatibility with the Wireless Crafting Terminal from WCT, not yet tested).
  - Set the Package Crafter in the extension of [PackagedAuto](https://github.com/TheLMiffy1111/PackagedAuto) (such as [PackagedExCrafting](https://github.com/TheLMiffy1111/PackagedExCrafting)) to the corresponding Recipe Catalyst of JEIRecipe.
  - Set the Terminal in the [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) to the corresponding Recipe Catalyst of JEIRecipe.(1.0.1)
+- Added a configuration option to disable the build permission for AE2's ME Security Terminal, as this feature provides no practical benefit and can be inconvenient. :)
+- Fixed a bug in the lazy AE2 ME Level Maintainer that caused items crafted automatically to disappear partially.
 
 You can freely add it to your modpack，as long as you indicate the source
