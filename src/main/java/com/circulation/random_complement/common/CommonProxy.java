@@ -1,4 +1,4 @@
-package com.circulation.random_complement.proxy;
+package com.circulation.random_complement.common;
 
 @SuppressWarnings("MethodMayBeStatic")
 public class CommonProxy {
