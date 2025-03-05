@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -123,7 +124,7 @@ public class InputHendler {
                 return;
             }
 
-            if (slot == -1) {
+            if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
                 for (int i = 0; i < 9; i++) {
                     if (player.inventory.getStackInSlot(i).isEmpty()){
                         player.inventory.currentItem = i;

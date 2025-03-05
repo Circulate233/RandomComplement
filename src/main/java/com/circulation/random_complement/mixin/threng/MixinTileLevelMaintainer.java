@@ -2,15 +2,14 @@ package com.circulation.random_complement.mixin.threng;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.networking.crafting.ICraftingGrid;
-import appeng.api.networking.crafting.ICraftingLink;
-import appeng.api.networking.crafting.ICraftingRequester;
+import appeng.api.networking.crafting.*;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import io.github.phantamanta44.libnine.util.data.serialization.AutoSerialize;
@@ -21,8 +20,6 @@ import io.github.phantamanta44.threng.util.ThrEngCraftingTracker;
 import org.spongepowered.asm.mixin.*;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Mixin(value = TileLevelMaintainer.class, remap = false)
@@ -33,14 +30,14 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
     @Final
     private TileLevelMaintainer.InventoryRequest requests;
 
+    @Final
     @Shadow
     @AutoSerialize
-    @Final
-    private ThrEngCraftingTracker crafter = new ThrEngCraftingTracker(this, 5);
+    private ThrEngCraftingTracker crafter;
 
-    @Shadow
     @Final
-    private long[] knownCounts = new long[5];
+    @Shadow
+    private long[] knownCounts;
 
     @Shadow
     private int sleepTicks = 0;
@@ -65,16 +62,18 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
                     for(int i = 0; i < 5; ++i) {
                         if (this.requests.isRequesting(i)) {
-                            if (this.knownCounts[i] == -1L) {
-                                IAEItemStack stack = storageGrid.getStorageList().findPrecise(AEItemStack.fromItemStack(this.requests.getStackInSlot(i)));
-                                this.knownCounts[i] = stack == null ? 0L : stack.getStackSize();
-                                workDone = true;
-                            }
+                            IAEItemStack stack = storageGrid.getStorageList().findPrecise(AEItemStack.fromItemStack(this.requests.getStackInSlot(i)));
+                            this.knownCounts[i] = stack == null ? 0L : stack.getStackSize();
+                            workDone = true;
 
                             if (this.crafter.isSlotOpen(i)) {
-                                long toCraft = novaEngineering_Core$d(i, this.knownCounts[i]);
-                                if (toCraft > 0L && this.crafter.requestCrafting(i, (novaEngineering_Core$c(i, toCraft)), this.getWorld(), grid, crafting, this.actionSource)) {
-                                    workDone = true;
+                                try {
+                                    long toCraft = this.novaEngineering_Core$computeDelta(i, knownCounts[i]);
+                                    if (toCraft > 0 && this.crafter.requestCrafting(i, AEItemStack.fromItemStack(this.requests.getStackInSlot(i)).setStackSize(toCraft), this.world, grid, this.getProxy().getCrafting(), this.actionSource)) {
+                                        workDone = true;
+                                    }
+                                } catch (GridAccessException ignored) {
+
                                 }
                             }
                         }
@@ -113,46 +112,39 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
             if (slot == -1) {
                 return stack;
             } else if (mode == Actionable.SIMULATE) {
-                final List<IAEItemStack> rem = new ArrayList<>();
-                this.aeGrid().ifPresent(grid -> {
+                if (this.aeGrid().isPresent()) {
+                    var grid = this.aeGrid().get();
                     IAEItemStack aeStack = Objects.requireNonNull(stack);
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
-                    IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid)grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                    IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid) grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
-                    rem.add(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.SIMULATE));
-                });
-                if (rem.isEmpty())return stack;
-                return rem.get(0);
+                    return Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, mode);
+                }
+                return null;
             } else {
-                final List<IAEItemStack> rem = new ArrayList<>();
-                this.aeGrid().ifPresent(grid -> {
+                if (this.aeGrid().isPresent()) {
+                    var grid = this.aeGrid().get();
                     IAEItemStack aeStack = Objects.requireNonNull(stack);
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
-                    IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid)grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                    IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid) grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
-                    rem.add(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.MODULATE));
-
-                    if (rem.get(0) == null || rem.get(0).getStackSize() < stack.getStackSize()) {
-                        this.sleepIncrement = ThrEngConfig.networkDevices.levelMaintainerSleepMin;
-                        this.sleepTicks = 0;
-                    }
-                });
-                if (rem.isEmpty())return stack;
-                return rem.get(0);
+                    return Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.MODULATE);
+                }
+                return null;
             }
         }
     }
 
     @Unique
-    private IAEItemStack novaEngineering_Core$c(int index, long count) {
-        AEItemStack stack = Objects.requireNonNull(AEItemStack.fromItemStack(((InvokerInventoryRequest) this.requests).getRequestStacks()[index]));
+    private IAEItemStack novaEngineering_Core$request(int index, long count) {
+        AEItemStack stack = Objects.requireNonNull(AEItemStack.fromItemStack(((AccessorInventoryRequest) this.requests).getRequestStacks()[index]));
         stack.setStackSize(count);
         return stack;
     }
 
     @Unique
-    private long novaEngineering_Core$d(int index, long existing) {
-        InvokerInventoryRequest t = ((InvokerInventoryRequest) this.requests);
+    private long novaEngineering_Core$computeDelta(int index, long existing) {
+        AccessorInventoryRequest t = ((AccessorInventoryRequest) this.requests);
         return !t.getRequestStacks()[index].isEmpty() && t.getRequestQtys()[index] - existing > 0L ? t.getRequestBatches()[index] : 0L;
     }
 

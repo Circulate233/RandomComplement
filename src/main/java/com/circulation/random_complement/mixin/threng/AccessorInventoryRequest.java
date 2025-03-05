@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(value = TileLevelMaintainer.InventoryRequest.class,remap = false)
-public interface InvokerInventoryRequest {
+public interface AccessorInventoryRequest {
 
     @Accessor("requestStacks")
     ItemStack[] getRequestStacks();
