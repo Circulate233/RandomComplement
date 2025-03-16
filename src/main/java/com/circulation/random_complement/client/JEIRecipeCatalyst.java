@@ -1,8 +1,13 @@
 package com.circulation.random_complement.client;
 
 import com._0xc4de.ae2exttable.items.ItemRegistry;
-import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.*;
-import mezz.jei.api.*;
+import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.AdvancedTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.BasicTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.EliteTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.UltimateTableCategory;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.IModRegistry;
+import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

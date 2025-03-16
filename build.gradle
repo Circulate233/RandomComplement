@@ -207,9 +207,11 @@ dependencies {
     implementation rfg.deobf("curse.maven:baubles-227083:2518667")
     implementation rfg.deobf("curse.maven:not-enough-energistics-515565:5234732")
     implementation rfg.deobf("curse.maven:extended-crafting-268387:2777071")
-    implementation(rfg.deobf("curse.maven:libnine-322344:3509087"))
-    implementation(rfg.deobf("curse.maven:lazy-ae2-322347:3254160"))
+    implementation rfg.deobf("curse.maven:libnine-322344:3509087")
+    implementation rfg.deobf("curse.maven:lazy-ae2-322347:3254160")
+    implementation rfg.deobf("curse.maven:modularmachinery-community-edition-817377:5952626")
     implementation rfg.deobf('_0xc4de:ae2exttable-dev')
+    implementation rfg.deobf("curse.maven:industrialcraft-2-242638:3078604")
 
     compileOnlyApi rfg.deobf("curse.maven:had-enough-items-557549:4810661")
 }
