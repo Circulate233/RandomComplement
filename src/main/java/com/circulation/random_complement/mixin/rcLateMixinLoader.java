@@ -27,6 +27,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.ae2e.json","ae2exttable");
         addModdedMixinCFG("mixins.random_complement.mmce.json","modularmachinery");
         addModdedMixinCFG("mixins.random_complement.ic2.json","ic2");
+        addModdedMixinCFG("mixins.random_complement.te5.json","thermalexpansion");
     }
 
     @Override
