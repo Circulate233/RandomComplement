@@ -1,14 +1,16 @@
 {
-	"package": "com.circulation.random_complement.mixin.ae2fc",
-	"required": true,
-	"refmap": "mixins.random_complement.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"MixinCPacketLoadPattern",
-		"MixinItemOrPartGuiFactory"
-	],
-	"server": [],
-	"client": []
+  "package": "com.circulation.random_complement.mixin.ae2fc",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinCPacketLoadPattern",
+    "MixinItemOrPartGuiFactory"
+  ],
+  "server": [],
+  "client": [
+    "MixinGuiFluidPatternTerminal"
+  ]
 }

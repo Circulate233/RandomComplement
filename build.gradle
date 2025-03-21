@@ -217,7 +217,8 @@ dependencies {
     implementation(rfg.deobf("curse.maven:thermal-foundation-222880:2926428"))
     implementation(rfg.deobf("curse.maven:RedstoneFlux-270789:2920436"))
     implementation rfg.deobf("curse.maven:industrialcraft-2-242638:3078604")
-    implementation rfg.deobf("curse.maven:future-mc-310059:6162819")
+    implementation rfg.deobf("curse.maven:mekanism-energistics-1027681:5775101")
+    implementation rfg.deobf("curse.maven:mekanism-ce-399904:5351260")
 
     compileOnlyApi rfg.deobf("curse.maven:had-enough-items-557549:4810661")
 }

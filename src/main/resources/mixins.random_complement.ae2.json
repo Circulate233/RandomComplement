@@ -8,5 +8,8 @@
     "MixinSecurityCache"
   ],
   "server": [],
-  "client": []
+  "client": [
+    "AccessorGuiMEMonitorable",
+    "MixinAEBaseGui"
+  ]
 }

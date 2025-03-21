@@ -20,13 +20,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class InputHendler {
+public class InputHandler {
 
-    public static InputHendler INSTANCE = new InputHendler();
+    public static InputHandler INSTANCE = new InputHandler();
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static int tick = 0;
 
-    private InputHendler(){
+    private InputHandler(){
 
     }
 

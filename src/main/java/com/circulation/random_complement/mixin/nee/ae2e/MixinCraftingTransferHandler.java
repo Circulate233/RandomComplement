@@ -76,9 +76,7 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
     }
 
     @Shadow
-    private RecipeAnalyzer initAnalyzer(@Nonnull RecipeAnalyzer analyzer, @Nonnull GuiContainer craftingTerm, @Nonnull IRecipeLayout recipeLayout, @Nonnull EntityPlayer player) {
-        return analyzer;
-    }
+    protected abstract RecipeAnalyzer initAnalyzer(@Nonnull RecipeAnalyzer analyzer, @Nonnull GuiContainer craftingTerm, @Nonnull IRecipeLayout recipeLayout, @Nonnull EntityPlayer player);
 
     @Unique
     private RecipeAnalyzer randomComplement$createAnalyzer(@Nonnull GuiScreen screen) {
