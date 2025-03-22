@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Mixin(value = AEBaseGui.class,remap = false)
+@Mixin(value = AEBaseGui.class)
 public abstract class MixinAEBaseGui{
 
     @Unique
@@ -49,7 +49,7 @@ public abstract class MixinAEBaseGui{
         return randomComplement$craftableCache;
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lappeng/client/render/StackSizeRenderer;renderStackSize(Lnet/minecraft/client/gui/FontRenderer;Lappeng/api/storage/data/IAEItemStack;II)V", shift = At.Shift.AFTER ,ordinal = 0))
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lappeng/client/render/StackSizeRenderer;renderStackSize(Lnet/minecraft/client/gui/FontRenderer;Lappeng/api/storage/data/IAEItemStack;II)V", shift = At.Shift.AFTER ,ordinal = 0,remap = false))
     private void drawSlotME(Slot slot, CallbackInfo ci) {
         if (slot instanceof SlotME slotME) {
             var aeStack = slotME.getAEStack();

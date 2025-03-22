@@ -4,7 +4,7 @@ Some fixes and content expansion
 
 # What has this mod done so far?
 
- - For AE2UEL:
+ - For [AE2UEL](https://github.com/AE2-UEL/Applied-Energistics-2):
    - Allows players to use the vanilla PickBlock Key to retrieve items from their Wireless Terminal's network and place them directly into their hand. Just like in Creative Mode!(Of course, items will be deducted from your network)
    - Ported the new version of AE2's additional rendering effects for craftable items,Also supports AE2FCR's Fluid Pattern Terminal.
 

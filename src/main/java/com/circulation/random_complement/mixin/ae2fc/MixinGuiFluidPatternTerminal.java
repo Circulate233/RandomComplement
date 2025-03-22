@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Mixin(value = GuiFluidPatternTerminal.class,remap = false)
+@Mixin(value = GuiFluidPatternTerminal.class)
 public class MixinGuiFluidPatternTerminal {
 
     @Unique
@@ -56,7 +56,7 @@ public class MixinGuiFluidPatternTerminal {
         return randomComplement$craftableCache;
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Slot;getStack()Lnet/minecraft/item/ItemStack;",ordinal = 0,remap = true))
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Slot;getStack()Lnet/minecraft/item/ItemStack;",ordinal = 0))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.getDisplayStack().isEmpty()) {
