@@ -9,7 +9,7 @@ import appeng.client.gui.implementations.GuiPatternTerm;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
-import com.circulation.random_complement.client.handler.SlotMEHandler;
+import com.circulation.random_complement.client.handler.MEHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +54,7 @@ public abstract class MixinAEBaseGui{
         if (slot instanceof SlotME slotME) {
             var aeStack = slotME.getAEStack();
             if (aeStack != null && aeStack.isCraftable()) {
-                SlotMEHandler.drawPlus(slot.xPos, slot.yPos);
+                MEHandler.drawPlus(slot.xPos, slot.yPos);
             }
         }
     }
@@ -65,7 +65,7 @@ public abstract class MixinAEBaseGui{
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
                     if (randomComplement$getCraftables(patternTerm).contains(new CraftableItem(slotFake.getDisplayStack()))) {
-                        SlotMEHandler.drawPlus(slotFake);
+                        MEHandler.drawPlus(slotFake);
                     }
                 }
             }

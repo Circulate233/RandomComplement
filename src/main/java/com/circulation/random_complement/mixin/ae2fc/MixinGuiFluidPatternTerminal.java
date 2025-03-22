@@ -6,7 +6,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
-import com.circulation.random_complement.client.handler.SlotMEHandler;
+import com.circulation.random_complement.client.handler.MEHandler;
 import com.circulation.random_complement.mixin.ae2.AccessorGuiMEMonitorable;
 import com.glodblock.github.client.GuiFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -62,11 +62,11 @@ public class MixinGuiFluidPatternTerminal {
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();
                 if (randomComplement$getCraftables().contains(new CraftableItem(item))) {
-                    SlotMEHandler.drawPlus(slotFake);
+                    MEHandler.drawPlus(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket){
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack)FakeItemRegister.getAEStack(item)).getFluidStack());
                     if (randomComplement$getCraftables().contains(new CraftableItem(item1))) {
-                        SlotMEHandler.drawPlus(slotFake);
+                        MEHandler.drawPlus(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")){
                     randomComplement$mekengDrawSlot(item,slot);
@@ -82,7 +82,7 @@ public class MixinGuiFluidPatternTerminal {
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
             if (randomComplement$getCraftables().contains(new CraftableItem(item1))) {
-                SlotMEHandler.drawPlus(slot);
+                MEHandler.drawPlus(slot);
             }
         }
     }
