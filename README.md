@@ -9,7 +9,6 @@ Some fixes and content expansion
    - Ported the new version of AE2's additional rendering effects for craftable items,Also supports AE2FCR's Fluid Pattern Terminal.
    - Automatically fill blank patterns into the Pattern Terminal.
 
- - Fix bug in [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2)([PR](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2/pull/6) Already accepted,After the version update of Extended Crafting Terminals for Applied Energistics 2, it will be removed)
  - Fix bug in [AE2FluidCraft-Rework](https://github.com/Circulate233/AE2FluidCraft-Rework) ([#175](https://github.com/AE2-UEL/AE2FluidCraft-Rework/issues/175),PR Already created,After the version update, it will be removed)
  - Related projects with [NotEnoughEnergistics](https://github.com/vfyjxf/NotEnoughEnergistics):
    - The compatibility with [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) has been added. Now you can use Ctrl+click on [+] to request the items.
