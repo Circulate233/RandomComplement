@@ -13,7 +13,7 @@ public class MixinSecurityCache {
 
     @Inject(method = "hasPermission(ILappeng/api/config/SecurityPermissions;)Z", at = @At(value= "HEAD"), cancellable = true)
     public void hasPermissionMixin1(int playerID, SecurityPermissions perm, CallbackInfoReturnable<Boolean> cir) {
-        if (RCConfig.SecurityCache && perm == SecurityPermissions.BUILD){
+        if (RCConfig.AE2.SecurityCache && perm == SecurityPermissions.BUILD){
             cir.setReturnValue(true);
             cir.cancel();
         }

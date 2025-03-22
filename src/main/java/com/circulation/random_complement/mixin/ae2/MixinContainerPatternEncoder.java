@@ -35,5 +35,4 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         MEHandler.refillBlankPatterns(this,patternSlotIN);
     }
 
-
 }

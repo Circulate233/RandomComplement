@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import static com.circulation.random_complement.RCConfig.*;
+import static com.circulation.random_complement.RCConfig.IC2.*;
 
 @Mixin(value = ItemUpgradeModule.class,remap = false)
 public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule.UpgradeType> implements IFullUpgrade, IHandHeldSubInventory, IItemHudInfo {
