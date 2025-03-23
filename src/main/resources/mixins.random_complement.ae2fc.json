@@ -6,6 +6,7 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorContainerWirelessPatternTerminal",
     "MixinContainerExpandedProcessingPatternTerm",
     "MixinContainerExtendedFluidPatternTerminal",
     "MixinContainerFluidPatternTerminal",
@@ -15,6 +16,8 @@
   ],
   "server": [],
   "client": [
-    "MixinGuiFluidPatternTerminal"
+    "MixinGuiExtendedFluidPatternTerminal",
+    "MixinGuiFluidPatternTerminal",
+    "MixinGuiWirelessFluidPatternTerminal"
   ]
 }

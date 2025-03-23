@@ -5,7 +5,6 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
-import appeng.client.gui.implementations.GuiPatternTerm;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
@@ -25,14 +24,14 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Mixin(value = AEBaseGui.class)
-public abstract class MixinAEBaseGui{
+public abstract class MixinAEBaseGui {
 
     @Unique
     private Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage(GuiMEMonitorable gui) {
-        IItemList<IAEItemStack> all = ((AccessorGuiMEMonitorable)gui).getRepo().getList();
+        IItemList<IAEItemStack> all = ((AccessorGuiMEMonitorable) gui).getRepo().getList();
         return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
     }
 
@@ -49,7 +48,7 @@ public abstract class MixinAEBaseGui{
         return randomComplement$craftableCache;
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lappeng/client/render/StackSizeRenderer;renderStackSize(Lnet/minecraft/client/gui/FontRenderer;Lappeng/api/storage/data/IAEItemStack;II)V", shift = At.Shift.AFTER ,ordinal = 0,remap = false))
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lappeng/client/render/StackSizeRenderer;renderStackSize(Lnet/minecraft/client/gui/FontRenderer;Lappeng/api/storage/data/IAEItemStack;II)V", shift = At.Shift.AFTER, ordinal = 0, remap = false))
     private void drawSlotME(Slot slot, CallbackInfo ci) {
         if (slot instanceof SlotME slotME) {
             var aeStack = slotME.getAEStack();
@@ -61,7 +60,7 @@ public abstract class MixinAEBaseGui{
 
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiPatternTerm patternTerm) {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable patternTerm) {
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
                     if (randomComplement$getCraftables(patternTerm).contains(new CraftableItem(slotFake.getDisplayStack()))) {
@@ -71,6 +70,5 @@ public abstract class MixinAEBaseGui{
             }
         }
     }
-
 
 }

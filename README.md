@@ -19,5 +19,6 @@ Some fixes and content expansion
 - Fixed a bug in the lazy AE2 ME Level Maintainer that caused items crafted automatically to disappear partially.But this is just a temporary patch and it hasn't completely fixed the problem.(Can be closed in config)
 - Prevent the Thermal Expansion Cyclic Assembler from operating when the output slot contains items to avoid potential bugs(Can be closed in config)
 - Allow configuration of the effects of IC2's Energy Storage and Overclock Upgrades(Adjust in config)
+- Fix the erroneous behavior of [MMCE](https://github.com/NovaEngineering-Source/ModularMachinery-Community-Edition) structure preview in JEI
 
 You can freely add it to your modpack，as long as you indicate the source

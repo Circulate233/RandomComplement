@@ -8,9 +8,11 @@ import com.circulation.random_complement.client.handler.MEHandler;
 import com.glodblock.github.client.container.ContainerWirelessFluidPatternTerminal;
 import com.glodblock.github.interfaces.PatternConsumer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ContainerWirelessFluidPatternTerminal.class,remap = false)
@@ -20,7 +22,12 @@ public abstract class MixinContainerWirelessFluidPatternTerminal extends Contain
         super(ip, gui);
     }
 
-    @Inject(method = "encode",at = @At(value = "INVOKE", target = "Lcom/glodblock/github/client/container/ContainerWirelessFluidPatternTerminal;encodeFluidPattern()V"))
+    @Redirect(method = "saveChanges",at = @At(value = "INVOKE", target = "Lappeng/helpers/WirelessTerminalGuiObject;saveChanges(Lnet/minecraft/nbt/NBTTagCompound;)V"))
+    public void saveChangesMixin(WirelessTerminalGuiObject instance, NBTTagCompound data) {
+        ((AccessorContainerWirelessPatternTerminal)this).getWirelessTerminalGUIObject().saveChanges(data);
+    }
+
+    @Inject(method = "encode",at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
         MEHandler.refillBlankPatterns(this,patternSlotIN);
     }

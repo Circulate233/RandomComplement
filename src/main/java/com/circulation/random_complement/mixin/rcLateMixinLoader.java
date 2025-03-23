@@ -1,5 +1,6 @@
 package com.circulation.random_complement.mixin;
 
+import com.circulation.random_complement.RCConfig;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,10 +22,12 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             addModdedMixinCFG("mixins.random_complement.nee.baubles.json","baubles");
             addModdedMixinCFG("mixins.random_complement.nee.ae2e.json","ae2exttable");
         }
-        addModdedMixinCFG("mixins.random_complement.threng.json","threng");
+        if (RCConfig.LazyAE.EnableRepair) {
+            addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
+        }
         addModdedMixinCFG("mixins.random_complement.ae2.json","appliedenergistics2");
         addModdedMixinCFG("mixins.random_complement.ae2fc.json","ae2fc");
-        addModdedMixinCFG("mixins.random_complement.mmce.json","modularmachinery");
+        addModdedMixinCFG("mixins.random_complement.mmce.json","modularmachinery","jei");
         addModdedMixinCFG("mixins.random_complement.ic2.json","ic2");
         addModdedMixinCFG("mixins.random_complement.te5.json","thermalexpansion");
     }

@@ -26,6 +26,13 @@ public class RCConfig {
         public static int energyStorageEnergy = 10000;
     }
 
+    @Config(modid = RandomComplement.MOD_ID,category = "lazyae2")
+    public static class LazyAE{
+        @Config.Comment({"Fixes related to the lazy ae feature may occasionally introduce errors; disabling it can prevent such issues."})
+        @Config.Name("EnableRepair")
+        public static boolean EnableRepair = true;
+    }
+
     @Config(modid = RandomComplement.MOD_ID,category = "te5")
     public static class TE5{
         @Config.Comment({"Prevent the Thermal Expansion Cyclic Assembler from operating when the output slot contains items to avoid potential bugs"})

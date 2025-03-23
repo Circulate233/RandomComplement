@@ -18,7 +18,7 @@ public abstract class MixinContainerFluidPatternTerminal extends ContainerExpand
         super(ip, monitorable);
     }
 
-    @Inject(method = "encode",at = @At(value = "INVOKE", target = "Lcom/glodblock/github/client/container/ContainerExtendedFluidPatternTerminal;encodeFluidPattern()V"))
+    @Inject(method = "encode",at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
         MEHandler.refillBlankPatterns(this,patternSlotIN);
     }

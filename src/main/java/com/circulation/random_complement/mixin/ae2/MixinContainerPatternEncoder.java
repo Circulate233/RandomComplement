@@ -30,7 +30,7 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         MEHandler.refillBlankPatterns(this,patternSlotIN);
     }
 
-    @Inject(method = "encode",at = @At("TAIL"))
+    @Inject(method = "encode",at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
         MEHandler.refillBlankPatterns(this,patternSlotIN);
     }
