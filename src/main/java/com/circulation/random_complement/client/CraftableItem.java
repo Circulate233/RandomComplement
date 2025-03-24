@@ -1,18 +1,18 @@
 package com.circulation.random_complement.client;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Objects;
 
 public class CraftableItem {
-    public Item item;
+    public ResourceLocation item;
     public int meta;
     public NBTTagCompound nbt;
 
     public CraftableItem(ItemStack itemStack){
-        this.item = itemStack.getItem();
+        this.item = itemStack.getItem().getRegistryName();
         this.meta = itemStack.getItemDamage();
         this.nbt = itemStack.getTagCompound();
     }
@@ -23,12 +23,12 @@ public class CraftableItem {
         if (o == null || getClass() != o.getClass()) return false;
         CraftableItem that = (CraftableItem) o;
         return meta == that.meta &&
-                item.getRegistryName().equals(that.item.getRegistryName()) &&
-                Objects.equals(nbt, that.nbt);
+                item.equals(that.item) &&
+                (nbt != null && that.nbt != null) ? nbt.equals(that.nbt) : (nbt == null && that.nbt == null);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item.getRegistryName(), meta, nbt);
+        return Objects.hash(item, meta, nbt);
     }
 }

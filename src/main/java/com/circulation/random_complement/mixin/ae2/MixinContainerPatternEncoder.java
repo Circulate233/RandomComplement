@@ -7,7 +7,7 @@ import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.IContainerCraftingPacket;
 import appeng.util.inv.IAEAppEngInventory;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

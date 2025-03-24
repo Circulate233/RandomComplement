@@ -6,7 +6,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.mixin.ae2.AccessorGuiMEMonitorable;
 import com.glodblock.github.client.GuiFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;

@@ -10,6 +10,7 @@
     "MixinContainerExpandedProcessingPatternTerm",
     "MixinContainerExtendedFluidPatternTerminal",
     "MixinContainerFluidPatternTerminal",
+    "MixinContainerUltimateEncoder",
     "MixinContainerWirelessFluidPatternTerminal",
     "MixinCPacketLoadPattern",
     "MixinItemOrPartGuiFactory"
@@ -18,6 +19,8 @@
   "client": [
     "MixinGuiExtendedFluidPatternTerminal",
     "MixinGuiFluidPatternTerminal",
-    "MixinGuiWirelessFluidPatternTerminal"
+    "MixinGuiUltimateEncoder",
+    "MixinGuiWirelessFluidPatternTerminal",
+    "MixinPacketMEInventoryUpdate"
   ]
 }

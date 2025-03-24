@@ -8,7 +8,7 @@ import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;

@@ -7,7 +7,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.client.gui.implementations.GuiExpandedProcessingPatternTerm;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.CraftableItem;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import com.glodblock.github.client.GuiExtendedFluidPatternTerminal;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;

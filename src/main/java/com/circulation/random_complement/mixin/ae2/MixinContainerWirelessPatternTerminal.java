@@ -4,7 +4,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.implementations.ContainerWirelessPatternTerminal;
 import appeng.helpers.WirelessTerminalGuiObject;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

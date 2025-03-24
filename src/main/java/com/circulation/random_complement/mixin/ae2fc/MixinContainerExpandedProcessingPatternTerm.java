@@ -3,7 +3,7 @@ package com.circulation.random_complement.mixin.ae2fc;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerExpandedProcessingPatternTerm;
 import appeng.container.implementations.ContainerPatternEncoder;
-import com.circulation.random_complement.client.handler.MEHandler;
+import com.circulation.random_complement.common.handler.MEHandler;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
