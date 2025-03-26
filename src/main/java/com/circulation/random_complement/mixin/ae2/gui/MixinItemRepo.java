@@ -40,7 +40,7 @@ public abstract class MixinItemRepo {
     @Unique
     private boolean randomComplement$isPriorityItem(IAEItemStack stack) {
         if (Platform.isClient() && Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable g) {
-            CraftableItem item = new CraftableItem(stack.getDefinition());
+            CraftableItem item = CraftableItem.getInstance(stack.getDefinition());
             var list = ((SpecialLogic) g).r$getList();
             return list.contains(item);
         }

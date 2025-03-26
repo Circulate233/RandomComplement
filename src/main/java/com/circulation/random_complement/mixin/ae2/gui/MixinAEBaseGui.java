@@ -58,7 +58,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
             randomComplement$craftableCache = this.randomComplement$getStorage(gui)
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> new CraftableItem(itemStack.getDefinition()))
+                    .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
                     .collect(Collectors.toSet());
         }
 
@@ -80,13 +80,18 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable patternTerm) {
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
-                    if (randomComplement$getCraftables(patternTerm).contains(new CraftableItem(slotFake.getDisplayStack()))) {
+                    if (randomComplement$getCraftables(patternTerm).contains(CraftableItem.getInstance(slotFake.getDisplayStack()))) {
                         MEHandler.drawPlus(slotFake);
                     }
                 }
             }
         }
     }
+
+    @Unique
+    private int randomComplement$counter = 0;
+    @Unique
+    private int randomComplement$counter1 = 0;
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V",remap = false, shift = At.Shift.AFTER))
     private void drawPin(float f, int x, int y, CallbackInfo ci){
@@ -96,17 +101,18 @@ public abstract class MixinAEBaseGui extends GuiContainer {
                 int i = 0;
                 for (Slot slot : this.getInventorySlots()) {
                     if (slot instanceof SlotME slotME) {
-                        if (items.contains(new CraftableItem(slotME.getStack()))) {
+                        if (items.contains(CraftableItem.getInstance(slotME.getStack()))) {
                             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                             this.randomComplement$bindTexture();
                             this.drawTexturedModalRect(
                                     this.getGuiLeft() + slot.xPos - 1,
                                     this.getGuiTop() + slot.yPos - 1,
                                     AE2.craftingSlotTextureIndex * 18,
-                                    0,
+                                    randomComplement$counter * 18,
                                     18, 18
                             );
                         } else {
+                            randomComplement$counter = (randomComplement$counter + ((++randomComplement$counter1 & 3) == 0 ? 1 : 0)) % 14;
                             break;
                         }
                     }
@@ -118,7 +124,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     @Unique
     private void randomComplement$bindTexture() {
         final ResourceLocation loc = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned.png");
-        Minecraft.getMinecraft().getTextureManager().bindTexture(loc);
+        this.mc.getTextureManager().bindTexture(loc);
     }
 
 }

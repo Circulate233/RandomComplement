@@ -1,40 +1,49 @@
 package com.circulation.random_complement.client;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class CraftableItem {
-    public ResourceLocation item;
-    public int meta;
-    public NBTTagCompound nbt;
+    public String str;
 
-    public CraftableItem(ItemStack itemStack){
-        this.item = itemStack.getItem().getRegistryName();
-        this.meta = itemStack.getItemDamage();
-        this.nbt = itemStack.getTagCompound();
+    private CraftableItem(ItemStack itemStack){
+        var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
+        if (itemStack.hasTagCompound()) {
+            key.append(itemStack.getTagCompound().hashCode());
+        }
+        this.str = key.toString();
     }
 
-    public CraftableItem(ResourceLocation item,int meta,NBTTagCompound nbt){
-        this.item = item;
-        this.meta = meta;
-        this.nbt = nbt;
+    private CraftableItem(String str){
+        this.str = str;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CraftableItem that = (CraftableItem) o;
-        return meta == that.meta &&
-                item.equals(that.item) &&
-                (nbt != null && that.nbt != null) ? nbt.equals(that.nbt) : (nbt == null && that.nbt == null);
+    private static final LoadingCache<String, CraftableItem> CRAFTABLE_ITEM_POOL =
+            CacheBuilder.newBuilder()
+                    .maximumSize(10000)
+                    .weakValues()
+                    .build(new CacheLoader<>() {
+                        @Override
+                        public CraftableItem load(@NotNull String str) {
+                            return new CraftableItem(str);
+                        }
+                    });
+
+    public static CraftableItem getInstance(@NotNull ItemStack itemStack) {
+        try {
+            var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
+            if (itemStack.hasTagCompound()) {
+                key.append(itemStack.getTagCompound().hashCode());
+            }
+            return CRAFTABLE_ITEM_POOL.get(key.toString());
+        } catch (ExecutionException e) {
+            return new CraftableItem("null");
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(item, meta, nbt);
-    }
 }

@@ -30,8 +30,7 @@ public class MixinGuiMEMonitorable implements SpecialLogic {
     @Unique
     @Override
     public Set<CraftableItem> r$getList() {
-        Set<CraftableItem> set = new HashSet<>();
-        set.addAll(randomComplement$craftableCacheS);
+        Set<CraftableItem> set = new HashSet<>(randomComplement$craftableCacheS);
         set.addAll(randomComplement$craftableCache);
         return set;
     }

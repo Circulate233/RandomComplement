@@ -78,6 +78,17 @@ public class InputHandler {
             int slot = player.inventory.getSlotFor(result);
             if (InventoryPlayer.isHotbar(slot)) {
                 player.inventory.currentItem = slot;
+            } else if (slot != -1){
+                return;
+            }
+
+            if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
+                for (int i = 0; i < 9; i++) {
+                    if (player.inventory.getStackInSlot(i).isEmpty()){
+                        player.inventory.currentItem = i;
+                        break;
+                    }
+                }
             }
 
             RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result,player.inventory.currentItem));
@@ -142,5 +153,4 @@ public class InputHandler {
             tick = 20;
         }
     }
-
 }

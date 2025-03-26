@@ -46,7 +46,7 @@ public abstract class MixinPacketMEInventoryUpdate implements SpecialPacket {
                     GuiScreen gui = Minecraft.getMinecraft().currentScreen;
                     if (gui instanceof GuiUltimateEncoder) {
                         ((SpecialLogic) gui).r$addAllList(this.list.stream()
-                                .map(itemStack -> new CraftableItem(itemStack.getDefinition()))
+                                .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
                                 .collect(Collectors.toSet()));
                     }
             }
