@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2;
+package com.circulation.random_complement.mixin.ae2.gui;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
@@ -7,11 +7,18 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
+import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,15 +26,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.circulation.random_complement.RCConfig.AE2;
+
 @Mixin(value = AEBaseGui.class)
-public abstract class MixinAEBaseGui {
+public abstract class MixinAEBaseGui extends GuiContainer {
+
+    @Shadow(remap = false)
+    protected abstract List<Slot> getInventorySlots();
 
     @Unique
     private Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+
+    public MixinAEBaseGui(Container inventorySlotsIn) {
+        super(inventorySlotsIn);
+    }
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage(GuiMEMonitorable gui) {
@@ -69,6 +86,39 @@ public abstract class MixinAEBaseGui {
                 }
             }
         }
+    }
+
+    @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V",remap = false, shift = At.Shift.AFTER))
+    private void drawPin(float f, int x, int y, CallbackInfo ci){
+        if ((Object)this instanceof GuiMEMonitorable monitorable){
+            var items = ((SpecialLogic)monitorable).r$getList();
+            if (!items.isEmpty()) {
+                int i = 0;
+                for (Slot slot : this.getInventorySlots()) {
+                    if (slot instanceof SlotME slotME) {
+                        if (items.contains(new CraftableItem(slotME.getStack()))) {
+                            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                            this.randomComplement$bindTexture();
+                            this.drawTexturedModalRect(
+                                    this.getGuiLeft() + slot.xPos - 1,
+                                    this.getGuiTop() + slot.yPos - 1,
+                                    AE2.craftingSlotTextureIndex * 18,
+                                    0,
+                                    18, 18
+                            );
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Unique
+    private void randomComplement$bindTexture() {
+        final ResourceLocation loc = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned.png");
+        Minecraft.getMinecraft().getTextureManager().bindTexture(loc);
     }
 
 }

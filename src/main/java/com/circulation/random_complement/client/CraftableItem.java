@@ -17,6 +17,12 @@ public class CraftableItem {
         this.nbt = itemStack.getTagCompound();
     }
 
+    public CraftableItem(ResourceLocation item,int meta,NBTTagCompound nbt){
+        this.item = item;
+        this.meta = meta;
+        this.nbt = nbt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

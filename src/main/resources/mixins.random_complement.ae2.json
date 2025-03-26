@@ -5,14 +5,18 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinContainerPatternEncoder",
-    "MixinContainerPatternTerm",
-    "MixinContainerWirelessPatternTerminal",
-    "MixinSecurityCache"
+    "MixinPacketMEInventoryUpdate",
+    "MixinSecurityCache",
+    "container.MixinContainerMEMonitorable",
+    "container.MixinContainerPatternEncoder",
+    "container.MixinContainerPatternTerm",
+    "container.MixinContainerWirelessPatternTerminal"
   ],
   "server": [],
   "client": [
-    "AccessorGuiMEMonitorable",
-    "MixinAEBaseGui"
+    "gui.AccessorGuiMEMonitorable",
+    "gui.MixinAEBaseGui",
+    "gui.MixinGuiMEMonitorable",
+    "gui.MixinItemRepo"
   ]
 }

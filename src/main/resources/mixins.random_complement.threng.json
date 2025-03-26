@@ -1,6 +1,7 @@
 {
   "package": "com.circulation.random_complement.mixin.threng",
-  "refmap": "mixins.novaeng_core.refmap.json",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_8",

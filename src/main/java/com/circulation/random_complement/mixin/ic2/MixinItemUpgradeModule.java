@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import static com.circulation.random_complement.RCConfig.IC2.*;
+import static com.circulation.random_complement.RCConfig.IC2;
 
 @Mixin(value = ItemUpgradeModule.class,remap = false)
 public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule.UpgradeType> implements IFullUpgrade, IHandHeldSubInventory, IItemHudInfo {
@@ -28,7 +28,7 @@ public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule
     public double getProcessTimeMultiplier(ItemStack stack, IUpgradableBlock parent) {
         ItemUpgradeModule.UpgradeType type = this.getType(stack);
         if (type == ItemUpgradeModule.UpgradeType.overclocker){
-            return overclockerTime;
+            return IC2.overclockerTime;
         }
         return 1.0d;
     }
@@ -41,7 +41,7 @@ public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule
     public double getEnergyDemandMultiplier(ItemStack stack, IUpgradableBlock parent) {
         ItemUpgradeModule.UpgradeType type = this.getType(stack);
         if (type == ItemUpgradeModule.UpgradeType.overclocker) {
-            return overclockerEnergy;
+            return IC2.overclockerEnergy;
         }
         return 1.0d;
     }
@@ -54,7 +54,7 @@ public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule
     public int getExtraEnergyStorage(ItemStack stack, IUpgradableBlock parent) {
         ItemUpgradeModule.UpgradeType type = this.getType(stack);
         if (type == ItemUpgradeModule.UpgradeType.energy_storage) {
-            return energyStorageEnergy;
+            return IC2.energyStorageEnergy;
         }
         return 0;
     }

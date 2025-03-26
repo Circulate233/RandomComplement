@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2fc;
+package com.circulation.random_complement.mixin.ae2fc.container;
 
 import appeng.api.AEApi;
 import appeng.api.parts.IPart;
@@ -14,6 +14,7 @@ import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.interfaces.SpecialPacket;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.interfaces.PatternConsumer;
@@ -59,11 +60,14 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
         }
     }
 
-    @Inject(method = "detectAndSendChanges",at = @At("TAIL"))
+    @Inject(method = "detectAndSendChanges",at = @At("TAIL"),remap = true)
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer() && randomComplement$incomplete) {
-            randomComplement$queueInventory(MEHandler.getTerminalGuiObject(randomComplement$containerTerminal.getInventoryPlayer()), (EntityPlayerMP) randomComplement$containerTerminal.getInventoryPlayer().player);
-            randomComplement$incomplete = false;
+            var gui = MEHandler.getTerminalGuiObject(randomComplement$containerTerminal.getInventoryPlayer());
+            if (gui != null) {
+                randomComplement$queueInventory(gui, (EntityPlayerMP) randomComplement$containerTerminal.getInventoryPlayer().player);
+                randomComplement$incomplete = false;
+            }
         }
     }
 
@@ -71,6 +75,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
     private void randomComplement$queueInventory(WirelessTerminalGuiObject w,EntityPlayerMP playerMP) {
         try {
             PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
+            ((SpecialPacket)piu).r$setId(1);
 
             for (IAEItemStack send : w.getStorageList()) {
                 if (send.isCraftable()) {
@@ -79,6 +84,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
                     } catch (BufferOverflowException var7) {
                         NetworkHandler.instance().sendTo(piu,playerMP);
                         piu = new PacketMEInventoryUpdate();
+                        ((SpecialPacket)piu).r$setId(1);
                         piu.appendItem(send);
                     }
                 }

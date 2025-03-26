@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -40,6 +41,8 @@ public class InputHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.KeyInputEvent event) {
         if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
+            ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
+
             EntityPlayer player = mc.player;
             World world = player.world;
             RayTraceResult target = mc.objectMouseOver;
@@ -85,6 +88,8 @@ public class InputHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.MouseInputEvent event) {
         if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
+            ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
+
             EntityPlayer player = mc.player;
             World world = player.world;
             RayTraceResult target = mc.objectMouseOver;

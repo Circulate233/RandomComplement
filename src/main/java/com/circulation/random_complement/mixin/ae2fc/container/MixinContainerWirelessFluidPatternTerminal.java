@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2fc;
+package com.circulation.random_complement.mixin.ae2fc.container;
 
 import appeng.api.implementations.IUpgradeableCellContainer;
 import appeng.container.implementations.ContainerWirelessPatternTerminal;

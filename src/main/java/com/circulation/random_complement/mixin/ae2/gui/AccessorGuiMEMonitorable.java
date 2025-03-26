@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2;
+package com.circulation.random_complement.mixin.ae2.gui;
 
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.ItemRepo;

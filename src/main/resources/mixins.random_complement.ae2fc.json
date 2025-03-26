@@ -6,21 +6,21 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AccessorContainerWirelessPatternTerminal",
-    "MixinContainerExpandedProcessingPatternTerm",
-    "MixinContainerExtendedFluidPatternTerminal",
-    "MixinContainerFluidPatternTerminal",
-    "MixinContainerUltimateEncoder",
-    "MixinContainerWirelessFluidPatternTerminal",
     "MixinCPacketLoadPattern",
-    "MixinItemOrPartGuiFactory"
+    "MixinItemOrPartGuiFactory",
+    "container.AccessorContainerWirelessPatternTerminal",
+    "container.MixinContainerExpandedProcessingPatternTerm",
+    "container.MixinContainerExtendedFluidPatternTerminal",
+    "container.MixinContainerFluidPatternTerminal",
+    "container.MixinContainerUltimateEncoder",
+    "container.MixinContainerWirelessFluidPatternTerminal"
   ],
   "server": [],
   "client": [
-    "MixinGuiExtendedFluidPatternTerminal",
-    "MixinGuiFluidPatternTerminal",
-    "MixinGuiUltimateEncoder",
-    "MixinGuiWirelessFluidPatternTerminal",
-    "MixinPacketMEInventoryUpdate"
+    "MixinPacketMEInventoryUpdate",
+    "gui.MixinGuiExtendedFluidPatternTerminal",
+    "gui.MixinGuiFluidPatternTerminal",
+    "gui.MixinGuiUltimateEncoder",
+    "gui.MixinGuiWirelessFluidPatternTerminal"
   ]
 }

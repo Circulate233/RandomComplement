@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2fc;
+package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Mixin(value = GuiExtendedFluidPatternTerminal.class,remap = false)
+@Mixin(value = GuiExtendedFluidPatternTerminal.class)
 public class MixinGuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatternTerm {
 
     @Unique
