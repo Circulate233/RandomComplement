@@ -24,7 +24,7 @@ public class RCConfig {
 
         @Config.Comment({"Sets the texture index used for the crafting item slot"})
         @Config.Name("CraftingSlotTextureIndex")
-        @Config.RangeInt(min = 0, max = 2)
+        @Config.RangeInt(min = 0, max = 5)
         public int craftingSlotTextureIndex = 1;
     }
 

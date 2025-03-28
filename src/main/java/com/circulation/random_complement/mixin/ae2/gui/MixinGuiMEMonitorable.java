@@ -21,6 +21,9 @@ public class MixinGuiMEMonitorable implements SpecialLogic {
     @Unique
     public Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
 
+    @Unique
+    private Set<CraftableItem> randomComplement$mergedCache = new HashSet<>();
+
     @Inject(method = "onGuiClosed",at = @At("TAIL"))
     public void onGuiClosedMixin(CallbackInfo ci) {
         randomComplement$craftableCacheS.clear();
@@ -30,9 +33,11 @@ public class MixinGuiMEMonitorable implements SpecialLogic {
     @Unique
     @Override
     public Set<CraftableItem> r$getList() {
-        Set<CraftableItem> set = new HashSet<>(randomComplement$craftableCacheS);
-        set.addAll(randomComplement$craftableCache);
-        return set;
+        if (randomComplement$mergedCache.isEmpty()){
+            randomComplement$mergedCache.addAll(randomComplement$craftableCacheS);
+            randomComplement$mergedCache.addAll(randomComplement$craftableCache);
+        }
+        return randomComplement$mergedCache;
     }
 
     @Unique

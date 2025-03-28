@@ -9,6 +9,7 @@ import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.CraftableItem;
+import com.circulation.random_complement.client.handler.InputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import net.minecraft.client.Minecraft;
@@ -24,10 +25,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -89,42 +87,61 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     }
 
     @Unique
-    private int randomComplement$counter = 0;
-    @Unique
-    private int randomComplement$counter1 = 0;
+    private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V",remap = false, shift = At.Shift.AFTER))
     private void drawPin(float f, int x, int y, CallbackInfo ci){
         if ((Object)this instanceof GuiMEMonitorable monitorable){
             var items = ((SpecialLogic)monitorable).r$getList();
             if (!items.isEmpty()) {
-                int i = 0;
+                List<SlotME> slots = new ArrayList<>();
                 for (Slot slot : this.getInventorySlots()) {
                     if (slot instanceof SlotME slotME) {
                         if (items.contains(CraftableItem.getInstance(slotME.getStack()))) {
-                            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                            this.randomComplement$bindTexture();
-                            this.drawTexturedModalRect(
-                                    this.getGuiLeft() + slot.xPos - 1,
-                                    this.getGuiTop() + slot.yPos - 1,
-                                    AE2.craftingSlotTextureIndex * 18,
-                                    randomComplement$counter * 18,
-                                    18, 18
-                            );
+                            slots.add(slotME);
                         } else {
-                            randomComplement$counter = (randomComplement$counter + ((++randomComplement$counter1 & 3) == 0 ? 1 : 0)) % 14;
                             break;
                         }
                     }
+                }
+
+                final int cycle = (slots.size() + 8) / 9;
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                this.randomComplement$bindTexture(randomComplement$textureIndex);
+                for (int i = 0; i < cycle; i++) {
+                    int amount = Math.min(slots.size() - i * 9,9);
+                    int yOffset = randomComplement$textureIndex < 3
+                            ? InputHandler.counter * 18
+                            : (randomComplement$textureIndex - 3) * 18;
+
+                    this.drawTexturedModalRect(
+                            this.getGuiLeft() + 8,
+                            this.getGuiTop() + 17 + 18 * i,
+                            0,
+                            yOffset,
+                            18 * amount, 18
+                    );
                 }
             }
         }
     }
 
     @Unique
-    private void randomComplement$bindTexture() {
-        final ResourceLocation loc = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned.png");
-        this.mc.getTextureManager().bindTexture(loc);
+    private static Map<Integer,ResourceLocation> randomComplement$textures = new HashMap<>();
+
+    static {
+        randomComplement$textures.put(0,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
+        randomComplement$textures.put(1,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
+        randomComplement$textures.put(2,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
+        final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
+        randomComplement$textures.put(3,rl);
+        randomComplement$textures.put(4,rl);
+        randomComplement$textures.put(5,rl);
+    }
+
+    @Unique
+    private void randomComplement$bindTexture(int craftingSlotTextureIndex) {
+        this.mc.getTextureManager().bindTexture(randomComplement$textures.get(craftingSlotTextureIndex));
     }
 
 }

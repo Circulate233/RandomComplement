@@ -26,6 +26,8 @@ public class InputHandler {
     public static InputHandler INSTANCE = new InputHandler();
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static int tick = 0;
+    public static int counter = 0;
+    private static int counter1 = 0;
 
     private InputHandler(){
 
@@ -36,6 +38,7 @@ public class InputHandler {
         if (tick > 0){
             tick--;
         }
+        counter = (counter + ((++counter1 & 1) == 0 ? 1 : 0)) % 14;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
