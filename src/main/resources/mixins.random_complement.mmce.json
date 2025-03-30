@@ -1,17 +1,19 @@
 {
-	"package": "com.circulation.random_complement.mixin.mmce",
-	"required": true,
-	"refmap": "mixins.random_complement.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"AccessorRecipeLayout",
-		"AccessorStructurePreviewWrapper",
-		"MixinStructurePreviewWrapper"
-	],
-	"server": [],
-	"client": [
-		"MixinRecipesGui"
+  "package": "com.circulation.random_complement.mixin.mmce",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AccessorRecipeLayout",
+    "AccessorStructurePreviewWrapper",
+    "MixinMEPatternProvider",
+    "MixinStructurePreviewWrapper",
+    "MixinTileMultiblockMachineController"
+  ],
+  "server": [],
+  "client": [
+    "MixinRecipesGui"
 	]
 }
