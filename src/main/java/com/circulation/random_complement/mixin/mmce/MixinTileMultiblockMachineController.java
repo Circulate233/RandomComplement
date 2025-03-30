@@ -20,7 +20,7 @@ public abstract class MixinTileMultiblockMachineController extends TileEntityRes
     @Shadow
     protected DynamicMachine foundMachine;
 
-    @Inject(method = "tryColorize",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;",shift = At.Shift.BY,by = 2))
+    @Inject(method = "tryColorize",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;",shift = At.Shift.BY,by = 2,remap = true))
     private void tryColorize(BlockPos pos, int color, CallbackInfo ci) {
         var te = this.getWorld().getTileEntity(pos);
         if (te instanceof MEPatternProvider mep) {
