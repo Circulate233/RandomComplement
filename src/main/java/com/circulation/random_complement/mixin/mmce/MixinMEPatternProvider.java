@@ -9,17 +9,18 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.ICustomNameObject;
 import appeng.helpers.IInterfaceHost;
 import appeng.tile.inventory.AppEngInternalInventory;
+import com.circulation.random_complement.common.interfaces.SpecialMEPatternProvider;
 import com.google.common.collect.ImmutableSet;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import github.kasuminova.mmce.common.tile.base.MEMachineComponent;
+import hellfirepvp.modularmachinery.common.lib.ItemsMM;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.items.IItemHandler;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,7 +29,10 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 @Mixin(value = MEPatternProvider.class,remap = false)
-public abstract class MixinMEPatternProvider extends MEMachineComponent implements IInterfaceHost, ICustomNameObject {
+public abstract class MixinMEPatternProvider extends MEMachineComponent implements IInterfaceHost, ICustomNameObject, SpecialMEPatternProvider {
+
+    @Unique
+    private final DualityInterface randomComplement$duality = new DualityInterface(this.proxy,this);
 
     @Final
     @Shadow
@@ -38,7 +42,43 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
     private String randomComplement$customName;
 
     @Unique
-    private final DualityInterface randomComplement$duality = new DualityInterface(this.proxy,this);
+    private String randomComplement$machineName;
+
+    @Unique
+    private boolean randomComplement$isI18n = false;
+
+    @Unique
+    private static final ItemStack randomComplement$item = new ItemStack(ItemsMM.mePatternProvider);
+
+    @Unique
+    @Override
+    public String r$getMachineName(){
+        if (randomComplement$machineName != null) {
+            if (randomComplement$isI18n) {
+                return I18n.translateToFallback(randomComplement$machineName);
+            } else {
+                return randomComplement$machineName;
+            }
+        } else {
+            return randomComplement$item.getDisplayName();
+        }
+    }
+
+    /**
+     * @author circulation
+     * @reason 防止一些奇怪的问题
+     */
+    @Overwrite
+    public ItemStack getVisualItemStack(){
+        return randomComplement$item;
+    }
+
+    @Unique
+    @Override
+    public void r$setMachineName(String name,boolean isI18n){
+        this.randomComplement$machineName = name;
+        this.randomComplement$isI18n = isI18n;
+    }
 
     @Inject(method = "readCustomNBT",at = @At("TAIL"))
     public void readFromNBT(NBTTagCompound compound, CallbackInfo ci) {
@@ -62,7 +102,7 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
         if (this.hasCustomInventoryName()) {
             return this.randomComplement$customName;
         } else {
-            return this.getVisualItemStack().getDisplayName();
+            return randomComplement$item.getDisplayName();
         }
     }
 

@@ -42,6 +42,20 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
     @Unique
     public int randomComplement$total = 0;
 
+    @Unique
+    private static Constructor<?> randomComplement$constructor;
+
+    @Inject(method = "<clinit>",at = @At("TAIL"))
+    private static void onClinit(CallbackInfo ci){
+        try {
+            Class<?> clazz = Class.forName("appeng.container.implementations.ContainerInterfaceTerminal$InvTracker");
+            randomComplement$constructor = clazz.getDeclaredConstructor(DualityInterface.class, IItemHandler.class, String.class);
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        randomComplement$constructor.setAccessible(true);
+    }
+
     public MixinContainerInterfaceTerminal(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
     }
@@ -71,20 +85,13 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
         for(IGridNode gn : CoreModHooks.getMachines(this.grid, MEPatternProvider.class)) {
             if (gn.isActive()) {
                 try {
-                    Class<?> clazz = Class.forName("appeng.container.implementations.ContainerInterfaceTerminal$InvTracker");
-                    Constructor<?> constructor = clazz.getDeclaredConstructor(DualityInterface.class, IItemHandler.class, String.class);
-                    constructor.setAccessible(true);
                     IInterfaceHost ih = (IInterfaceHost)gn.getMachine();
                     DualityInterface dual = ih.getInterfaceDuality();
                     var patterns = ((MEPatternProvider)ih).getPatterns();
                     var name = dual.getTermName();
-                    Object instance = constructor.newInstance(dual,patterns,name);
+                    Object instance = randomComplement$constructor.newInstance(dual,patterns,name);
                     this.diList.put(ih, instance);
-                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                         InvocationTargetException | InstantiationException ignored) {
-
-                }
-
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException ignored) {}
             }
         }
     }

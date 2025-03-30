@@ -5,9 +5,9 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.tile.inventory.AppEngInternalInventory;
+import com.circulation.random_complement.common.interfaces.SpecialMEPatternProvider;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.translation.I18n;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -46,17 +46,8 @@ public class MixinDualityInterface {
     @Inject(method = "getTermName",at = @At(value = "INVOKE", target = "Lappeng/helpers/IInterfaceHost;getTargets()Ljava/util/EnumSet;"), cancellable = true)
     public void getTermNameMixin(CallbackInfoReturnable<String> cir) {
         TileEntity hostTile = this.iHost.getTileEntity();
-        if (hostTile instanceof MEPatternProvider mep) {
-            var nbt = hostTile.getTileData();
-            if (nbt.hasKey("machineName") || nbt.hasKey("machineNamePrefix")) {
-                if (I18n.canTranslate(nbt.getString("machineNamePrefix"))){
-                    cir.setReturnValue(I18n.translateToFallback(nbt.getString("machineNamePrefix")));
-                } else {
-                    cir.setReturnValue(nbt.getString("machineName"));
-                }
-            } else {
-                cir.setReturnValue(mep.getVisualItemStack().getDisplayName());
-            }
+        if (hostTile instanceof SpecialMEPatternProvider mep) {
+            cir.setReturnValue(mep.r$getMachineName());
         }
     }
 }
