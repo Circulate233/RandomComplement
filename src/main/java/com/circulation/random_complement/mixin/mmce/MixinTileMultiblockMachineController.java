@@ -45,7 +45,7 @@ public abstract class MixinTileMultiblockMachineController extends TileEntityRes
                     return;
                 }
                 var panel = (String) randomComplement$machineName.get(machine);
-                mep.r$setMachineName(panel);
+                mep.r$setMachineName(panel.replaceAll("§.","").replaceAll("#([A-Fa-f0-9]{6}(?:-[A-Fa-f0-9]{6})*)",""));
             } catch (IllegalAccessException ignored) {}
         }
     }
