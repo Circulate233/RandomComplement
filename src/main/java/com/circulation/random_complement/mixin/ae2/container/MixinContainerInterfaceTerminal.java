@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Constructor;
@@ -62,6 +63,8 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
 
     @Inject(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Lappeng/api/networking/IGridNode;isActive()Z",ordinal = 0,remap = false,shift = At.Shift.BY,by = 2))
     public void detectAndSendChangesMixin(CallbackInfo ci) {
+        randomComplement$total = 0;
+        randomComplement$missing = false;
         for(IGridNode gn : this.grid.getMachines(MEPatternProvider.class)) {
             if (gn.isActive()) {
                 IInterfaceHost ih = (IInterfaceHost)gn.getMachine();
@@ -96,13 +99,13 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
         }
     }
 
+    @Redirect(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Ljava/util/Map;size()I"))
+    public int totalMixin(Map<?,?> instance){
+        return (instance.size() - randomComplement$total);
+    }
+
     @ModifyVariable(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Ljava/util/Map;size()I",remap = false,shift = At.Shift.BY ,by = -2),name = "missing")
     public boolean missingMixin(boolean missing){
         return randomComplement$missing || missing;
-    }
-
-    @ModifyVariable(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Ljava/util/Map;size()I",remap = false,shift = At.Shift.BY ,by = -2),name = "total")
-    public int totalMixin(int total){
-        return total + randomComplement$total;
     }
 }
