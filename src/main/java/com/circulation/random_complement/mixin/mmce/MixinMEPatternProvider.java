@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -45,22 +44,15 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
     private String randomComplement$machineName;
 
     @Unique
-    private boolean randomComplement$isI18n = false;
-
-    @Unique
     private static final ItemStack randomComplement$item = new ItemStack(ItemsMM.mePatternProvider);
 
     @Unique
     @Override
     public String r$getMachineName(){
         if (randomComplement$machineName != null) {
-            if (randomComplement$isI18n) {
-                return I18n.translateToFallback(randomComplement$machineName);
-            } else {
-                return randomComplement$machineName;
-            }
+            return randomComplement$machineName;
         } else {
-            return randomComplement$item.getDisplayName();
+            return randomComplement$item.getItem().getTranslationKey();
         }
     }
 
@@ -75,9 +67,8 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
 
     @Unique
     @Override
-    public void r$setMachineName(String name,boolean isI18n){
+    public void r$setMachineName(String name){
         this.randomComplement$machineName = name;
-        this.randomComplement$isI18n = isI18n;
     }
 
     @Inject(method = "readCustomNBT",at = @At("TAIL"))
@@ -102,7 +93,7 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
         if (this.hasCustomInventoryName()) {
             return this.randomComplement$customName;
         } else {
-            return randomComplement$item.getDisplayName();
+            return randomComplement$item.getItem().getTranslationKey();
         }
     }
 

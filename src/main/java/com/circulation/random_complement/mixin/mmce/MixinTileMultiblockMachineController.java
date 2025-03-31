@@ -41,11 +41,11 @@ public abstract class MixinTileMultiblockMachineController extends TileEntityRes
                 var machine = this.foundMachine;
                 var key = machine.getRegistryName().getNamespace() + "." + machine.getRegistryName().getPath() + ".prefix";
                 if (I18n.canTranslate(key)) {
-                    mep.r$setMachineName(key, true);
+                    mep.r$setMachineName(key);
                     return;
                 }
                 var panel = (String) randomComplement$machineName.get(machine);
-                mep.r$setMachineName(panel, false);
+                mep.r$setMachineName(panel);
             } catch (IllegalAccessException ignored) {}
         }
     }

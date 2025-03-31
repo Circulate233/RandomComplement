@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2;
+package com.circulation.random_complement.mixin.mmce;
 
 import com.circulation.random_complement.common.interfaces.SpecialInvTracker;
 import org.spongepowered.asm.mixin.Final;

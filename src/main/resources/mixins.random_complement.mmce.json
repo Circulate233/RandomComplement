@@ -8,6 +8,9 @@
   "mixins": [
     "AccessorRecipeLayout",
     "AccessorStructurePreviewWrapper",
+    "MixinContainerInterfaceTerminal",
+    "MixinDualityInterface",
+    "MixinInvTracker",
     "MixinMEPatternProvider",
     "MixinStructurePreviewWrapper",
     "MixinTileMultiblockMachineController"

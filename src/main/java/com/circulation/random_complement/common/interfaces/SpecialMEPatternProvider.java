@@ -4,5 +4,5 @@ public interface SpecialMEPatternProvider {
 
     String r$getMachineName();
 
-    void r$setMachineName(String name,boolean isI18n);
+    void r$setMachineName(String name);
 }
