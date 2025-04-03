@@ -6,14 +6,16 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AccessorRecipeLayout",
-    "AccessorStructurePreviewWrapper",
     "MixinContainerInterfaceTerminal",
     "MixinDualityInterface",
     "MixinInvTracker",
     "MixinMEPatternProvider",
+    "MixinRecipesGui$AccessorRecipeLayout",
+    "MixinRecipesGui$AccessorStructurePreviewWrapper",
     "MixinStructurePreviewWrapper",
-    "MixinTileMultiblockMachineController"
+    "MixinStructurePreviewWrapper$AccessorMachineStructurePreviewPanel",
+    "MixinTileMultiblockMachineController",
+    "MixinTileMultiblockMachineController$AccessorAbstractMachine"
   ],
   "server": [],
   "client": [

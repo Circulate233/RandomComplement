@@ -110,7 +110,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
                 this.randomComplement$bindTexture(randomComplement$textureIndex);
                 for (int i = 0; i < cycle; i++) {
                     int amount = Math.min(slots.size() - i * 9,9);
-                    int yOffset = randomComplement$textureIndex < 3
+                    int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
                             ? InputHandler.counter * 18
                             : (randomComplement$textureIndex - 3) * 18;
 
@@ -137,6 +137,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         randomComplement$textures.put(3,rl);
         randomComplement$textures.put(4,rl);
         randomComplement$textures.put(5,rl);
+        randomComplement$textures.put(6,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
     }
 
     @Unique

@@ -12,10 +12,10 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,20 +31,24 @@ public class MixinStructurePreviewWrapper {
     @Redirect(method = "getIngredients",at = @At(value = "INVOKE", target = "Lhellfirepvp/modularmachinery/common/machine/TaggedPositionBlockArray;getIngredientList()Ljava/util/List;"))
     public List<List<ItemStack>> getIngredientsMixin(TaggedPositionBlockArray instance){
         if (gui != null) {
-            try {
-                WidgetController controller = this.gui.getWidgetController();
-                Field machine = MachineStructurePreviewPanel.class.getDeclaredField("renderer");
-                machine.setAccessible(true);
-                var panel = (WorldSceneRendererWidget) machine.get(PreviewPanels.getPanel(this.machine, controller.getGui()));
-                var list = panel.getPattern().getDescriptiveStackList(panel.getTickSnap(), panel.getWorldRenderer().getWorld(), panel.getRenderOffset());
-                list.remove(0);
-                List<List<ItemStack>> finalList = new ArrayList<>();
-                list.forEach(itemStack -> finalList.add(Collections.singletonList(itemStack)));
-                return finalList;
-            } catch (NoSuchFieldException | IllegalAccessException ignored) {
-            }
+            WidgetController controller = this.gui.getWidgetController();
+            var panel = ((AccessorMachineStructurePreviewPanel)PreviewPanels.getPanel(this.machine, controller.getGui())).getRenderer();
+            var list = panel.getPattern().getDescriptiveStackList(panel.getTickSnap(), panel.getWorldRenderer().getWorld(), panel.getRenderOffset());
+            list.remove(0);
+            List<List<ItemStack>> finalList = new ArrayList<>();
+            list.forEach(itemStack -> finalList.add(Collections.singletonList(itemStack)));
+            return finalList;
 
         }
         return instance.getIngredientList();
     }
+
+    @Mixin(value = MachineStructurePreviewPanel.class,remap = false)
+    public interface AccessorMachineStructurePreviewPanel{
+
+        @Accessor
+        WorldSceneRendererWidget getRenderer();
+
+    }
+
 }
