@@ -13,7 +13,6 @@
     "MixinRecipesGui$AccessorRecipeLayout",
     "MixinRecipesGui$AccessorStructurePreviewWrapper",
     "MixinStructurePreviewWrapper",
-    "MixinStructurePreviewWrapper$AccessorMachineStructurePreviewPanel",
     "MixinTileMultiblockMachineController",
     "MixinTileMultiblockMachineController$AccessorAbstractMachine"
   ],
