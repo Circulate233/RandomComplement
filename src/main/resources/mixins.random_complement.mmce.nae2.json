@@ -1,5 +1,5 @@
 {
-	"package": "com.circulation.random_complement.mixin.nae2",
+	"package": "com.circulation.random_complement.mixin.mmce.nae2",
 	"required": true,
 	"refmap": "mixins.random_complement.refmap.json",
 	"target": "@env(DEFAULT)",
