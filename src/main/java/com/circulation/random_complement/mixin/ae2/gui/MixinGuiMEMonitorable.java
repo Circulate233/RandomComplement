@@ -46,11 +46,13 @@ public class MixinGuiMEMonitorable implements SpecialLogic {
         randomComplement$craftableCache = list;
     }
 
+    @Unique
     @Override
     public void r$addList(CraftableItem item) {
         randomComplement$craftableCache.add(item);
     }
 
+    @Unique
     @Override
     public void r$addAllList(Set<CraftableItem> list) {
         randomComplement$craftableCache.addAll(list);

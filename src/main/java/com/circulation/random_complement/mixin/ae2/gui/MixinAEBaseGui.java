@@ -7,7 +7,6 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.client.handler.InputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
@@ -16,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -107,7 +105,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
                 final int cycle = (slots.size() + 8) / 9;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.randomComplement$bindTexture(randomComplement$textureIndex);
+                MEHandler.randomComplement$bindTexture(this.mc,randomComplement$textureIndex);
                 for (int i = 0; i < cycle; i++) {
                     int amount = Math.min(slots.size() - i * 9,9);
                     int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
@@ -124,25 +122,6 @@ public abstract class MixinAEBaseGui extends GuiContainer {
                 }
             }
         }
-    }
-
-    @Unique
-    private static Map<Integer,ResourceLocation> randomComplement$textures = new HashMap<>();
-
-    static {
-        randomComplement$textures.put(0,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
-        randomComplement$textures.put(1,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
-        randomComplement$textures.put(2,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
-        final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
-        randomComplement$textures.put(3,rl);
-        randomComplement$textures.put(4,rl);
-        randomComplement$textures.put(5,rl);
-        randomComplement$textures.put(6,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
-    }
-
-    @Unique
-    private void randomComplement$bindTexture(int craftingSlotTextureIndex) {
-        this.mc.getTextureManager().bindTexture(randomComplement$textures.get(craftingSlotTextureIndex));
     }
 
 }

@@ -14,6 +14,8 @@ import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
+import com.circulation.random_complement.RandomComplement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -22,10 +24,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MEHandler {
 
@@ -162,5 +170,23 @@ public class MEHandler {
             return new WirelessTerminalGuiObject(wt, item, player, player.world, pos.getX(), pos.getY(), pos.getZ());
         }
         return null;
+    }
+
+    private static final Map<Integer, ResourceLocation> randomComplement$textures = new HashMap<>();
+
+    static {
+        randomComplement$textures.put(0,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
+        randomComplement$textures.put(1,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
+        randomComplement$textures.put(2,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
+        final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
+        randomComplement$textures.put(3,rl);
+        randomComplement$textures.put(4,rl);
+        randomComplement$textures.put(5,rl);
+        randomComplement$textures.put(6,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void randomComplement$bindTexture(Minecraft mc,int craftingSlotTextureIndex) {
+        mc.getTextureManager().bindTexture(randomComplement$textures.get(craftingSlotTextureIndex));
     }
 }

@@ -1,60 +1,70 @@
-package com.circulation.random_complement.mixin.ae2.container;
+package com.circulation.random_complement.mixin.thaumicenergistics;
 
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
-import appeng.api.parts.IPart;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
-import appeng.api.util.IConfigurableObject;
-import appeng.container.AEBaseContainer;
-import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
-import appeng.util.IConfigManagerHost;
-import appeng.util.Platform;
+import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import thaumicenergistics.container.ContainerBaseTerminal;
+import thaumicenergistics.container.ICraftingContainer;
+import thaumicenergistics.container.part.ContainerArcaneTerminal;
+import thaumicenergistics.part.PartBase;
+import thaumicenergistics.part.PartSharedTerminal;
 
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Mixin(value = ContainerMEMonitorable.class)
-public abstract class MixinContainerMEMonitorable extends AEBaseContainer implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEItemStack> {
-
-    @Shadow(remap = false)
-    @Final
-    public IItemList<IAEItemStack> items;
-
-    @Shadow(remap = false)
-    private IGridNode networkNode;
-
-    public MixinContainerMEMonitorable(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
-        super(ip, myTile, myPart);
-    }
+@Mixin(ContainerArcaneTerminal.class)
+public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal implements IMEMonitorHandlerReceiver<IAEItemStack>, ICraftingContainer {
 
     @Unique
     private boolean randomComplement$incomplete = true;
 
-    @Inject(method = "detectAndSendChanges",at = @At("TAIL"))
+    @Shadow(remap = false)
+    protected PartSharedTerminal part;
+
+    public MixinContainerArcaneTerminal(EntityPlayer player, PartBase part) {
+        super(player, part);
+    }
+
+    @Unique
+    private static final Set<CraftableItem> randomComplement$craftableCacheS = new HashSet<>();
+
+    @Unique
+    public Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+
+    @Unique
+    private Set<CraftableItem> randomComplement$mergedCache = new HashSet<>();
+
+    @Unique
+    private int randomComplement$a = 0;
+
+    @Inject(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Lthaumicenergistics/part/PartSharedTerminal;getTile()Lnet/minecraft/tileentity/TileEntity;",remap = false))
     public void detectAndSendChangesMixin(CallbackInfo ci) {
-        if (Platform.isServer() && randomComplement$incomplete) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player);
+        if (randomComplement$a == 0) {
+            randomComplement$a++;
+            return;
+        }
+        if (randomComplement$incomplete) {
+            randomComplement$queueInventory((EntityPlayerMP) this.player);
             randomComplement$incomplete = false;
         }
     }
@@ -63,9 +73,9 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
     private void randomComplement$queueInventory(EntityPlayerMP playerMP) {
         try {
             PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
-            ((SpecialPacket)piu).r$setId(2);
+            ((SpecialPacket)piu).r$setId(3);
             List<IAEItemStack> items = new ArrayList<>();
-            var node = this.networkNode;
+            var node = part.getGridNode();
             if (node == null) {
                 return;
             } else {
@@ -99,4 +109,5 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
             AELog.debug(e);
         }
     }
+
 }
