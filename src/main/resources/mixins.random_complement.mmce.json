@@ -13,8 +13,7 @@
     "MixinRecipesGui$AccessorRecipeLayout",
     "MixinRecipesGui$AccessorStructurePreviewWrapper",
     "MixinStructurePreviewWrapper",
-    "MixinTileMultiblockMachineController",
-    "MixinTileMultiblockMachineController$AccessorAbstractMachine"
+    "MixinTileMultiblockMachineController"
   ],
   "server": [],
   "client": [
