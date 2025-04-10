@@ -16,6 +16,8 @@
   "client": [
     "gui.AccessorGuiMEMonitorable",
     "gui.MixinAEBaseGui",
+    "gui.MixinGuiCraftConfirm",
+    "gui.MixinGuiCraftingCPU",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo"
   ]
