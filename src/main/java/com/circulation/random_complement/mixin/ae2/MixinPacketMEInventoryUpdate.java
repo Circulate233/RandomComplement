@@ -6,9 +6,9 @@ import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
 import appeng.util.item.AEItemStack;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
+import com.circulation.random_complement.common.util.SimpleItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -89,7 +89,7 @@ public abstract class MixinPacketMEInventoryUpdate implements SpecialPacket {
                     GuiScreen gui = Minecraft.getMinecraft().currentScreen;
                     if (gui instanceof GuiMEMonitorable) {
                         ((SpecialLogic) gui).r$setList(this.list.stream()
-                                .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
+                                .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                                 .collect(Collectors.toSet()));
                     }
             }

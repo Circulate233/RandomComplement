@@ -7,6 +7,9 @@
   "mixins": [
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
+    "MixinTileInscriber",
+    "container.AccessorAEBaseContainer",
+    "container.MixinContainerInscriber",
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
@@ -18,6 +21,7 @@
     "gui.MixinAEBaseGui",
     "gui.MixinGuiCraftConfirm",
     "gui.MixinGuiCraftingCPU",
+    "gui.MixinGuiInscriber",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo"
   ]

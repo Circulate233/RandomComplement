@@ -30,15 +30,12 @@ import java.util.List;
 @Mixin(GuiCraftingCPU.class)
 public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSource {
 
-
     @Unique
-    private IAEItemStack hoveredAEStack;
-
+    private IAEItemStack randomComplement$hoveredAEStack;
 
     public MixinGuiCraftingCPU(Container container) {
         super(container);
     }
-
 
     /**
      * @author sddsd2332
@@ -47,40 +44,40 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/704">代码来自GTNH团队的AE2U。</a>
      */
     @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z",ordinal = 1), remap = false)
-    public void gethoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 0) IAEItemStack stack) {
-        hoveredAEStack = stack;
+    public void getHoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 0) IAEItemStack stack) {
+        randomComplement$hoveredAEStack = stack;
     }
 
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
     public String addItemInformation(Object n) {
-        if (getItemInformation(n).length() != 0) {
-            return getItemDisplayName(n) + getItemInformation(n);
+        if (!randomComplement$getItemInformation(n).isEmpty()) {
+            return randomComplement$getItemDisplayName(n) + randomComplement$getItemInformation(n);
         } else {
-            return getItemDisplayName(n);
+            return randomComplement$getItemDisplayName(n);
         }
 
     }
 
 
     @Override
-    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) throws IOException {
-        if (hoveredAEStack != null && btn == 2) {
-            ((AEBaseContainer) inventorySlots).setTargetStack(hoveredAEStack);
+    protected void mouseClicked(final int xCord, final int yCord, final int btn) throws IOException {
+        if (randomComplement$hoveredAEStack != null && btn == 2) {
+            ((AEBaseContainer) inventorySlots).setTargetStack(randomComplement$hoveredAEStack);
             final PacketInventoryAction p = new PacketInventoryAction(
                     InventoryAction.AUTO_CRAFT,
                     inventorySlots.inventorySlots.size(),
                     0);
             NetworkHandler.instance.sendToServer(p);
         }
-        super.mouseClicked(xCoord, yCoord, btn);
-        //   this.searchField.mouseClicked(xCoord, yCoord, btn);
+        super.mouseClicked(xCord, yCord, btn);
+        //   this.searchField.mouseClicked(xCord, yCord, btn);
     }
 
     @Unique
-    private static String getItemInformation(final Object o) {
+    private static String randomComplement$getItemInformation(final Object o) {
         String dspToolTip = "";
-        List<String> lineList = new ArrayList();
+        List<String> lineList = new ArrayList<>();
         if (o == null) {
             return "** Null";
         }
@@ -103,7 +100,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         } catch (Exception ignored) {
         }
 
-        if (lineList.size() > 0) {
+        if (!lineList.isEmpty()) {
             dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
         }
         return dspToolTip;
@@ -111,7 +108,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
 
 
     @Unique
-    private String getItemDisplayName(Object n) {
+    private String randomComplement$getItemDisplayName(Object n) {
         return Platform.getItemDisplayName(n);
     }
 

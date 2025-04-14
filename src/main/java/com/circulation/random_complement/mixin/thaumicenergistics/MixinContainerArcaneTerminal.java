@@ -8,8 +8,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
+import com.circulation.random_complement.common.util.SimpleItem;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,13 +46,13 @@ public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal
     }
 
     @Unique
-    private static final Set<CraftableItem> randomComplement$craftableCacheS = new HashSet<>();
+    private static final Set<SimpleItem> randomComplement$craftableCacheS = new HashSet<>();
 
     @Unique
-    public Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
-    private Set<CraftableItem> randomComplement$mergedCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$mergedCache = new HashSet<>();
 
     @Unique
     private int randomComplement$a = 0;

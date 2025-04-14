@@ -7,10 +7,10 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.client.handler.InputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -36,7 +36,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     protected abstract List<Slot> getInventorySlots();
 
     @Unique
-    private Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     public MixinAEBaseGui(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -49,12 +49,12 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     }
 
     @Unique
-    private Set<CraftableItem> randomComplement$getCraftables(GuiMEMonitorable gui) {
+    private Set<SimpleItem> randomComplement$getCraftables(GuiMEMonitorable gui) {
         if (randomComplement$craftableCache.isEmpty()) {
             randomComplement$craftableCache = this.randomComplement$getStorage(gui)
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
+                    .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                     .collect(Collectors.toSet());
         }
 
@@ -76,7 +76,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable patternTerm) {
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
-                    if (randomComplement$getCraftables(patternTerm).contains(CraftableItem.getInstance(slotFake.getDisplayStack()))) {
+                    if (randomComplement$getCraftables(patternTerm).contains(SimpleItem.getInstance(slotFake.getDisplayStack()))) {
                         MEHandler.drawPlus(slotFake);
                     }
                 }
@@ -95,7 +95,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
                 List<SlotME> slots = new ArrayList<>();
                 for (Slot slot : this.getInventorySlots()) {
                     if (slot instanceof SlotME slotME) {
-                        if (items.contains(CraftableItem.getInstance(slotME.getStack()))) {
+                        if (items.contains(SimpleItem.getInstance(slotME.getStack()))) {
                             slots.add(slotME);
                         } else {
                             break;

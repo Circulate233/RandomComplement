@@ -1,0 +1,10 @@
+gui.inscriber.block_mode.name=Automation Access Mode
+gui.inscriber.block_mode.OPEN.text=Automation can access any slot from any side. Input slots cannot be extracted from.
+gui.inscriber.block_mode.CLOSE.text=Automation can access slots from specific sides. Top and bottom slots can be extracted from.
+gui.inscriber.auto_output.name=Auto-Export
+gui.inscriber.auto_output.OPEN.text=Produced items will be auto-exported through any extraction side.
+gui.inscriber.auto_output.CLOSE.text=Produced items will be not be auto-exported.
+gui.inscriber.max_stack_limit.name=Input Slot Stack Size(Only GUI)
+gui.inscriber.max_stack_limit.SMALL.text=Stack to 1
+gui.inscriber.max_stack_limit.MEDIUM.text=Stack to 4
+gui.inscriber.max_stack_limit.BIG.text=Stack to 64

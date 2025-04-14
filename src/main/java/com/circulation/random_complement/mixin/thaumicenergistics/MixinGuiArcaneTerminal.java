@@ -4,10 +4,10 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.client.handler.InputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,16 +40,16 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Unique
-    private static final Set<CraftableItem> randomComplement$craftableCacheS = new HashSet<>();
+    private static final Set<SimpleItem> randomComplement$craftableCacheS = new HashSet<>();
 
     @Unique
-    public Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
-    public Set<CraftableItem> randomComplement$cpuCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$cpuCache = new HashSet<>();
 
     @Unique
-    private Set<CraftableItem> randomComplement$mergedCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$mergedCache = new HashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
@@ -58,12 +58,12 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     }
 
     @Unique
-    private Set<CraftableItem> randomComplement$getCraftables() {
+    private Set<SimpleItem> randomComplement$getCraftables() {
         if (randomComplement$cpuCache.isEmpty()) {
             randomComplement$cpuCache = this.randomComplement$getStorage()
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
+                    .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                     .collect(Collectors.toSet());
         }
 
@@ -77,7 +77,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
             List<SlotME<?>> slots = new ArrayList<>();
             for (Slot slot : this.inventorySlots.inventorySlots) {
                 if (slot instanceof SlotME<?> slotME) {
-                    if (items.contains(CraftableItem.getInstance(slotME.getStack()))) {
+                    if (items.contains(SimpleItem.getInstance(slotME.getStack()))) {
                         slots.add(slotME);
                     } else {
                         break;
@@ -118,7 +118,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
         if (slot instanceof SlotGhost slotG) {
             var aeStack = slotG.getStack();
             if (!aeStack.isEmpty()) {
-                if (randomComplement$getCraftables().contains(CraftableItem.getInstance(aeStack))) {
+                if (randomComplement$getCraftables().contains(SimpleItem.getInstance(aeStack))) {
                     MEHandler.drawPlus(slotG);
                 }
             }
@@ -133,7 +133,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     @Override
-    public Set<CraftableItem> r$getList() {
+    public Set<SimpleItem> r$getList() {
         if (randomComplement$mergedCache.isEmpty()){
             randomComplement$mergedCache.addAll(randomComplement$craftableCacheS);
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
@@ -143,19 +143,20 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     @Override
-    public void r$setList(Set<CraftableItem> list) {
-        randomComplement$craftableCache = list;
+    public void r$setList(Set<SimpleItem> list) {
+        randomComplement$craftableCache.clear();
+        randomComplement$craftableCache.addAll(list);
     }
 
     @Unique
     @Override
-    public void r$addList(CraftableItem item) {
+    public void r$addList(SimpleItem item) {
         randomComplement$craftableCache.add(item);
     }
 
     @Unique
     @Override
-    public void r$addAllList(Set<CraftableItem> list) {
+    public void r$addAllList(Set<SimpleItem> list) {
         randomComplement$craftableCache.addAll(list);
     }
 
