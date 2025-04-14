@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.definitions.IItemDefinition;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -16,6 +17,7 @@ import appeng.tile.grid.AENetworkPowerTile;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.misc.TileInscriber;
 import appeng.util.InventoryAdaptor;
+import appeng.util.inv.WrapperChainedItemHandler;
 import appeng.util.inv.WrapperFilteredItemHandler;
 import appeng.util.inv.filter.IAEItemFilter;
 import appeng.util.item.AEItemStack;
@@ -24,7 +26,6 @@ import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutpu
 import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
 import com.circulation.random_complement.common.handler.InscriberItemHandler;
-import com.circulation.random_complement.common.handler.RCWrapperChainedItemHandler;
 import com.circulation.random_complement.common.interfaces.ItemHandlerTool;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigManagerHost;
@@ -97,7 +98,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
 
-        this.randomComplement$input = new RCWrapperChainedItemHandler(this.randomComplement$topItemHandlerExtern, this.randomComplement$bottomItemHandlerExtern, this.randomComplement$sideItemHandlerExtern);
+        this.randomComplement$input = new WrapperChainedItemHandler(this.randomComplement$topItemHandlerExtern, this.randomComplement$bottomItemHandlerExtern, this.randomComplement$sideItemHandlerExtern);
         this.randomComplement$list.add(topItemHandler);
         this.randomComplement$list.add(bottomItemHandler);
         this.randomComplement$list.add(sideItemHandler);
@@ -149,7 +150,11 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
             if (item.getCount() <= 1){
                 instance.setStackInSlot(slot,stack);
             } else {
-                item.setCount(item.getCount() - 1);
+                if (randomComplement$hasNamePress()) {
+                    instance.setStackInSlot(slot,stack);
+                } else {
+                    item.setCount(item.getCount() - 1);
+                }
             }
         }
     }
@@ -170,7 +175,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     }
 
     @Redirect(method = "getTask(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Lappeng/api/features/IInscriberRecipe;",at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getCount()I",remap = true))
-    private int getTask(ItemStack input, ItemStack plateA, ItemStack plateB) {
+    private int getTaskMixin(ItemStack input, ItemStack plateA, ItemStack plateB) {
         return 1;
     }
 
@@ -248,5 +253,15 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
             return remaining;
         }
         return output;
+    }
+
+    @Unique
+    private final static IItemDefinition randomComplement$namePress = AEApi.instance().definitions().materials().namePress();
+
+    @Unique
+    public boolean randomComplement$hasNamePress() {
+        ItemStack slot0 = randomComplement$topItemHandlerExtern.getStackInSlot(0);
+        ItemStack slot1 = randomComplement$bottomItemHandlerExtern.getStackInSlot(0);
+        return randomComplement$namePress.isSameAs(slot0) || randomComplement$namePress.isSameAs(slot1);
     }
 }

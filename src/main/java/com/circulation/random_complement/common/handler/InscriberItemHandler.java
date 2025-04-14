@@ -62,7 +62,10 @@ public class InscriberItemHandler implements IAEItemFilter {
     }
 
     public boolean allowExtract(IItemHandler inv, int slot, int amount) {
-        return false;
+        if (itemHandlers == null){
+            this.itemHandlers = ((ItemHandlerTool)te).r$getItemHandlers();
+        }
+        return inv == itemHandlers.get(2) && slot == 1;
     }
 
     public boolean allowInsert(IItemHandler inv, int slot, ItemStack stack) {

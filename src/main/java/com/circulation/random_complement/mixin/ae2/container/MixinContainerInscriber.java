@@ -15,6 +15,7 @@ import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ContainerInscriber.class,remap = false)
 public class MixinContainerInscriber extends ContainerUpgradeable implements InscriberConfigs {
@@ -74,6 +76,21 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
         ((SlotRestrictedInput)this.top).setStackLimit(limit);
         ((SlotRestrictedInput)this.middle).setStackLimit(limit);
         ((SlotRestrictedInput)this.bottom).setStackLimit(limit);
+    }
+
+    @Inject(method = "isValidForSlot",at = @At("HEAD"))
+    public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir){
+        if (s instanceof SlotRestrictedInput i) {
+            int limit = switch (this.r$getMaxStackLimit()) {
+                case SMALL:
+                    yield 1;
+                case MEDIUM:
+                    yield 4;
+                case BIG:
+                    yield 64;
+            };
+            i.setStackLimit(limit);
+        }
     }
 
     @Inject(method = "<init>",at = @At("TAIL"))
