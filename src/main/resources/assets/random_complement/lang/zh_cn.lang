@@ -10,3 +10,14 @@ gui.color.appliedenergistics2.InterfaceTerminalMatch=2A00FF00
 gui.color.appliedenergistics2.ProcessBarStartColor=FFE60A00
 gui.color.appliedenergistics2.ProcessBarMiddleColor=FFE6E600
 gui.color.appliedenergistics2.ProcessBarEndColor=FF0AE600
+
+gui.inscriber.block_mode.name=自动化访问模式
+gui.inscriber.block_mode.OPEN.text=允许自动化从任何面访问任何槽。禁止从输入槽抽取物品。
+gui.inscriber.block_mode.CLOSE.text=允许自动化从特定面访问对应槽。允许从上、下槽抽取物品。
+gui.inscriber.auto_output.name=自动输出
+gui.inscriber.auto_output.OPEN.text=制作好的物品可从任何导出面自动输出。
+gui.inscriber.auto_output.CLOSE.text=制作好的物品不会被自动输出。
+gui.inscriber.max_stack_limit.name=堆叠上限（仅GUI）
+gui.inscriber.max_stack_limit.SMALL.text=堆叠1物品
+gui.inscriber.max_stack_limit.MEDIUM.text=堆叠4物品
+gui.inscriber.max_stack_limit.BIG.text=堆叠64物品

@@ -4,8 +4,8 @@ import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.util.Platform;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,7 +39,7 @@ public class MixinMERepo {
     @Unique
     private boolean randomComplement$isPriorityItem(IAEItemStack stack) {
         if (Platform.isClient() && Minecraft.getMinecraft().currentScreen instanceof GuiArcaneTerminal g) {
-            CraftableItem item = CraftableItem.getInstance(stack.getDefinition());
+            SimpleItem item = SimpleItem.getInstance(stack.getDefinition());
             var list = ((SpecialLogic) g).r$getList();
             return list.contains(item);
         }

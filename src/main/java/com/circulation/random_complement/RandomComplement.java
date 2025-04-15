@@ -1,6 +1,7 @@
 package com.circulation.random_complement;
 
 import com.circulation.random_complement.common.CommonProxy;
+import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -28,10 +29,10 @@ public class RandomComplement {
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
-    public static CommonProxy proxy = null;
+    public static CommonProxy proxy;
 
     @Mod.Instance(MOD_ID)
-    public static RandomComplement instance = null;
+    public static RandomComplement instance;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -39,6 +40,7 @@ public class RandomComplement {
         int start = 0;
         if (Loader.isModLoaded("appliedenergistics2")) {
             NET_CHANNEL.registerMessage(WirelessPickBlock.Handler.class, WirelessPickBlock.class, start++, Side.SERVER);
+            NET_CHANNEL.registerMessage(RCConfigButton.Handler.class,RCConfigButton.class, start++, Side.SERVER);
         }
         proxy.preInit();
     }

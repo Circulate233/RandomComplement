@@ -1,4 +1,4 @@
-package com.circulation.random_complement.client;
+package com.circulation.random_complement.common.util;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -8,10 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 
-public class CraftableItem {
+public class SimpleItem {
     public String str;
+    private static final SimpleItem empty = new SimpleItem("e");
 
-    private CraftableItem(ItemStack itemStack){
+    private SimpleItem(ItemStack itemStack){
         var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
         if (itemStack.hasTagCompound()) {
             key.append(itemStack.getTagCompound().hashCode());
@@ -19,31 +20,36 @@ public class CraftableItem {
         this.str = key.toString();
     }
 
-    private CraftableItem(String str){
+    private SimpleItem(String str){
         this.str = str;
     }
 
-    private static final LoadingCache<String, CraftableItem> CRAFTABLE_ITEM_POOL =
+    private static final LoadingCache<String, SimpleItem> CRAFTABLE_ITEM_POOL =
             CacheBuilder.newBuilder()
                     .maximumSize(10000)
                     .weakValues()
                     .build(new CacheLoader<>() {
                         @Override
-                        public CraftableItem load(@NotNull String str) {
-                            return new CraftableItem(str);
+                        public SimpleItem load(@NotNull String str) {
+                            return new SimpleItem(str);
                         }
                     });
 
-    public static CraftableItem getInstance(@NotNull ItemStack itemStack) {
+    public static SimpleItem getInstance(@NotNull ItemStack itemStack) {
         try {
+            if (itemStack.isEmpty())return empty;
             var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
             if (itemStack.hasTagCompound()) {
                 key.append(itemStack.getTagCompound().hashCode());
             }
             return CRAFTABLE_ITEM_POOL.get(key.toString());
         } catch (ExecutionException e) {
-            return new CraftableItem("null");
+            return empty;
         }
+    }
+
+    public boolean isEmpty(){
+        return this == empty;
     }
 
 }

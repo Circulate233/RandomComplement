@@ -25,19 +25,19 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
     public String addItemInformation(Object n) {
-        if (getItemInformation(n).length() != 0) {
-            return getItemDisplayName(n) + getItemInformation(n);
+        if (!randomComplement$getItemInformation(n).isEmpty()) {
+            return randomComplement$getItemDisplayName(n) + randomComplement$getItemInformation(n);
         } else {
-            return getItemDisplayName(n);
+            return randomComplement$getItemDisplayName(n);
         }
 
     }
 
 
     @Unique
-    private static String getItemInformation(final Object o) {
+    private static String randomComplement$getItemInformation(final Object o) {
         String dspToolTip = "";
-        List<String> lineList = new ArrayList();
+        List<String> lineList = new ArrayList<>();
         if (o == null) {
             return "** Null";
         }
@@ -62,7 +62,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         } catch (Exception ignored) {
         }
 
-        if (lineList.size() > 0) {
+        if (!lineList.isEmpty()) {
             dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
         }
         return dspToolTip;
@@ -70,7 +70,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
 
     @Unique
-    private String getItemDisplayName(Object n) {
+    private String randomComplement$getItemDisplayName(Object n) {
         return Platform.getItemDisplayName(n);
     }
 }

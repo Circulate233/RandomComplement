@@ -8,6 +8,9 @@
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
     "container.MixinContainerCraftingCPU",
+    "MixinTileInscriber",
+    "container.AccessorAEBaseContainer",
+    "container.MixinContainerInscriber",
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
@@ -21,6 +24,7 @@
     "gui.MixinGuiCraftConfirm",
     "gui.MixinGuiCraftingCPU",
     "gui.MixinGuiCraftingStatus",
+    "gui.MixinGuiInscriber",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo"
   ]

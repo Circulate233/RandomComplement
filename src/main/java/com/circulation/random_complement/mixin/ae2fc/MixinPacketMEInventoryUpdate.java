@@ -4,9 +4,9 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
+import com.circulation.random_complement.common.util.SimpleItem;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -46,7 +46,7 @@ public abstract class MixinPacketMEInventoryUpdate implements SpecialPacket {
                     GuiScreen gui = Minecraft.getMinecraft().currentScreen;
                     if (gui instanceof GuiUltimateEncoder) {
                         ((SpecialLogic) gui).r$addAllList(this.list.stream()
-                                .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
+                                .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                                 .collect(Collectors.toSet()));
                     }
             }

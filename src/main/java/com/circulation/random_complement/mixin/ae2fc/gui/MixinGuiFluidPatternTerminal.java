@@ -5,8 +5,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.util.SimpleItem;
 import com.circulation.random_complement.mixin.ae2.gui.AccessorGuiMEMonitorable;
 import com.glodblock.github.client.GuiFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
 public class MixinGuiFluidPatternTerminal {
 
     @Unique
-    private Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
@@ -44,12 +44,12 @@ public class MixinGuiFluidPatternTerminal {
     }
 
     @Unique
-    private Set<CraftableItem> randomComplement$getCraftables() {
+    private Set<SimpleItem> randomComplement$getCraftables() {
         if (randomComplement$craftableCache.isEmpty()) {
             randomComplement$craftableCache = this.randomComplement$getStorage()
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> CraftableItem.getInstance(itemStack.getDefinition()))
+                    .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                     .collect(Collectors.toSet());
         }
 
@@ -61,11 +61,11 @@ public class MixinGuiFluidPatternTerminal {
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();
-                if (randomComplement$getCraftables().contains(CraftableItem.getInstance(item))) {
+                if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item))) {
                     MEHandler.drawPlus(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket){
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack)FakeItemRegister.getAEStack(item)).getFluidStack());
-                    if (randomComplement$getCraftables().contains(CraftableItem.getInstance(item1))) {
+                    if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item1))) {
                         MEHandler.drawPlus(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")){
@@ -81,7 +81,7 @@ public class MixinGuiFluidPatternTerminal {
     private void randomComplement$mekengDrawSlot(ItemStack item,Slot slot){
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
-            if (randomComplement$getCraftables().contains(CraftableItem.getInstance(item1))) {
+            if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item1))) {
                 MEHandler.drawPlus(slot);
             }
         }

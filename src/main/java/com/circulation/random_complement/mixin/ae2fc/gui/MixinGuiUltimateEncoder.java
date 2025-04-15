@@ -2,9 +2,9 @@ package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.client.CraftableItem;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.common.util.SimpleItem;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.item.ItemGasPacket;
@@ -29,18 +29,18 @@ import java.util.Set;
 public class MixinGuiUltimateEncoder implements SpecialLogic {
 
     @Unique
-    public Set<CraftableItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Inject(method = "drawSlot", at = @At(value = "HEAD"),remap = true)
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (!this.randomComplement$craftableCache.isEmpty() && slot instanceof SlotFake slotFake) {
             var item = slotFake.getDisplayStack();
             if (!item.isEmpty()) {
-                if (this.randomComplement$craftableCache.contains(CraftableItem.getInstance(item))) {
+                if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item))) {
                     MEHandler.drawPlus(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket) {
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
-                    if (this.randomComplement$craftableCache.contains(CraftableItem.getInstance(item1))) {
+                    if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
                         MEHandler.drawPlus(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")) {
@@ -55,7 +55,7 @@ public class MixinGuiUltimateEncoder implements SpecialLogic {
     private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot){
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
-            if (this.randomComplement$craftableCache.contains(CraftableItem.getInstance(item1))) {
+            if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
                 MEHandler.drawPlus(slot);
             }
         }
@@ -63,23 +63,24 @@ public class MixinGuiUltimateEncoder implements SpecialLogic {
 
     @Unique
     @Override
-    public Set<CraftableItem> r$getList() {
+    public Set<SimpleItem> r$getList() {
         return randomComplement$craftableCache;
     }
 
     @Unique
     @Override
-    public void r$setList(Set<CraftableItem> list) {
-        randomComplement$craftableCache = list;
+    public void r$setList(Set<SimpleItem> list) {
+        randomComplement$craftableCache.clear();
+        randomComplement$craftableCache.addAll(list);
     }
 
     @Override
-    public void r$addList(CraftableItem item) {
+    public void r$addList(SimpleItem item) {
         randomComplement$craftableCache.add(item);
     }
 
     @Override
-    public void r$addAllList(Set<CraftableItem> list) {
+    public void r$addAllList(Set<SimpleItem> list) {
         randomComplement$craftableCache.addAll(list);
     }
 
