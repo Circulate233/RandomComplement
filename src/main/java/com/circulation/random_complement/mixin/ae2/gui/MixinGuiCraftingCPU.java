@@ -5,18 +5,26 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiCraftingCPU;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.container.AEBaseContainer;
+import appeng.container.implementations.ContainerCraftingCPU;
+import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.circulation.random_complement.common.integration.ae2.getCraftingCPUCluster;
 import com.google.common.base.Joiner;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,15 +34,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Mixin(GuiCraftingCPU.class)
 public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSource {
 
+
+    @Shadow(remap = false)
+    @Final
+    private ContainerCraftingCPU craftingCpu;
+    @Shadow(remap = false)
+    private List<IAEItemStack> visual;
     @Unique
     private IAEItemStack randomComplement$hoveredAEStack;
 
     public MixinGuiCraftingCPU(Container container) {
         super(container);
+    }
+
+    /**
+     * @author sddsd2332
+     * @reason 额外添加制作耗时
+     */
+    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I", ordinal = 0), remap = false)
+    public int getCumulativeTime(FontRenderer instance, String text, int x, int y, int color) {
+        if (craftingCpu instanceof getCraftingCPUCluster craftingCPU) {
+            long getTime = craftingCPU.elapsedTime();
+            if (getTime > 0L && !this.visual.isEmpty()){
+                long elapsedTime = TimeUnit.MILLISECONDS.convert(getTime, TimeUnit.NANOSECONDS);
+                String etaTimeText = DurationFormatUtils.formatDuration(elapsedTime, GuiText.ETAFormat.getLocal());
+                text = text + " " + I18n.translateToLocal("gui.appliedenergistics2.CraftingStatusCumulativeTime") + " - " + etaTimeText;
+            }
+        }
+        return instance.drawString(text, x, y, color);
     }
 
     /**
