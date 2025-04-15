@@ -25,6 +25,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Mixin(value = ContainerInscriber.class,remap = false)
 public class MixinContainerInscriber extends ContainerUpgradeable implements InscriberConfigs {
 
@@ -78,9 +82,12 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
         ((SlotRestrictedInput)this.bottom).setStackLimit(limit);
     }
 
+    @Unique
+    private final Set<Slot> randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top,this.bottom,this.middle));
+
     @Inject(method = "isValidForSlot",at = @At("HEAD"))
     public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir){
-        if (s instanceof SlotRestrictedInput i) {
+        if (randomComplement$slotSet.contains(s)) {
             int limit = switch (this.r$getMaxStackLimit()) {
                 case SMALL:
                     yield 1;
@@ -89,7 +96,7 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
                 case BIG:
                     yield 64;
             };
-            i.setStackLimit(limit);
+            ((SlotRestrictedInput)s).setStackLimit(limit);
         }
     }
 

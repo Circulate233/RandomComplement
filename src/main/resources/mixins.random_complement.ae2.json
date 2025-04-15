@@ -7,9 +7,9 @@
   "mixins": [
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
-    "container.MixinContainerCraftingCPU",
     "MixinTileInscriber",
     "container.AccessorAEBaseContainer",
+    "container.MixinContainerCraftingCPU",
     "container.MixinContainerInscriber",
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",

@@ -60,23 +60,22 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
 
     @Shadow
     @Final
-    private AppEngInternalInventory topItemHandler = new AppEngInternalInventory(this, 1, 1);
+    private AppEngInternalInventory topItemHandler;
     @Shadow
     @Final
-    private AppEngInternalInventory bottomItemHandler = new AppEngInternalInventory(this, 1, 1);
+    private AppEngInternalInventory bottomItemHandler;
     @Shadow
     @Final
-    private AppEngInternalInventory sideItemHandler = new AppEngInternalInventory(this, 2, 1);
+    private AppEngInternalInventory sideItemHandler;
 
-    @Shadow @Final private IItemHandlerModifiable inv;
     @Unique
     final IAEItemFilter randomComplement$filter = new InscriberItemHandler((TileInscriber)(Object)this);
     @Unique
-    private final IItemHandler randomComplement$topItemHandlerExtern = new WrapperFilteredItemHandler(topItemHandler,randomComplement$filter);
+    private IItemHandler randomComplement$topItemHandlerExtern;
     @Unique
-    private final IItemHandler randomComplement$bottomItemHandlerExtern = new WrapperFilteredItemHandler(bottomItemHandler,randomComplement$filter);
+    private IItemHandler randomComplement$bottomItemHandlerExtern;
     @Unique
-    private final IItemHandler randomComplement$sideItemHandlerExtern = new WrapperFilteredItemHandler(sideItemHandler,randomComplement$filter);
+    private IItemHandler randomComplement$sideItemHandlerExtern;
 
     @Unique
     private final List<IItemHandler> randomComplement$list = new ArrayList<>();
@@ -97,6 +96,10 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
+
+        randomComplement$topItemHandlerExtern = new WrapperFilteredItemHandler(topItemHandler,randomComplement$filter);
+        randomComplement$bottomItemHandlerExtern = new WrapperFilteredItemHandler(bottomItemHandler,randomComplement$filter);
+        randomComplement$sideItemHandlerExtern = new WrapperFilteredItemHandler(sideItemHandler,randomComplement$filter);
 
         this.randomComplement$input = new WrapperChainedItemHandler(this.randomComplement$topItemHandlerExtern, this.randomComplement$bottomItemHandlerExtern, this.randomComplement$sideItemHandlerExtern);
         this.randomComplement$list.add(topItemHandler);

@@ -59,7 +59,6 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
 
     }
 
-
     @Override
     protected void mouseClicked(final int xCord, final int yCord, final int btn) throws IOException {
         if (randomComplement$hoveredAEStack != null && btn == 2) {

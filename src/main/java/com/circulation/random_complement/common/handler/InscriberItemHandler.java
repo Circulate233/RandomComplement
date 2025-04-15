@@ -62,10 +62,7 @@ public class InscriberItemHandler implements IAEItemFilter {
     }
 
     public boolean allowExtract(IItemHandler inv, int slot, int amount) {
-        if (itemHandlers == null){
-            this.itemHandlers = ((ItemHandlerTool)te).r$getItemHandlers();
-        }
-        return inv == itemHandlers.get(2) && slot == 1;
+        return slot == 1;
     }
 
     public boolean allowInsert(IItemHandler inv, int slot, ItemStack stack) {
@@ -160,6 +157,9 @@ public class InscriberItemHandler implements IAEItemFilter {
         final var slot2 = slots.get(2);
         if (slot2.isEmpty()){
             if (inv == itemHandlers.get(2)) {
+                if (recipes.get(item) == null){
+                    return Collections.emptySet();
+                }
                 if (slots.get(0).isEmpty() || slots.get(1).isEmpty()){
                     recipes.get(item).forEach(recipe -> {
                         if (recipe.top.contains(item) || recipe.button.contains(item)) {
@@ -176,6 +176,9 @@ public class InscriberItemHandler implements IAEItemFilter {
                     });
                 }
             } else {
+                if (recipes.get(item) == null){
+                    return Collections.emptySet();
+                }
                 recipes.get(item).forEach(recipe -> {
                     if (!recipe.isTwo) {
                         if (recipe.top.contains(item) || recipe.button.contains(item)) {
@@ -186,12 +189,18 @@ public class InscriberItemHandler implements IAEItemFilter {
             }
         } else {
             if (item.isEmpty()) {
+                if (recipesi.get(slot2) == null){
+                    return Collections.emptySet();
+                }
                 recipesi.get(slot2).forEach(recipe -> {
                     if (recipe.input.contains(slot2)) {
                         out.addAll(recipe.getCounter(item));
                     }
                 });
             } else {
+                if (recipes.get(item) == null){
+                    return Collections.emptySet();
+                }
                 recipes.get(item).forEach(recipe -> {
                     if (!recipe.isTwo) {
                         if (recipe.input.contains(slot2)) {

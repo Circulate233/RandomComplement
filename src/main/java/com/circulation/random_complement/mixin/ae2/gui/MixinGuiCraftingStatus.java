@@ -15,22 +15,25 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = GuiCraftingStatus.class, remap = false)
 public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
 
-
-
     public MixinGuiCraftingStatus(InventoryPlayer inventoryPlayer, Object te) {
         super(inventoryPlayer, te);
     }
 
     @Unique
     private static int randomComplement$processBarStartColorInt = GuiColors.ProcessBarStartColor.getColor();
+
     @Unique
     private static final int[] PROCESS_BAR_START_COLOR_INT_ARR = new int[]{(randomComplement$processBarStartColorInt >> 24) & 0xFF, (randomComplement$processBarStartColorInt >> 16) & 0xFF, (randomComplement$processBarStartColorInt >> 8) & 0xFF, randomComplement$processBarStartColorInt & 0xFF};
+
     @Unique
     private static int randomComplement$processBarMiddleColorInt = GuiColors.ProcessBarMiddleColor.getColor();
+
     @Unique
     private static final int[] PROCESS_BAR_MIDDLE_COLOR_INT_ARR = new int[]{(randomComplement$processBarMiddleColorInt >> 24) & 0xFF, (randomComplement$processBarMiddleColorInt >> 16) & 0xFF, (randomComplement$processBarMiddleColorInt >> 8) & 0xFF, randomComplement$processBarMiddleColorInt & 0xFF};
+
     @Unique
     private static int randomComplement$processBarEndColorInt = GuiColors.ProcessBarEndColor.getColor();
+
     @Unique
     private static final int[] PROCESS_BAR_END_COLOR_INT_ARR = new int[]{(randomComplement$processBarEndColorInt >> 24) & 0xFF, (randomComplement$processBarEndColorInt >> 16) & 0xFF, (randomComplement$processBarEndColorInt >> 8) & 0xFF, randomComplement$processBarEndColorInt & 0xFF};
 
@@ -55,22 +58,21 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
         return (a << 24) | (r << 16) | (g << 8) | (b);
     }
 
+    @Unique
+    private int randomComplement$yPos;
 
     @Unique
-    private int ypos;
-    @Unique
-    private CraftingCPUStatus cpuStatus;
+    private CraftingCPUStatus randomComplement$cpuStatus;
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/client/gui/implementations/GuiCraftingStatus;drawTexturedModalRect(IIIIII)V", ordinal = 0))
-    private void setYpos(GuiCraftingStatus instance, int x, int y, int textureX, int textureY, int width, int height) {
-        ypos = y;
+    private void setYPos(GuiCraftingStatus instance, int x, int y, int textureX, int textureY, int width, int height) {
+        randomComplement$yPos = y;
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
-
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/CraftingCPUStatus;getCrafting()Lappeng/api/storage/data/IAEItemStack;", ordinal = 0))
-    private IAEItemStack getcpuStatus(CraftingCPUStatus instance) {
-        cpuStatus = instance;
+    private IAEItemStack getCpuStatus(CraftingCPUStatus instance) {
+        randomComplement$cpuStatus = instance;
         return instance.getCrafting();
     }
 
@@ -83,9 +85,8 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", ordinal = 2))
     private void draw() {
         GL11.glPushMatrix();
-        double craftingPercentage = (double) (cpuStatus.getTotalItems() - Math.max(cpuStatus.getRemainingItems(), 0)) / (double) cpuStatus.getTotalItems();
-        drawRect(-85, ypos + 23 - 3, -85 + (int) ((67 - 1) * craftingPercentage), ypos + 23 - 2, this.randomComplement$calculateGradientColor(craftingPercentage));
+        double craftingPercentage = (double) (randomComplement$cpuStatus.getTotalItems() - Math.max(randomComplement$cpuStatus.getRemainingItems(), 0)) / (double) randomComplement$cpuStatus.getTotalItems();
+        drawRect(-85, randomComplement$yPos + 23 - 3, -85 + (int) ((67 - 1) * craftingPercentage), randomComplement$yPos + 23 - 2, this.randomComplement$calculateGradientColor(craftingPercentage));
     }
-
 
 }
