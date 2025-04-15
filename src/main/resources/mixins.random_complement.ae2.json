@@ -7,10 +7,12 @@
   "mixins": [
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
+    "container.MixinContainerCraftingCPU",
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
-    "container.MixinContainerWirelessPatternTerminal"
+    "container.MixinContainerWirelessPatternTerminal",
+    "me.storage.MixinCreativeCellInventory"
   ],
   "server": [],
   "client": [
@@ -18,6 +20,7 @@
     "gui.MixinAEBaseGui",
     "gui.MixinGuiCraftConfirm",
     "gui.MixinGuiCraftingCPU",
+    "gui.MixinGuiCraftingStatus",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo"
   ]

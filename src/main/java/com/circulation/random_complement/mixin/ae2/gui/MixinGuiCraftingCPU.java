@@ -39,14 +39,13 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         super(container);
     }
 
-
     /**
      * @author sddsd2332
      * @reason 实现物品在合成时，能够再次下单该物品
      *
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/704">代码来自GTNH团队的AE2U。</a>
      */
-    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z",ordinal = 1), remap = false)
+    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1), remap = false)
     public void gethoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 0) IAEItemStack stack) {
         hoveredAEStack = stack;
     }
