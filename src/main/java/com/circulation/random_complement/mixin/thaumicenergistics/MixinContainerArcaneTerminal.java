@@ -8,6 +8,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
+import appeng.util.Platform;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
 import com.circulation.random_complement.common.util.SimpleItem;
 import com.google.common.collect.ImmutableSet;
@@ -64,16 +65,23 @@ public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal
             return;
         }
         if (randomComplement$incomplete) {
-            randomComplement$queueInventory((EntityPlayerMP) this.player);
+            randomComplement$queueInventory((EntityPlayerMP) this.player,3);
             randomComplement$incomplete = false;
         }
     }
 
+    @Inject(method = "onContainerClosed",at = @At("TAIL"))
+    public void onClosedMixin(EntityPlayer player, CallbackInfo ci){
+        if (Platform.isServer()) {
+            randomComplement$queueInventory((EntityPlayerMP) this.player,5);
+        }
+    }
+
     @Unique
-    private void randomComplement$queueInventory(EntityPlayerMP playerMP) {
+    private void randomComplement$queueInventory(EntityPlayerMP playerMP,int id) {
         try {
             PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
-            ((SpecialPacket)piu).r$setId(3);
+            ((SpecialPacket)piu).r$setId(id);
             List<IAEItemStack> items = new ArrayList<>();
             var node = part.getGridNode();
             if (node == null) {
@@ -99,7 +107,7 @@ public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal
                 } catch (BufferOverflowException var7) {
                     NetworkHandler.instance().sendTo(piu,playerMP);
                     piu = new PacketMEInventoryUpdate();
-                    ((SpecialPacket)piu).r$setId(1);
+                    ((SpecialPacket)piu).r$setId(id);
                     piu.appendItem(send);
                 }
             }

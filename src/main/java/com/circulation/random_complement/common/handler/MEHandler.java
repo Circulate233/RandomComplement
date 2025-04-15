@@ -15,6 +15,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,9 +34,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class MEHandler {
+
+    public static final Set<SimpleItem> craftableCacheS = new HashSet<>();
 
     public static void drawPlus(int x, int y) {
         Tessellator tessellator = Tessellator.getInstance();

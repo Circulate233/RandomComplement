@@ -18,6 +18,7 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -54,16 +55,23 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
     @Inject(method = "detectAndSendChanges",at = @At("TAIL"))
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer() && randomComplement$incomplete) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player);
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,2);
             randomComplement$incomplete = false;
         }
     }
 
+    @Inject(method = "onContainerClosed",at = @At("TAIL"))
+    public void onClosedMixin(EntityPlayer player, CallbackInfo ci){
+        if (Platform.isServer()) {
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,4);
+        }
+    }
+
     @Unique
-    private void randomComplement$queueInventory(EntityPlayerMP playerMP) {
+    private void randomComplement$queueInventory(EntityPlayerMP playerMP,int id) {
         try {
             PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
-            ((SpecialPacket)piu).r$setId(2);
+            ((SpecialPacket)piu).r$setId(id);
             List<IAEItemStack> items = new ArrayList<>();
             var node = this.networkNode;
             if (node == null) {
@@ -89,7 +97,7 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
                 } catch (BufferOverflowException var7) {
                     NetworkHandler.instance().sendTo(piu,playerMP);
                     piu = new PacketMEInventoryUpdate();
-                    ((SpecialPacket)piu).r$setId(1);
+                    ((SpecialPacket)piu).r$setId(id);
                     piu.appendItem(send);
                 }
             }

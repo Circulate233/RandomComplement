@@ -4,6 +4,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
 import appeng.core.sync.packets.PacketMEInventoryUpdate;
+import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.interfaces.SpecialPacket;
 import com.circulation.random_complement.common.util.SimpleItem;
@@ -34,7 +35,7 @@ public abstract class MixinPacketMEInventoryUpdate implements SpecialPacket {
     private List<IAEItemStack> list;
 
     @Unique
-    private Set<Integer> randomComplement$modes = new HashSet<>(Arrays.asList(3));
+    private Set<Integer> randomComplement$modes = new HashSet<>(Arrays.asList(3,5));
 
     @SideOnly(Side.CLIENT)
     @Inject(method = "clientPacketData",at = @At("HEAD"), cancellable = true)
@@ -48,6 +49,10 @@ public abstract class MixinPacketMEInventoryUpdate implements SpecialPacket {
                                 .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                                 .collect(Collectors.toSet()));
                     }
+                case 5:
+                    MEHandler.craftableCacheS.addAll(this.list.stream()
+                            .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
+                            .collect(Collectors.toSet()));
             }
             ci.cancel();
         }

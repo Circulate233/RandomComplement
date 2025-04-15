@@ -40,9 +40,6 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Unique
-    private static final Set<SimpleItem> randomComplement$craftableCacheS = new HashSet<>();
-
-    @Unique
     public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
@@ -125,18 +122,13 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
         }
     }
 
-    @Inject(method = "onGuiClosed",at = @At("TAIL"))
-    public void onGuiClosedMixin(CallbackInfo ci) {
-        randomComplement$craftableCacheS.clear();
-        randomComplement$craftableCacheS.addAll(randomComplement$craftableCache);
-    }
-
     @Unique
     @Override
     public Set<SimpleItem> r$getList() {
         if (randomComplement$mergedCache.isEmpty()){
-            randomComplement$mergedCache.addAll(randomComplement$craftableCacheS);
+            randomComplement$mergedCache.addAll(MEHandler.craftableCacheS);
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
+            MEHandler.craftableCacheS.clear();
         }
         return randomComplement$mergedCache;
     }
