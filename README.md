@@ -8,6 +8,9 @@ Some fixes and content expansion
    - Allows players to use the vanilla PickBlock Key to retrieve items from their Wireless Terminal's network and place them directly into their hand. Just like in Creative Mode!(Of course, items will be deducted from your network)
    - Ported the new version of AE2's additional rendering effects for craftable items,Also supports AE2FCR's Fluid Pattern Terminal.
    - Automatically fill blank patterns into the Pattern Terminal.
+   - Ported nearly all features from the 1.19+ Inscriber; 
+   - Changed the time display in Crafting Status to show elapsed time instead; 
+   - Creative ME Storage Cell now maintains a capacity of 2^52-1.
  - For [MMCE](https://github.com/NovaEngineering-Source/ModularMachinery-Community-Edition):
    - ME Machinery Pattern Provider joins AE2 interface terminal! While custom naming is not supported, the ME Machinery Pattern Provider within the Interface Terminal will dynamically render its designated name from the Modular Machinery.
    - Conducted bug fixes for the compatibility between MMCE Structure Preview and the Pattern Terminal support.

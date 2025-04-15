@@ -83,7 +83,7 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
     }
 
     @Unique
-    private final Set<Slot> randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top,this.bottom,this.middle));
+    private Set<Slot> randomComplement$slotSet;
 
     @Inject(method = "isValidForSlot",at = @At("HEAD"))
     public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir){
@@ -107,6 +107,7 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
         this.randomComplement$InscriberBlockMode = (InscriberBlockMode) cm.getSetting(RCSettings.InscriberBlockMode);
         this.randomComplement$InscriberAutoOutput = (InscriberAutoOutput) cm.getSetting(RCSettings.InscriberAutoOutput);
         this.randomComplement$InscriberMaxStackLimit = (InscriberMaxStackLimit) cm.getSetting(RCSettings.InscriberMaxStackLimit);
+        randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top,this.bottom,this.middle));
         int limit = switch (this.r$getMaxStackLimit()) {
             case SMALL:
                 yield 1;

@@ -32,7 +32,7 @@ public abstract class MixinContainerCraftingCPU extends AEBaseContainer implemen
      * @reason 合成情况预计时间修改为已经耗时时间
      *
      */
-    @Redirect(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerCraftingCPU;setEstimatedTime(J)V"))
+    @Redirect(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerCraftingCPU;setEstimatedTime(J)V",remap = false),remap = true)
     public void setEstimatedTime(ContainerCraftingCPU instance, long eta) {
         setEstimatedTime(getMonitor().getElapsedTime());
     }
