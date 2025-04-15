@@ -11,6 +11,8 @@ gui.color.appliedenergistics2.ProcessBarStartColor=FFE60A00
 gui.color.appliedenergistics2.ProcessBarMiddleColor=FFE6E600
 gui.color.appliedenergistics2.ProcessBarEndColor=FF0AE600
 
+gui.appliedenergistics2.CraftingStatusCumulativeTime=合成耗时
+
 gui.inscriber.block_mode.name=自动化访问模式
 gui.inscriber.block_mode.OPEN.text=允许自动化从任何面访问任何槽。禁止从输入槽抽取物品。
 gui.inscriber.block_mode.CLOSE.text=允许自动化从特定面访问对应槽。允许从上、下槽抽取物品。

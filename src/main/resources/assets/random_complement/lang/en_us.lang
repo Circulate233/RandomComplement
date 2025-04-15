@@ -10,6 +10,8 @@ gui.color.appliedenergistics2.ProcessBarStartColor=FFE60A00
 gui.color.appliedenergistics2.ProcessBarMiddleColor=FFE6E600
 gui.color.appliedenergistics2.ProcessBarEndColor=FF0AE600
 
+gui.appliedenergistics2.CraftingStatusCumulativeTime=Cumulative Time
+
 gui.inscriber.block_mode.name=Automation Access Mode
 gui.inscriber.block_mode.OPEN.text=Automation can access any slot from any side. Input slots cannot be extracted from.
 gui.inscriber.block_mode.CLOSE.text=Automation can access slots from specific sides. Top and bottom slots can be extracted from.
