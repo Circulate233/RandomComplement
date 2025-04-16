@@ -5,7 +5,6 @@ import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.features.ILocatable;
 import appeng.api.features.IWirelessTermHandler;
-import appeng.api.features.IWirelessTermRegistry;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
@@ -87,7 +86,7 @@ public class WirelessPickBlock implements IMessage {
 
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack item = player.inventory.getStackInSlot(i);
-                if (item.getItem() instanceof IWirelessTermHandler) {
+                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
                     work(item, player,needItem,message.slot,new BlockPos(i,0,Integer.MIN_VALUE));
                     return null;
                 }
@@ -104,7 +103,7 @@ public class WirelessPickBlock implements IMessage {
         public void readBaubles(EntityPlayer player,ItemStack exitem,int slot) {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
                 ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-                if (item.getItem() instanceof IWirelessTermHandler) {
+                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
                     work(item, player,exitem,slot,new BlockPos(i,1,Integer.MIN_VALUE));
                     return;
                 }
@@ -120,12 +119,7 @@ public class WirelessPickBlock implements IMessage {
                 handItemConnt = player.inventory.getStackInSlot(slot).getCount();
             }
 
-            IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
-            IWirelessTermHandler handler = registry.getWirelessTerminalHandler(item);
-            if (!registry.isWirelessTerminal(item)) {
-                player.sendMessage(PlayerMessages.DeviceNotWirelessTerminal.get());
-                return;
-            }
+            IWirelessTermHandler handler = AEApi.instance().registries().wireless().getWirelessTerminalHandler(item);
             String unparsedKey = handler.getEncryptionKey(item);
             if (unparsedKey.isEmpty()) {
                 player.sendMessage(PlayerMessages.DeviceNotLinked.get());
