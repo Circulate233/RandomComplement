@@ -66,6 +66,6 @@ public class RCConfig {
         @Config.Comment({"Change the name of the nbtedit command of FTB"})
         @Config.Name("ModifyCmdEditNBT")
         @Config.RequiresMcRestart
-        public boolean ModifyCmdEditNBT = true;
+        public boolean ModifyCmdEditNBT = false;
     }
 }
