@@ -13,7 +13,6 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.core.localization.PlayerMessages;
 import appeng.helpers.WirelessTerminalGuiObject;
-import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.me.helpers.PlayerSource;
 import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
@@ -88,7 +87,7 @@ public class WirelessPickBlock implements IMessage {
 
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack item = player.inventory.getStackInSlot(i);
-                if (item.getItem() instanceof ToolWirelessTerminal) {
+                if (item.getItem() instanceof IWirelessTermHandler) {
                     work(item, player,needItem,message.slot,new BlockPos(i,0,Integer.MIN_VALUE));
                     return null;
                 }
@@ -105,7 +104,7 @@ public class WirelessPickBlock implements IMessage {
         public void readBaubles(EntityPlayer player,ItemStack exitem,int slot) {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
                 ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-                if (item.getItem() instanceof ToolWirelessTerminal) {
+                if (item.getItem() instanceof IWirelessTermHandler) {
                     work(item, player,exitem,slot,new BlockPos(i,1,Integer.MIN_VALUE));
                     return;
                 }
@@ -121,13 +120,12 @@ public class WirelessPickBlock implements IMessage {
                 handItemConnt = player.inventory.getStackInSlot(slot).getCount();
             }
 
-            ToolWirelessTerminal wt = (ToolWirelessTerminal) item.getItem();
             IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
+            IWirelessTermHandler handler = registry.getWirelessTerminalHandler(item);
             if (!registry.isWirelessTerminal(item)) {
                 player.sendMessage(PlayerMessages.DeviceNotWirelessTerminal.get());
                 return;
             }
-            IWirelessTermHandler handler = registry.getWirelessTerminalHandler(item);
             String unparsedKey = handler.getEncryptionKey(item);
             if (unparsedKey.isEmpty()) {
                 player.sendMessage(PlayerMessages.DeviceNotLinked.get());
@@ -140,7 +138,7 @@ public class WirelessPickBlock implements IMessage {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                     return;
                 }
-                WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(wt,item,player, player.world, pos.getX(), pos.getY(), pos.getZ());
+                WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler,item,player, player.world, pos.getX(), pos.getY(), pos.getZ());
 
                 if (!obj.rangeCheck()) {
                     player.sendMessage(PlayerMessages.OutOfRange.get());
