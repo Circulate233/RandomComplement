@@ -23,3 +23,9 @@ gui.inscriber.max_stack_limit.name=堆叠上限（仅GUI）
 gui.inscriber.max_stack_limit.SMALL.text=堆叠1物品
 gui.inscriber.max_stack_limit.MEDIUM.text=堆叠4物品
 gui.inscriber.max_stack_limit.BIG.text=堆叠64物品
+
+commands.ftbnbtedit.usage=/ftbnbtedit
+commands.ftbnbtedit.block.usage=/ftbnbtedit block <x> <y> <z>
+commands.ftbnbtedit.entity.usage=/ftbnbtedit entity <id>
+commands.ftbnbtedit.player.usage=/ftbnbtedit player <玩家>
+commands.ftbnbtedit.item.usage=/ftbnbtedit 物品

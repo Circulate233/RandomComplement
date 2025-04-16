@@ -17,6 +17,9 @@ public class RCConfig {
     @Config.Name("TE5")
     public static final TE5 TE5 = new TE5();
 
+    @Config.Name("FTBU")
+    public static final FTBU FTBU = new FTBU();
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
@@ -57,5 +60,12 @@ public class RCConfig {
         @Config.Name("SequentialFabricatorMixin")
         @Config.RequiresMcRestart
         public boolean SequentialFabricatorMixin = true;
+    }
+
+    public static class FTBU{
+        @Config.Comment({"Change the name of the nbtedit command of FTB"})
+        @Config.Name("ModifyCmdEditNBT")
+        @Config.RequiresMcRestart
+        public boolean ModifyCmdEditNBT = true;
     }
 }
