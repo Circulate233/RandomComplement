@@ -32,6 +32,10 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.te5.json","thermalexpansion");
         addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json","thaumicenergistics");
         addModdedMixinCFG("mixins.random_complement.mmce.nae2.json","modularmachinery","nae2");
+        if (RCConfig.FTBU.ModifyCmdEditNBT){
+            addModdedMixinCFG("mixins.random_complement.ftbu.json","ftbutilities");
+        }
+
     }
 
     @Override

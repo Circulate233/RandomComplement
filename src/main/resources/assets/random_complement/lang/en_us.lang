@@ -22,3 +22,10 @@ gui.inscriber.max_stack_limit.name=Input Slot Stack Size(Only GUI)
 gui.inscriber.max_stack_limit.SMALL.text=Stack to 1
 gui.inscriber.max_stack_limit.MEDIUM.text=Stack to 4
 gui.inscriber.max_stack_limit.BIG.text=Stack to 64
+
+commands.ftbnbtedit.usage=/ftbnbtedit
+commands.ftbnbtedit.too_large=NBT size too large!
+commands.ftbnbtedit.block.usage=/ftbnbtedit block <x> <y> <z>
+commands.ftbnbtedit.entity.usage=/ftbnbtedit entity <id>
+commands.ftbnbtedit.player.usage=/ftbnbtedit player <player>
+commands.ftbnbtedit.item.usage=/ftbnbtedit item

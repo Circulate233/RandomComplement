@@ -27,7 +27,7 @@ assertProperty 'mod_name'
 
 assertSubProperties 'use_tags', 'tag_class_name'
 assertSubProperties 'use_access_transformer', 'access_transformer_locations'
-assertSubProperties 'use_mixins', 'mixin_booter_version', 'mixin_refmap'
+assertSubProperties 'use_mixins', 'mixin_booter_version', 'mixin_refmap', 'use_mixins_debugClassLoading'
 assertSubProperties 'is_coremod', 'coremod_includes_mod', 'coremod_plugin_class_name'
 assertSubProperties 'use_asset_mover', 'asset_mover_version'
 
@@ -108,6 +108,10 @@ minecraft {
         args << '-Dmixin.hotSwap=true'
         args << '-Dmixin.checks.interfaces=true'
         args << '-Dmixin.debug.export=true'
+         if (propertyBool('use_mixins_debugClassLoading')) {
+            args << '-Dlegacy.debugClassLoading=true'
+            args << '-Dlegacy.debugClassLoadingSave=true'
+        }
     }
     extraRunJvmArguments.addAll(args)
     extraRunJvmArguments.addAll(propertyStringList('extra_jvm_args'))
@@ -227,6 +231,8 @@ dependencies {
     implementation rfg.deobf("curse.maven:thaumic-energistics-extended-life-849094:6321322")
     implementation rfg.deobf("curse.maven:thaumic-223628:2629023")
     implementation rfg.deobf("curse.maven:nae2-884359:5380800")
+    implementation rfg.deobf('curse.maven:ftb-library-237167:2985811')
+    implementation rfg.deobf('curse.maven:ftb-utilities-237102:3157548')
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
