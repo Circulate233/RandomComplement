@@ -1,0 +1,14 @@
+{
+  "package": "com.circulation.random_complement.mixin.tf5",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinItemDiagramRedprint"
+  ],
+  "server": [],
+  "client": [
+  ]
+}

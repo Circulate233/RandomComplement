@@ -20,6 +20,9 @@ public class RCConfig {
     @Config.Name("FTBU")
     public static final FTBU FTBU = new FTBU();
 
+    @Config.Name("TF5")
+    public static final TF5 TF5 = new TF5();
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
@@ -67,5 +70,12 @@ public class RCConfig {
         @Config.Name("ModifyCmdEditNBT")
         @Config.RequiresMcRestart
         public boolean ModifyCmdEditNBT = false;
+    }
+
+    public static class TF5{
+        @Config.Comment({"When the offhand has a red map and the player is crouching, cancel the clear setting"})
+        @Config.Name("RedDiagramOfTheDeputy")
+        @Config.RequiresMcRestart
+        public boolean RedDiagramOfTheDeputy = true;
     }
 }

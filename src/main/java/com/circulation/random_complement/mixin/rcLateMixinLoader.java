@@ -35,7 +35,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         if (RCConfig.FTBU.ModifyCmdEditNBT){
             addModdedMixinCFG("mixins.random_complement.ftbu.json","ftbutilities");
         }
-
+        addModdedMixinCFG("mixins.random_complement.tf5.json","thermalfoundation");
     }
 
     @Override
