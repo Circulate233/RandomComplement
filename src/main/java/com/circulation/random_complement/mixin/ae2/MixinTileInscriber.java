@@ -26,17 +26,17 @@ import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutpu
 import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
 import com.circulation.random_complement.common.handler.InscriberItemHandler;
-import com.circulation.random_complement.common.interfaces.ItemHandlerTool;
-import com.circulation.random_complement.common.interfaces.RCIConfigManager;
-import com.circulation.random_complement.common.interfaces.RCIConfigManagerHost;
-import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
+import com.circulation.random_complement.common.interfaces.*;
 import com.circulation.random_complement.common.util.RCConfigManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(value = TileInscriber.class,remap = false)
-public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject,RCIConfigManagerHost, ItemHandlerTool {
+public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject,RCIConfigManagerHost, ItemHandlerTool, RCTileInscriber {
 
     @Unique
     private RCIConfigManager randomComplement$rcSettings;
@@ -168,10 +168,9 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     @Inject(method = "tickingRequest",at = @At("TAIL"))
     public void tickingRequestMixin2(IGridNode node, int ticksSinceLastCall, CallbackInfoReturnable<TickRateModulation> cir) {
         if (!sideItemHandler.getStackInSlot(1).isEmpty() && this.r$getConfigManager().getSetting(RCSettings.InscriberAutoOutput) == InscriberAutoOutput.OPEN) {
-            if (randomComplement$tick++ >= 20) {
-                if (randomComplement$pushOut(sideItemHandler.getStackInSlot(1)).isEmpty()) {
-                    this.sideItemHandler.setStackInSlot(1, ItemStack.EMPTY);
-                }
+            if (randomComplement$tick++ >= 20 && !sideItemHandler.getStackInSlot(1).isEmpty()) {
+                var out = randomComplement$pushTickOut(sideItemHandler.getStackInSlot(1));
+                this.sideItemHandler.setStackInSlot(1, out);
                 randomComplement$tick = 0;
             }
         }
@@ -224,6 +223,20 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     }
 
     @Unique
+    private ItemStack randomComplement$pushTickOut(ItemStack output) {
+        if (output.isEmpty()) return output;
+
+        for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
+            EnumFacing facing = entry.getKey();
+            Object capability = entry.getValue();
+            output = randomComplement$pushTo(output, facing, capability);
+            if (output.isEmpty()) break;
+        }
+
+        return output;
+    }
+
+    @Unique
     private ItemStack randomComplement$pushOut(ItemStack output) {
         if (output.isEmpty()) return output;
 
@@ -266,5 +279,58 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         ItemStack slot0 = randomComplement$topItemHandlerExtern.getStackInSlot(0);
         ItemStack slot1 = randomComplement$bottomItemHandlerExtern.getStackInSlot(0);
         return randomComplement$namePress.isSameAs(slot0) || randomComplement$namePress.isSameAs(slot1);
+    }
+
+    @Override
+    @Unique
+    public void r$updateNeighbors(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull BlockPos neighbor){
+        EnumFacing updateFromFacing;
+        if (pos.getX() != neighbor.getX()) {
+            if (pos.getX() > neighbor.getX()) {
+                updateFromFacing = EnumFacing.WEST;
+            } else {
+                updateFromFacing = EnumFacing.EAST;
+            }
+        } else if (pos.getY() != neighbor.getY()) {
+            if (pos.getY() > neighbor.getY()) {
+                updateFromFacing = EnumFacing.DOWN;
+            } else {
+                updateFromFacing = EnumFacing.UP;
+            }
+        } else {
+            if (pos.getZ() == neighbor.getZ()) {
+                return;
+            }
+
+            if (pos.getZ() > neighbor.getZ()) {
+                updateFromFacing = EnumFacing.NORTH;
+            } else {
+                updateFromFacing = EnumFacing.SOUTH;
+            }
+        }
+
+        if (pos.offset(updateFromFacing).equals(neighbor)) {
+            TileEntity te = this.world.getTileEntity(this.pos.offset(updateFromFacing));
+            Object capability = null;
+            if (te != null) {
+                IStorageMonitorableAccessor accessor = te.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, updateFromFacing.getOpposite());
+                if (accessor != null) {
+                    IStorageMonitorable inventory = accessor.getInventory(this.randomComplement$mySrc);
+                    if (inventory != null) {
+                        capability = inventory;
+                    }
+                }
+
+                if (capability == null) {
+                    capability = InventoryAdaptor.getAdaptor(te, updateFromFacing.getOpposite());
+                }
+            }
+
+            if (capability != null) {
+                this.randomComplement$neighbors.put(updateFromFacing, capability);
+            } else {
+                this.randomComplement$neighbors.remove(updateFromFacing);
+            }
+        }
     }
 }
