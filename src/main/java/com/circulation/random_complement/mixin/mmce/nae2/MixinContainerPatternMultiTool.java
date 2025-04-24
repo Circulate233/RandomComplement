@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.mmce.nae2;
 
 import appeng.helpers.IInterfaceHost;
 import co.neeve.nae2.common.containers.ContainerPatternMultiTool;
+import co.neeve.nae2.common.enums.PatternMultiToolInventories;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Final;
@@ -18,10 +19,20 @@ public class MixinContainerPatternMultiTool {
     @Final
     private IInterfaceHost iface;
 
-    @Inject(method = "getPatternInventory",at = @At("RETURN"), cancellable = true)
+    @Shadow
+    public PatternMultiToolInventories viewingInventory;
+
+    @Inject(method = "getPatternInventory",at = @At("HEAD"), cancellable = true)
     public void getPatternInventoryMixin(CallbackInfoReturnable<IItemHandler> cir) {
-        if (iface instanceof MEPatternProvider mep){
+        if (this.viewingInventory == PatternMultiToolInventories.INTERFACE && iface instanceof MEPatternProvider mep){
             cir.setReturnValue(mep.getPatterns());
+        }
+    }
+
+    @Inject(method = "getInstalledCapacityUpgrades",at = @At("HEAD"), cancellable = true)
+    public void getInstalledCapacityUpgrades(CallbackInfoReturnable<Integer> cir) {
+        if (this.viewingInventory == PatternMultiToolInventories.INTERFACE && iface instanceof MEPatternProvider){
+            cir.setReturnValue(3);
         }
     }
 
