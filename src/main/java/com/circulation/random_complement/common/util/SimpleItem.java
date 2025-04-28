@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 
-public class SimpleItem {
+public final class SimpleItem {
     public String str;
     private static final SimpleItem empty = new SimpleItem("e");
 
@@ -50,6 +50,24 @@ public class SimpleItem {
 
     public boolean isEmpty(){
         return this == empty;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SimpleItem si) {
+            return this.toString().equals(si.toString());
+        }
+        return false;
+    }
+
+    @Override
+    public String toString(){
+        return this.str;
+    }
+
+    @Override
+    public int hashCode(){
+        return this.str.hashCode();
     }
 
 }
