@@ -1,0 +1,17 @@
+{
+  "package": "com.circulation.random_complement.mixin.botania",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "maxShiftBy": 2
+  },
+  "mixins": [
+    "MixinTileSpreader"
+  ],
+  "server": [],
+  "client": [
+	]
+}

@@ -23,6 +23,9 @@ public class RCConfig {
     @Config.Name("TF5")
     public static final TF5 TF5 = new TF5();
 
+    @Config.Name("Botania")
+    public static final Botania Botania = new Botania();
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
@@ -77,5 +80,12 @@ public class RCConfig {
         @Config.Name("RedDiagramOfTheDeputy")
         @Config.RequiresMcRestart
         public boolean RedDiagramOfTheDeputy = true;
+    }
+
+    public static class Botania{
+        @Config.Comment({"If the Mana Spreader output mana is greater than the maximum value of the Mana Spreader after installing the Mana Lens, the output will be based on the maximum value of the Mana Spreader"})
+        @Config.Name("ManaSpreaderFix")
+        @Config.RequiresMcRestart
+        public boolean ManaSpreaderFix = true;
     }
 }
