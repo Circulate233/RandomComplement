@@ -15,6 +15,8 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
+import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -86,25 +88,28 @@ public class MEHandler {
      * https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/c3cd45df5db9db256b9fb4774b2cb57fdf11e389/src/main/java/appeng/container/implementations/ContainerMEMonitorable.java#L397
      */
     public static void refillBlankPatterns(ContainerMEMonitorable container, SlotRestrictedInput slot) {
-        if (Platform.isServer()) {
-            ItemStack blanks = slot.getStack();
-            int blanksToRefill = 64;
-            blanksToRefill -= blanks.getCount();
-            if (blanksToRefill <= 0) return;
-            var blankPattern = AEApi.instance().definitions().materials().blankPattern().maybeStack(blanksToRefill);
-            if (blankPattern.isPresent()) {
-                final AEItemStack request = AEItemStack
-                        .fromItemStack(blankPattern.get());
-                final IAEItemStack extracted = Platform
-                        .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
-                if (extracted != null) {
-                    if (blanks.isEmpty()){
-                        blanks = request.getDefinition().copy();
-                        blanks.setCount((int) (extracted.getStackSize()));
-                    } else {
-                        blanks.setCount((int) (blanks.getCount() + extracted.getStackSize()));
+        if (container instanceof PatternTermConfigs) {
+            if (((PatternTermConfigs)container).r$getAutoFillPattern() == PatternTermAutoFillPattern.CLOSE)return;
+            if (Platform.isServer()) {
+                ItemStack blanks = slot.getStack();
+                int blanksToRefill = 64;
+                blanksToRefill -= blanks.getCount();
+                if (blanksToRefill <= 0) return;
+                var blankPattern = AEApi.instance().definitions().materials().blankPattern().maybeStack(blanksToRefill);
+                if (blankPattern.isPresent()) {
+                    final AEItemStack request = AEItemStack
+                            .fromItemStack(blankPattern.get());
+                    final IAEItemStack extracted = Platform
+                            .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
+                    if (extracted != null) {
+                        if (blanks.isEmpty()) {
+                            blanks = request.getDefinition().copy();
+                            blanks.setCount((int) (extracted.getStackSize()));
+                        } else {
+                            blanks.setCount((int) (blanks.getCount() + extracted.getStackSize()));
+                        }
+                        slot.putStack(blanks);
                     }
-                    slot.putStack(blanks);
                 }
             }
         }

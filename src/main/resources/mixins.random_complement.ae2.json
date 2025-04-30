@@ -8,7 +8,6 @@
     "MixinBlockInscriber",
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
-    "MixinTileInscriber",
     "container.AccessorAEBaseContainer",
     "container.MixinContainerCraftingCPU",
     "container.MixinContainerInscriber",
@@ -16,7 +15,9 @@
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
     "container.MixinContainerWirelessPatternTerminal",
-    "me.storage.MixinCreativeCellInventory"
+    "me.storage.MixinCreativeCellInventory",
+    "part.MixinAbstractPartEncoder",
+    "tile.MixinTileInscriber"
   ],
   "server": [],
   "client": [

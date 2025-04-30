@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2;
+package com.circulation.random_complement.mixin.ae2.tile;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -110,6 +110,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         this.randomComplement$mySrc = new MachineSource(this);
     }
 
+    @Unique
     @Override
     public RCIConfigManager r$getConfigManager() {
         return this.randomComplement$rcSettings;
@@ -122,6 +123,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         }
     }
 
+    @Unique
     @Override
     public void r$updateSetting(RCIConfigManager var1, Enum<?> var2, Enum<?> var3) {
         this.saveChanges();

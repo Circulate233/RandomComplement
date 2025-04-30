@@ -22,6 +22,10 @@ gui.inscriber.max_stack_limit.name=Input Slot Stack Size(Only GUI)
 gui.inscriber.max_stack_limit.SMALL.text=Stack to 1
 gui.inscriber.max_stack_limit.MEDIUM.text=Stack to 4
 gui.inscriber.max_stack_limit.BIG.text=Stack to 64
+gui.pattern_term.auto_fill_pattern.name=Auto-fill Pattern
+gui.pattern_term.auto_fill_pattern.OPEN.text=Allow automatic retrieval of blank patterns from storage
+gui.pattern_term.auto_fill_pattern.CLOSE.text=Do not supplement
+gui.pattern_term.auto_fill_pattern.ex.text=Only active when holding a Wireless Terminal!
 
 commands.ftbnbtedit.usage=/ftbnbtedit
 commands.ftbnbtedit.too_large=NBT size too large!

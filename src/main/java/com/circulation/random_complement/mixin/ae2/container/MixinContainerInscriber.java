@@ -70,12 +70,9 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
         this.randomComplement$InscriberAutoOutput = (InscriberAutoOutput) cm.getSetting(RCSettings.InscriberAutoOutput);
         this.randomComplement$InscriberMaxStackLimit = (InscriberMaxStackLimit) cm.getSetting(RCSettings.InscriberMaxStackLimit);
         int limit = switch (this.r$getMaxStackLimit()) {
-            case SMALL:
-                yield 1;
-            case MEDIUM:
-                yield 4;
-            case BIG:
-                yield 64;
+            case SMALL -> 1;
+            case MEDIUM -> 4;
+            case BIG -> 64;
         };
         ((SlotRestrictedInput)this.top).setStackLimit(limit);
         ((SlotRestrictedInput)this.middle).setStackLimit(limit);
@@ -89,12 +86,9 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
     public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir){
         if (randomComplement$slotSet.contains(s)) {
             int limit = switch (this.r$getMaxStackLimit()) {
-                case SMALL:
-                    yield 1;
-                case MEDIUM:
-                    yield 4;
-                case BIG:
-                    yield 64;
+                case SMALL -> 1;
+                case MEDIUM -> 4;
+                case BIG -> 64;
             };
             ((SlotRestrictedInput)s).setStackLimit(limit);
         }
@@ -109,12 +103,9 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
         this.randomComplement$InscriberMaxStackLimit = (InscriberMaxStackLimit) cm.getSetting(RCSettings.InscriberMaxStackLimit);
         randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top,this.bottom,this.middle));
         int limit = switch (this.r$getMaxStackLimit()) {
-            case SMALL:
-                yield 1;
-            case MEDIUM:
-                yield 4;
-            case BIG:
-                yield 64;
+            case SMALL -> 1;
+            case MEDIUM -> 4;
+            case BIG -> 64;
         };
         ((SlotRestrictedInput)this.top).setStackLimit(limit);
         ((SlotRestrictedInput)this.middle).setStackLimit(limit);

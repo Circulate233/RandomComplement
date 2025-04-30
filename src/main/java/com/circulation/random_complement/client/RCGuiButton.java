@@ -3,10 +3,7 @@ package com.circulation.random_complement.client;
 import appeng.api.config.Settings;
 import appeng.client.gui.widgets.GuiImgButton;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutput;
-import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
-import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
-import com.circulation.random_complement.client.buttonsetting.InterfaceButton;
+import com.circulation.random_complement.client.buttonsetting.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +22,7 @@ public class RCGuiButton extends GuiImgButton {
     private static Map<RCEnumPair, RCButtonAppearance> appearances;
     private final Enum<?> buttonSetting;
     private static final ResourceLocation texture = new ResourceLocation(RandomComplement.MOD_ID , "textures/gui/states.png");
+    private String exMessage = "";
 
     public RCGuiButton(int x, int y, Enum idx, Enum val) {
         super(x, y, idx, val);
@@ -38,6 +36,8 @@ public class RCGuiButton extends GuiImgButton {
             this.registerApp(4,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
             this.registerApp(5,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.MEDIUM);
             this.registerApp(6,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.BIG);
+            this.registerApp(7,RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.OPEN);
+            this.registerApp(8,RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
         }
     }
 
@@ -150,8 +150,12 @@ public class RCGuiButton extends GuiImgButton {
                 sb.replace(i, i + 1, "\n");
             }
 
-            return name + '\n' + sb;
+            return name + '\n' + sb + '\n' + exMessage;
         }
+    }
+
+    public void setEXMessage(String exMessage){
+        this.exMessage = exMessage;
     }
 
     private static class RCButtonAppearance {

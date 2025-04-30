@@ -23,6 +23,10 @@ gui.inscriber.max_stack_limit.name=堆叠上限（仅GUI）
 gui.inscriber.max_stack_limit.SMALL.text=堆叠1物品
 gui.inscriber.max_stack_limit.MEDIUM.text=堆叠4物品
 gui.inscriber.max_stack_limit.BIG.text=堆叠64物品
+gui.pattern_term.auto_fill_pattern.name=自动补充样板
+gui.pattern_term.auto_fill_pattern.OPEN.text=允许从存储中自动获取空白样板补充
+gui.pattern_term.auto_fill_pattern.CLOSE.text=不进行补充
+gui.pattern_term.auto_fill_pattern.ex.text=仅在持有无线终端的时候生效！
 
 commands.ftbnbtedit.usage=/ftbnbtedit
 commands.ftbnbtedit.block.usage=/ftbnbtedit block <x> <y> <z>

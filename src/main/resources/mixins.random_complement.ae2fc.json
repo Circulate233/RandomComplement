@@ -14,7 +14,8 @@
     "container.MixinContainerExtendedFluidPatternTerminal",
     "container.MixinContainerFluidPatternTerminal",
     "container.MixinContainerUltimateEncoder",
-    "container.MixinContainerWirelessFluidPatternTerminal"
+    "container.MixinContainerWirelessFluidPatternTerminal",
+    "tile.MixinTileUltimateEncoder"
   ],
   "server": [],
   "client": [
