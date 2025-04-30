@@ -36,6 +36,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             addModdedMixinCFG("mixins.random_complement.ftbu.json","ftbutilities");
         }
         addModdedMixinCFG("mixins.random_complement.tf5.json","thermalfoundation");
+        addModdedMixinCFG("mixins.random_complement.botania.json","botania");
     }
 
     @Override

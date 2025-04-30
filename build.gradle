@@ -212,7 +212,6 @@ dependencies {
     implementation rfg.deobf("curse.maven:ae2-extended-life-570458:6302098")
     implementation rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5504001")
     implementation rfg.deobf("curse.maven:baubles-227083:2518667")
-    implementation rfg.deobf("curse.maven:baubles-227083:2518667")
     implementation rfg.deobf("curse.maven:not-enough-energistics-515565:5234732")
     implementation rfg.deobf("curse.maven:extended-crafting-268387:2777071")
     implementation rfg.deobf("curse.maven:libnine-322344:3509087")
@@ -233,6 +232,7 @@ dependencies {
     implementation rfg.deobf("curse.maven:nae2-884359:5380800")
     implementation rfg.deobf('curse.maven:ftb-library-237167:2985811')
     implementation rfg.deobf('curse.maven:ftb-utilities-237102:3157548')
+    implementation rfg.deobf("curse.maven:botania-225643:3330934")
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
