@@ -1,18 +1,19 @@
 {
-	"package": "com.circulation.random_complement.mixin.thaumicenergistics",
-	"required": true,
-	"refmap": "mixins.random_complement.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"MixinContainerArcaneTerminal",
-		"MixinMERepo",
-		"MixinPacketMEInventoryUpdate"
-	],
-	"server": [],
-	"client": [
-		"MixinGuiArcaneTerminal",
-		"MixinGuiArcaneTerminal$AccessorMERepo"
+  "package": "com.circulation.random_complement.mixin.thaumicenergistics",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinContainerArcaneTerminal",
+    "MixinForgeUtil",
+    "MixinMERepo",
+    "MixinPacketMEInventoryUpdate"
+  ],
+  "server": [],
+  "client": [
+    "MixinGuiArcaneTerminal",
+    "MixinGuiArcaneTerminal$AccessorMERepo"
 	]
 }

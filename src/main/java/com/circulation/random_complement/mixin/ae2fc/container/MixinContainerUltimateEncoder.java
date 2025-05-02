@@ -72,15 +72,15 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(InventoryPlayer ipl, TileUltimateEncoder encoder, CallbackInfo ci) {
-        RCIConfigurableObject obj = (RCIConfigurableObject)encoder;
+        RCIConfigurableObject obj = (RCIConfigurableObject) encoder;
         var cm = obj.r$getConfigManager();
-        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern)cm.getSetting(RCSettings.PatternTermAutoFillPattern);
-        if (this.randomComplement$AutoFillPattern == PatternTermAutoFillPattern.OPEN) {
-            var terminalGuiObject = MEHandler.getTerminalGuiObject(ipl);
-            if (terminalGuiObject != null) {
-                this.randomComplement$containerTerminal = new ContainerWirelessTerm(ipl, terminalGuiObject);
+        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern) cm.getSetting(RCSettings.PatternTermAutoFillPattern);
+        var terminalGuiObject = MEHandler.getTerminalGuiObject(ipl);
+        if (terminalGuiObject != null) {
+            this.randomComplement$containerTerminal = new ContainerWirelessTerm(ipl, terminalGuiObject);
+            randomComplement$incomplete = true;
+            if (this.randomComplement$AutoFillPattern == PatternTermAutoFillPattern.OPEN) {
                 randomComplement$refillBlankPatternsUltimateEncoder(this.randomComplement$containerTerminal, patternSlotIN);
-                randomComplement$incomplete = true;
             }
         }
     }
