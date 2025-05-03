@@ -26,6 +26,9 @@ public class RCConfig {
     @Config.Name("Botania")
     public static final Botania Botania = new Botania();
 
+    @Config.Name("COFHCOHE")
+    public static final COFHCORE COFHCORE = new COFHCORE();
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
@@ -87,5 +90,13 @@ public class RCConfig {
         @Config.Name("ManaSpreaderFix")
         @Config.RequiresMcRestart
         public boolean ManaSpreaderFix = true;
+    }
+
+    public static class COFHCORE {
+        @Config.Comment({"Modify the number of upgrades that can be placed in slots"})
+        @Config.Name("SocketLimitModified")
+        @Config.RequiresMcRestart
+        @Config.RangeInt(min = 1, max = 64)
+        public int SocketLimitModified = 1;
     }
 }

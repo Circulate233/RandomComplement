@@ -1,13 +1,12 @@
 {
-  "package": "com.circulation.random_complement.mixin.te5",
+  "package": "com.circulation.random_complement.mixin.cofhcore",
   "required": true,
   "refmap": "mixins.random_complement.refmap.json",
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinTileCrafter",
-    "MixinTileMachineBase"
+    "MixinSlotAugment"
   ],
   "server": [],
   "client": [
