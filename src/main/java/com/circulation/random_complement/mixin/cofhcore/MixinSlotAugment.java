@@ -28,10 +28,9 @@ public abstract class MixinSlotAugment extends Slot {
     }
 
     //TODO:如果物品是专业化升级，则设置插槽为1
-    //目前无效
     @Override
-    public int getItemStackLimit(ItemStack stack){
-        return stack.getItem() instanceof IAugmentItem item && item.getAugmentType(stack).equals(AugmentType.ADVANCED) ? 1 : super.getItemStackLimit(stack);
+    public int getItemStackLimit(ItemStack stack) {
+        return stack.getItem() instanceof IAugmentItem item && (item.getAugmentType(stack).equals(AugmentType.ADVANCED) || item.getAugmentType(stack).equals(AugmentType.MODE)) ? 1 : super.getItemStackLimit(stack);
     }
 
     @Override

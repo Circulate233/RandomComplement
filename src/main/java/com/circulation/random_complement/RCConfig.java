@@ -69,6 +69,26 @@ public class RCConfig {
         @Config.Name("SequentialFabricatorMixin")
         @Config.RequiresMcRestart
         public boolean SequentialFabricatorMixin = true;
+
+        @Config.Comment({"Whether to enable energy consumption boost, just like the original upgrade state"})
+        @Config.Name("IncreasedEnergyConsumption")
+        @Config.RequiresMcRestart
+        public boolean IncreasedEnergyConsumption = false;
+
+        @Config.Comment({"The maximum chance of modifying an item to be reused is 100"})
+        @Config.Name("SecondaryProbability")
+        @Config.RequiresMcRestart
+        public boolean ReuseItemChance = true;
+
+        @Config.Comment({"Set the efficiency of the Fuel Catalyzer, which defaults to 15"})
+        @Config.Name("FuelCatalyzer")
+        @Config.RequiresMcRestart
+        public int FuelCatalyzer = 15;
+
+        @Config.Comment({"Whether to enable energy consumption boost, just like the original upgrade state"})
+        @Config.Name("FuelCatalyzerQuantityChanges")
+        @Config.RequiresMcRestart
+        public boolean FuelCatalyzerQuantityChanges = true;
     }
 
     public static class FTBU{
