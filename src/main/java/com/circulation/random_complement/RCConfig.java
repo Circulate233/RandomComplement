@@ -26,6 +26,9 @@ public class RCConfig {
     @Config.Name("Botania")
     public static final Botania Botania = new Botania();
 
+    @Config.Name("COFHCOHE")
+    public static final COFHCORE COFHCORE = new COFHCORE();
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
@@ -66,6 +69,26 @@ public class RCConfig {
         @Config.Name("SequentialFabricatorMixin")
         @Config.RequiresMcRestart
         public boolean SequentialFabricatorMixin = true;
+
+        @Config.Comment({"Whether to enable energy consumption boost, just like the original upgrade state"})
+        @Config.Name("IncreasedEnergyConsumption")
+        @Config.RequiresMcRestart
+        public boolean IncreasedEnergyConsumption = false;
+
+        @Config.Comment({"The maximum chance of modifying an item to be reused is 100"})
+        @Config.Name("SecondaryProbability")
+        @Config.RequiresMcRestart
+        public boolean ReuseItemChance = true;
+
+        @Config.Comment({"Set the efficiency of the Fuel Catalyzer, which defaults to 15"})
+        @Config.Name("FuelCatalyzer")
+        @Config.RequiresMcRestart
+        public int FuelCatalyzer = 15;
+
+        @Config.Comment({"Whether to enable energy consumption boost, just like the original upgrade state"})
+        @Config.Name("FuelCatalyzerQuantityChanges")
+        @Config.RequiresMcRestart
+        public boolean FuelCatalyzerQuantityChanges = true;
     }
 
     public static class FTBU{
@@ -87,5 +110,13 @@ public class RCConfig {
         @Config.Name("ManaSpreaderFix")
         @Config.RequiresMcRestart
         public boolean ManaSpreaderFix = true;
+    }
+
+    public static class COFHCORE {
+        @Config.Comment({"Modify the number of upgrades that can be placed in slots"})
+        @Config.Name("SocketLimitModified")
+        @Config.RequiresMcRestart
+        @Config.RangeInt(min = 1, max = 64)
+        public int SocketLimitModified = 1;
     }
 }

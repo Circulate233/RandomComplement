@@ -6,7 +6,12 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinTileCrafter"
+    "MixinTileCrafter",
+    "dynamo.MixinTileDynamoBase",
+    "machine.MixinTileBrewer",
+    "machine.MixinTileInsolator",
+    "machine.MixinTileMachineBase",
+    "machine.MixinTileSmelter"
   ],
   "server": [],
   "client": [
