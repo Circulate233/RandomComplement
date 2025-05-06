@@ -16,16 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinMessageEditNBTRequest {
 
 
-    @Inject(method = "onMessage", at = @At("HEAD"), cancellable = true)
-    private void setonMessage(CallbackInfo ci) {
-        if (RCConfig.FTBU.ModifyCmdEditNBT) {
-            ftbeditNBT();
-            ci.cancel();
-        }
-    }
-
     @Unique
-    private static void ftbeditNBT() {
+    @Inject(method = "editNBT",at = @At("HEAD"), cancellable = true)
+    private static void ftbeditNBT(CallbackInfo ci) {
+        if (!RCConfig.FTBU.ModifyCmdEditNBT) {
+            return;
+        }
         RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
         if (ray != null) {
             if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -34,6 +30,7 @@ public abstract class MixinMessageEditNBTRequest {
                 ClientUtils.execClientCommand("/ftbnbtedit entity " + ray.entityHit.getEntityId());
             }
         }
+        ci.cancel();
     }
 
 }
