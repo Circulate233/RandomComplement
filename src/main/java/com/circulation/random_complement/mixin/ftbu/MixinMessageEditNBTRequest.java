@@ -1,27 +1,30 @@
 package com.circulation.random_complement.mixin.ftbu;
 
+import com.circulation.random_complement.RCConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MessageEditNBTRequest.class)
-public abstract class MixinMessageEditNBTRequest extends MessageToClient {
+@Mixin(value = MessageEditNBTRequest.class, remap = false)
+public abstract class MixinMessageEditNBTRequest {
 
 
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        ftbeditNBT();
+    @Inject(method = "onMessage", at = @At("HEAD"), cancellable = true)
+    private void setonMessage(CallbackInfo ci) {
+        if (RCConfig.FTBU.ModifyCmdEditNBT) {
+            ftbeditNBT();
+            ci.cancel();
+        }
     }
 
     @Unique
-    @SideOnly(Side.CLIENT)
     private static void ftbeditNBT() {
         RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
         if (ray != null) {

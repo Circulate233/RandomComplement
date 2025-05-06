@@ -7,6 +7,7 @@ import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
+import com.circulation.random_complement.RCConfig;
 import gnu.trove.map.TObjectIntMap;
 import io.github.phantamanta44.threng.util.ThrEngCraftingTracker;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.ExecutionException;
@@ -38,19 +40,23 @@ public abstract class MixinThrEngCraftingTracker {
     @Shadow
     public abstract boolean isSlotOpen(int slot);
 
+
     /**
      * @author a
      * @reason v
      */
-    @Overwrite
-    public boolean requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc) {
+    @Inject(method = "requestCrafting",at = @At("HEAD"), cancellable = true)
+    public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir){
+        if (!RCConfig.LazyAE.EnableRepair){
+            return;
+        }
         if (item != null) {
             ItemStack inputStack = item.getCachedItemStack(item.getStackSize());
             ItemStack remaining = ItemStack.EMPTY;
             item.setCachedItemStack(inputStack);
             Future<ICraftingJob> jobCalculation = this.jobs[slot];
             if (!this.isSlotOpen(slot)) {
-                return false;
+                cir.setReturnValue(false);
             }
 
             if (jobCalculation == null && this.links[slot] == null) {
@@ -60,7 +66,7 @@ public abstract class MixinThrEngCraftingTracker {
             }
 
             if (jobCalculation == null) {
-                return false;
+                cir.setReturnValue(false);
             }
 
             try {
@@ -72,7 +78,7 @@ public abstract class MixinThrEngCraftingTracker {
                         if (link != null) {
                             this.randomComplement$setLink(slot, link);
                             this.linksInv.put(link,slot);
-                            return true;
+                            cir.setReturnValue(true);
                         }
                     }
                 }
@@ -80,8 +86,11 @@ public abstract class MixinThrEngCraftingTracker {
 
             }
         }
-        return false;
+        cir.setReturnValue(false);
+        cir.cancel();
     }
+
+
 
     @Unique
     private void randomComplement$setLink(int slot, ICraftingLink l) {
@@ -100,18 +109,27 @@ public abstract class MixinThrEngCraftingTracker {
 
     @Inject(method = "isSlotOpen",at = @At("HEAD"))
     public void isSlotOpenMixin(int i, CallbackInfoReturnable<Boolean> cir) {
+        if (!RCConfig.LazyAE.EnableRepair){
+            return;
+        }
         if (this.links[i] != null && (this.links[i].isCanceled() || this.links[i].isDone())) {
             this.linksInv.remove(this.links[i]);
             this.links[i] = null;
         }
     }
 
+
+
     /**
      * @author circulation
      * @reason 和见鬼毫无区别的导致崩溃
      */
-    @Overwrite
-    private void updateLinks(){
+    @Inject(method = "updateLinks",at = @At("HEAD"), cancellable = true)
+    private void updateLinks(CallbackInfo ci){
+        if (!RCConfig.LazyAE.EnableRepair){
+            return;
+        }
+        ci.cancel();
         //这东西究竟是怎么无限循环的？？？
     }
 }

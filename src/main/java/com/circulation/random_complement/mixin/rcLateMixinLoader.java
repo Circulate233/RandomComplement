@@ -1,6 +1,5 @@
 package com.circulation.random_complement.mixin;
 
-import com.circulation.random_complement.RCConfig;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,27 +16,23 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BooleanSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        if (Loader.isModLoaded("neenergistics")){
+        if (Loader.isModLoaded("neenergistics")) {
             addMixinCFG("mixins.random_complement.nee.json");
-            addModdedMixinCFG("mixins.random_complement.nee.baubles.json","baubles");
-            addModdedMixinCFG("mixins.random_complement.nee.ae2e.json","ae2exttable");
+            addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
+            addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
         }
-        if (RCConfig.LazyAE.EnableRepair) {
-            addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
-        }
-        addModdedMixinCFG("mixins.random_complement.ae2.json","appliedenergistics2");
-        addModdedMixinCFG("mixins.random_complement.ae2fc.json","ae2fc");
-        addModdedMixinCFG("mixins.random_complement.mmce.json","modularmachinery");
-        addModdedMixinCFG("mixins.random_complement.ic2.json","ic2");
-        addModdedMixinCFG("mixins.random_complement.te5.json","thermalexpansion");
-        addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json","thaumicenergistics");
-        addModdedMixinCFG("mixins.random_complement.mmce.nae2.json","modularmachinery","nae2");
-        if (RCConfig.FTBU.ModifyCmdEditNBT){
-            addModdedMixinCFG("mixins.random_complement.ftbu.json","ftbutilities");
-        }
-        addModdedMixinCFG("mixins.random_complement.tf5.json","thermalfoundation");
-        addModdedMixinCFG("mixins.random_complement.botania.json","botania");
-        addModdedMixinCFG("mixins.random_complement.cofhcore.json","cofhcore");
+        addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
+        addModdedMixinCFG("mixins.random_complement.ae2.json", "appliedenergistics2");
+        addModdedMixinCFG("mixins.random_complement.ae2fc.json", "ae2fc");
+        addModdedMixinCFG("mixins.random_complement.mmce.json", "modularmachinery");
+        addModdedMixinCFG("mixins.random_complement.ic2.json", "ic2");
+        addModdedMixinCFG("mixins.random_complement.te5.json", "thermalexpansion");
+        addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json", "thaumicenergistics");
+        addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "modularmachinery", "nae2");
+        addModdedMixinCFG("mixins.random_complement.ftbu.json", "ftbutilities");
+        addModdedMixinCFG("mixins.random_complement.tf5.json", "thermalfoundation");
+        addModdedMixinCFG("mixins.random_complement.botania.json", "botania");
+        addModdedMixinCFG("mixins.random_complement.cofhcore.json", "cofhcore");
     }
 
     @Override
