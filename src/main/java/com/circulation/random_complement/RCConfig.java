@@ -1,8 +1,13 @@
 package com.circulation.random_complement;
 
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = RandomComplement.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomComplement.MOD_ID)
 public class RCConfig {
 
     @Config.Name("AE2")
@@ -118,5 +123,12 @@ public class RCConfig {
         @Config.RequiresMcRestart
         @Config.RangeInt(min = 1, max = 64)
         public int SocketLimitModified = 1;
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(RandomComplement.MOD_ID)) {
+            ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
+        }
     }
 }

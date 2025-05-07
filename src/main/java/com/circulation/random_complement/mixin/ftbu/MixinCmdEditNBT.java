@@ -1,23 +1,23 @@
 package com.circulation.random_complement.mixin.ftbu;
 
-import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.circulation.random_complement.RCConfig;
 import com.feed_the_beast.ftbutilities.command.CmdEditNBT;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(CmdEditNBT.class)
-public class MixinCmdEditNBT extends CmdTreeBase {
+@Mixin(value = CmdEditNBT.class,remap = false)
+public class MixinCmdEditNBT {
 
 
-    public MixinCmdEditNBT(String n) {
-        super(n);
-    }
-
-
-    @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "nbtedit"), remap = false)
+    @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "nbtedit"))
     private static String setCmdNBT(String constant) {
-        return "ftbnbtedit";
+        if (RCConfig.FTBU.ModifyCmdEditNBT) {
+            return "ftbnbtedit";
+        } else {
+            return constant;
+        }
+
     }
 
 
