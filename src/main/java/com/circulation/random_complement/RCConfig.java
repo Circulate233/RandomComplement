@@ -34,6 +34,17 @@ public class RCConfig {
     @Config.Name("COFHCOHE")
     public static final COFHCORE COFHCORE = new COFHCORE();
 
+    @Config.Name("NEE")
+    public static final NEE NEE = new NEE();
+
+    public static class NEE {
+
+        @Config.Comment({"Whether to enable NEE compatibility for ae2exttable."})
+        @Config.Name("ae2e")
+        public boolean ae2e = true;
+
+    }
+
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
