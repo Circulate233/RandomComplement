@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 @Mixin(value = TileLevelMaintainer.class, remap = false)
@@ -110,7 +109,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
     /**
      * @author circulation
-     * @reason 修复插入物品逻辑，防止出现意外的吞物品
+     * @reason 修复插入物品逻辑，防止出现意外地吞物品
      */
     @Inject(method = "injectCraftedItems", at = @At("HEAD"), cancellable = true)
     public void injectCraftedItems(ICraftingLink link, IAEItemStack stack, Actionable mode, CallbackInfoReturnable<IAEItemStack> cir) {
@@ -130,7 +129,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid) grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                     cir.setReturnValue(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, mode));
-
+                    return;
                 }
                 cir.setReturnValue(null);
             } else {
@@ -140,11 +139,11 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = ((IStorageGrid) grid.getCache(IStorageGrid.class)).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                     cir.setReturnValue(Platform.poweredInsert(energyGrid, storageGrid, aeStack, this.actionSource, Actionable.MODULATE));
+                    return;
                 }
                 cir.setReturnValue(null);
             }
         }
-        cir.cancel();
     }
 
 

@@ -40,11 +40,6 @@ public abstract class MixinThrEngCraftingTracker {
     @Shadow
     public abstract boolean isSlotOpen(int slot);
 
-
-    /**
-     * @author a
-     * @reason v
-     */
     @Inject(method = "requestCrafting",at = @At("HEAD"), cancellable = true)
     public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir){
         if (!RCConfig.LazyAE.EnableRepair){
@@ -57,6 +52,7 @@ public abstract class MixinThrEngCraftingTracker {
             Future<ICraftingJob> jobCalculation = this.jobs[slot];
             if (!this.isSlotOpen(slot)) {
                 cir.setReturnValue(false);
+                return;
             }
 
             if (jobCalculation == null && this.links[slot] == null) {
@@ -67,6 +63,7 @@ public abstract class MixinThrEngCraftingTracker {
 
             if (jobCalculation == null) {
                 cir.setReturnValue(false);
+                return;
             }
 
             try {
@@ -79,6 +76,7 @@ public abstract class MixinThrEngCraftingTracker {
                             this.randomComplement$setLink(slot, link);
                             this.linksInv.put(link,slot);
                             cir.setReturnValue(true);
+                            return;
                         }
                     }
                 }
@@ -89,8 +87,6 @@ public abstract class MixinThrEngCraftingTracker {
         cir.setReturnValue(false);
         cir.cancel();
     }
-
-
 
     @Unique
     private void randomComplement$setLink(int slot, ICraftingLink l) {
@@ -117,8 +113,6 @@ public abstract class MixinThrEngCraftingTracker {
             this.links[i] = null;
         }
     }
-
-
 
     /**
      * @author circulation
