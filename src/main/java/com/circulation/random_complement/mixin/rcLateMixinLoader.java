@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin;
 
 import com.circulation.random_complement.common.util.VersionParser;
-import hellfirepvp.modularmachinery.ModularMachinery;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,14 +17,19 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BooleanSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
+        try {
+            Class<?> clazz = Class.forName("hellfirepvp.modularmachinery.ModularMachinery");
+            var mmversionField = clazz.getField("VERSION");
+            if (modLoaded("modularmachinery") && !VersionParser.MinimumVersion((String) mmversionField.get(null),"2.1.5")){
+                addMixinCFG("mixins.random_complement.mmce.json");
+                addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
+            }
+        } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ignored) {
+        }
         if (modLoaded("neenergistics")) {
             addMixinCFG("mixins.random_complement.nee.json");
             addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
             addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
-        }
-        if (modLoaded("modularmachinery") && !VersionParser.MinimumVersion(ModularMachinery.VERSION,"2.1.5")){
-            addMixinCFG("mixins.random_complement.mmce.json");
-            addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
         }
         addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
         addModdedMixinCFG("mixins.random_complement.ae2.json", "appliedenergistics2");
