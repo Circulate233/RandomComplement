@@ -47,10 +47,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(value = TileInscriber.class,remap = false)
 public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject,RCIConfigManagerHost, ItemHandlerTool, RCTileInscriber {
@@ -228,11 +225,22 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     private ItemStack randomComplement$pushTickOut(ItemStack output) {
         if (output.isEmpty()) return output;
 
-        for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
-            EnumFacing facing = entry.getKey();
-            Object capability = entry.getValue();
-            output = randomComplement$pushTo(output, facing, capability);
-            if (output.isEmpty()) break;
+        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(),this.getUp().getOpposite());
+        if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN) {
+            for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
+                EnumFacing facing = entry.getKey();
+                Object capability = entry.getValue();
+                output = randomComplement$pushTo(output, facing, capability);
+                if (output.isEmpty()) break;
+            }
+        } else {
+            for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
+                EnumFacing facing = entry.getKey();
+                if (FILTERED_KEYS.contains(facing))continue;
+                Object capability = entry.getValue();
+                output = randomComplement$pushTo(output, facing, capability);
+                if (output.isEmpty()) break;
+            }
         }
 
         return output;
@@ -242,11 +250,22 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     private ItemStack randomComplement$pushOut(ItemStack output) {
         if (output.isEmpty()) return output;
 
-        for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
-            EnumFacing facing = entry.getKey();
-            Object capability = entry.getValue();
-            output = randomComplement$pushTo(output, facing, capability);
-            if (output.isEmpty()) break;
+        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(),this.getUp().getOpposite());
+        if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN) {
+            for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
+                EnumFacing facing = entry.getKey();
+                Object capability = entry.getValue();
+                output = randomComplement$pushTo(output, facing, capability);
+                if (output.isEmpty()) break;
+            }
+        } else {
+            for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
+                EnumFacing facing = entry.getKey();
+                if (FILTERED_KEYS.contains(facing))continue;
+                Object capability = entry.getValue();
+                output = randomComplement$pushTo(output, facing, capability);
+                if (output.isEmpty()) break;
+            }
         }
 
         if (!output.isEmpty()) {
