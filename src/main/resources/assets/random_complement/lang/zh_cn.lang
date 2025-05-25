@@ -33,3 +33,6 @@ commands.ftbnbtedit.block.usage=/ftbnbtedit block <x> <y> <z>
 commands.ftbnbtedit.entity.usage=/ftbnbtedit entity <id>
 commands.ftbnbtedit.player.usage=/ftbnbtedit player <玩家>
 commands.ftbnbtedit.item.usage=/ftbnbtedit 物品
+
+key.retrieve_item.desc=自AE取出物品
+key.start_craft.desc=向AE请求合成

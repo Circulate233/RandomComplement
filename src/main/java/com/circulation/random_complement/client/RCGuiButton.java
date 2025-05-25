@@ -31,8 +31,8 @@ public class RCGuiButton extends GuiImgButton {
             appearances = new HashMap<>();
             this.registerApp(0,RCSettings.InscriberBlockMode, InscriberBlockMode.OPEN);
             this.registerApp(1,RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
-            this.registerApp(2,RCSettings.InscriberAutoOutput, InscriberAutoOutput.OPEN);
-            this.registerApp(3,RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
+            this.registerApp(2,RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
+            this.registerApp(3,RCSettings.InscriberAutoOutput, InscriberAutoOutput.OPEN);
             this.registerApp(4,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
             this.registerApp(5,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.MEDIUM);
             this.registerApp(6,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.BIG);

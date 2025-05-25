@@ -10,7 +10,8 @@ import zone.rong.mixinbooter.ILateMixinLoader;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-@SuppressWarnings({"unused", "SameParameterValue"})
+import static com.circulation.random_complement.common.util.Function.modLoaded;
+
 public class rcLateMixinLoader implements ILateMixinLoader {
 
     public static final Logger LOG = LogManager.getLogger("RC");
@@ -26,13 +27,16 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             }
         } catch (IllegalAccessException | NoSuchFieldException ignored) {
         }
-        if (modLoaded("neenergistics")) {
-            addMixinCFG("mixins.random_complement.nee.json");
-            addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
-            addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
+        if (modLoaded("appliedenergistics2")){
+            addMixinCFG("mixins.random_complement.ae2.json");
+            addModdedMixinCFG("mixins.random_complement.ae2.jei.json","jei");
+            if (modLoaded("neenergistics")) {
+                addMixinCFG("mixins.random_complement.nee.json");
+                addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
+                addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
+            }
         }
         addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
-        addModdedMixinCFG("mixins.random_complement.ae2.json", "appliedenergistics2");
         addModdedMixinCFG("mixins.random_complement.ae2fc.json", "ae2fc");
         addModdedMixinCFG("mixins.random_complement.ic2.json", "ic2");
         addModdedMixinCFG("mixins.random_complement.te5.json", "thermalexpansion");
@@ -41,6 +45,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.tf5.json", "thermalfoundation");
         addModdedMixinCFG("mixins.random_complement.botania.json", "botania");
         addModdedMixinCFG("mixins.random_complement.cofhcore.json", "cofhcore");
+        addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
     }
 
     @Override
@@ -56,10 +61,6 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             return false;
         }
         return supplier.getAsBoolean();
-    }
-
-    private static boolean modLoaded(final String modID) {
-        return Loader.isModLoaded(modID);
     }
 
     private static void addModdedMixinCFG(final String mixinConfig, final String modID) {

@@ -2,6 +2,7 @@ package com.circulation.random_complement.common.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.Loader;
 
 public class Function {
 
@@ -18,5 +19,9 @@ public class Function {
             }
         }
         return null;
+    }
+
+    public static boolean modLoaded(final String modID) {
+        return Loader.isModLoaded(modID);
     }
 }

@@ -1,9 +1,10 @@
 package com.circulation.random_complement;
 
 import com.circulation.random_complement.common.CommonProxy;
+import com.circulation.random_complement.common.network.KeyBindingHandle;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
-import net.minecraftforge.fml.common.Loader;
+import com.circulation.random_complement.common.util.Function;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -17,7 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "random_complement", name = Tags.MOD_NAME, version = Tags.VERSION,
         dependencies = "required:mixinbooter@[8.0,);" +
-                "after:appliedenergistics2@[v0.56.7,)"
+                "after:appliedenergistics2@[v0.56.7,);" +
+                "before:shulkertooltip@[1.9.2,);"
 )
 public class RandomComplement {
 
@@ -39,9 +41,12 @@ public class RandomComplement {
     public void preInit(FMLPreInitializationEvent event) {
 
         int start = 0;
-        if (Loader.isModLoaded("appliedenergistics2")) {
+        if (Function.modLoaded("appliedenergistics2")) {
             NET_CHANNEL.registerMessage(WirelessPickBlock.Handler.class, WirelessPickBlock.class, start++, Side.SERVER);
             NET_CHANNEL.registerMessage(RCConfigButton.Handler.class,RCConfigButton.class, start++, Side.SERVER);
+            if (Function.modLoaded("jei")) {
+                NET_CHANNEL.registerMessage(KeyBindingHandle.Handler.class, KeyBindingHandle.class, start++, Side.SERVER);
+            }
         }
         proxy.preInit();
     }
