@@ -100,7 +100,7 @@ public class MixinInputHandler {
                 if (ing.getValue() instanceof ItemStack i){
                     item = i.copy();
                 } else if (Function.modLoaded("ae2fc")){
-                    randomComplement$ae2fcWork(item,ing);
+                    item = randomComplement$ae2fcWork(ing);
                 }
                 if (item.isEmpty())return false;
                 if (k == RetrieveItem.getKeyBinding()) {
@@ -116,25 +116,27 @@ public class MixinInputHandler {
 
     @Unique
     @Optional.Method(modid = "ae2fc")
-    public void randomComplement$ae2fcWork(ItemStack item, IClickedIngredient<?> ing){
+    public ItemStack randomComplement$ae2fcWork(IClickedIngredient<?> ing){
         if (ing.getValue() instanceof FluidStack i) {
             var ii = FakeFluids.packFluid2Drops(i);
             if (ii != null){
-                item = ii;
+                return ii;
             }
         } else if (Function.modLoaded("mekeng")){
-            randomComplement$mekengWork(item,ing);
+            return randomComplement$mekengWork(ing);
         }
+        return ItemStack.EMPTY;
     }
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    private void randomComplement$mekengWork(ItemStack item, IClickedIngredient<?> ing){
+    private ItemStack randomComplement$mekengWork(IClickedIngredient<?> ing){
         if (ing.getValue() instanceof GasStack i) {
             var ii = FakeGases.packGas2Drops(i);
             if (ii != null){
-                item = ii;
+                return ii;
             }
         }
+        return ItemStack.EMPTY;
     }
 }

@@ -34,5 +34,5 @@ commands.ftbnbtedit.entity.usage=/ftbnbtedit entity <id>
 commands.ftbnbtedit.player.usage=/ftbnbtedit player <player>
 commands.ftbnbtedit.item.usage=/ftbnbtedit item
 
-key.retrieve_item.desc=retrieve item from AE
+key.retrieve_item.desc=Retrieve item from AE
 key.start_craft.desc=Request craft from AE
