@@ -17,16 +17,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
@@ -46,30 +44,19 @@ public class MixinInputHandler {
         return instance.add(e);
     }
 
-    @Inject(method = "onGuiKeyboardEvent(Lnet/minecraftforge/client/event/GuiScreenEvent$KeyboardInputEvent$Post;)V",at = @At("HEAD"), cancellable = true)
-    public void onGuiKeyboardEventPreMixin(GuiScreenEvent.KeyboardInputEvent.Post event, CallbackInfo ci) {
+    @Unique
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void r$onGuiKeyboardEventPre(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         if (randomComplement$work(false)){
             event.setCanceled(true);
-            ci.cancel();
         }
     }
 
-    @Inject(method = "onGuiMouseEvent",at = @At("HEAD"), cancellable = true)
-    public void onGuiMouseEventMixin(GuiScreenEvent.MouseInputEvent.Pre event, CallbackInfo ci) {
+    @Unique
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void r$onGuiMouseEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
         if (randomComplement$work(true)){
             event.setCanceled(true);
-            ci.cancel();
-        }
-    }
-
-    @Unique
-    boolean randomComplement$work = true;
-
-    @SubscribeEvent
-    @Unique
-    public void r$onTick(TickEvent.ServerTickEvent event){
-        if (!randomComplement$work){
-            randomComplement$work = true;
         }
     }
 
@@ -87,11 +74,6 @@ public class MixinInputHandler {
             if (k.isActiveAndMatches(eventKey)
             && k.getKeyModifier().isActive(k.getKeyConflictContext())) {
                 if (isMouse && !Mouse.isButtonDown(m)){
-                    return true;
-                }
-                if (randomComplement$work){
-                    randomComplement$work = false;
-                } else {
                     return true;
                 }
                 var ing = randomComplement$leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
