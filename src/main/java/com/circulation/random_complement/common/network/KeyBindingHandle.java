@@ -107,7 +107,7 @@ public class KeyBindingHandle implements IMessage {
                                             var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                                             var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(targetCount), Actionable.SIMULATE, new PlayerSource(player, t));
                                             if (aeItem != null && aeItem.getStackSize() > 0) {
-                                                var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(targetCount), Actionable.MODULATE, new PlayerSource(player, t));
+                                                var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, t));
 
                                                 targetCount -= aeitem.getStackSize();
 
@@ -132,7 +132,7 @@ public class KeyBindingHandle implements IMessage {
                             var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                             var host = c.getTarget();
                             if (host instanceof IActionHost h) {
-                                var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(item.getCount()), Actionable.SIMULATE, new PlayerSource(player, h));
+                                var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(targetCount), Actionable.SIMULATE, new PlayerSource(player, h));
                                 if (aeItem != null && aeItem.getStackSize() > 0) {
                                     var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, h));
                                     player.inventory.placeItemBackInInventory(player.world, aeitem.createItemStack());
@@ -288,7 +288,7 @@ public class KeyBindingHandle implements IMessage {
                                 var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                                 var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exitem).setStackSize(targetCount), Actionable.SIMULATE, new PlayerSource(player, t));
                                 if (aeItem != null && aeItem.getStackSize() > 0) {
-                                    var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exitem).setStackSize(targetCount), Actionable.MODULATE, new PlayerSource(player, t));
+                                    var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exitem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, t));
 
                                     targetCount -= aeitem.getStackSize();
 
