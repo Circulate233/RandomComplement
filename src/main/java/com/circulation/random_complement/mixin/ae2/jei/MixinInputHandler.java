@@ -73,11 +73,11 @@ public class MixinInputHandler {
         for (KeyBinding k : allKeyBinding) {
             if (k.isActiveAndMatches(eventKey)
             && k.getKeyModifier().isActive(k.getKeyConflictContext())) {
+                var ing = randomComplement$leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
+                if (ing == null)return false;
                 if (isMouse && !Mouse.isButtonDown(m)){
                     return true;
                 }
-                var ing = randomComplement$leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
-                if (ing == null)return false;
                 ItemStack item = ItemStack.EMPTY;
                 if (ing.getValue() instanceof ItemStack i){
                     item = i.copy();
