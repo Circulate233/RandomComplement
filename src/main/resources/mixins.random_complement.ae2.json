@@ -9,7 +9,7 @@
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
     "MixinWirelessTerminalGuiObject",
-    "container.AccessorAEBaseContainer",
+    "container.AccessorContainerMEMonitorable",
     "container.MixinContainerCraftingCPU",
     "container.MixinContainerInscriber",
     "container.MixinContainerMEMonitorable",

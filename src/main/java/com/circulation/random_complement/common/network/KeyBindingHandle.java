@@ -11,6 +11,7 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.core.localization.PlayerMessages;
@@ -21,16 +22,25 @@ import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
+import com.circulation.random_complement.mixin.ae2.container.AccessorContainerMEMonitorable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.time.Instant;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class KeyBindingHandle implements IMessage {
 
@@ -67,9 +77,12 @@ public class KeyBindingHandle implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<KeyBindingHandle, IMessage> {
+
+        private static final Map<UUID,Long> map = new ConcurrentHashMap<>();
+
         @Override
         public IMessage onMessage(KeyBindingHandle message, MessageContext ctx) {
-            var player = ctx.getServerHandler().player;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             var container = player.openContainer;
             var item = message.stack;
             switch (message.key){
@@ -86,14 +99,14 @@ public class KeyBindingHandle implements IMessage {
                                 String unparsedKey = handler.getEncryptionKey(ii);
                                 if (unparsedKey.isEmpty()) {
                                     player.sendMessage(PlayerMessages.DeviceNotLinked.get());
-                                    return null;
+                                    continue;
                                 }
                                 long parsedKey = Long.parseLong(unparsedKey);
                                 ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
                                 if (securityStation instanceof TileSecurityStation t) {
                                     if (!handler.hasPower(player, 1000F, ii)) {
                                         player.sendMessage(PlayerMessages.DeviceNotPowered.get());
-                                        return null;
+                                        continue;
                                     }
                                     WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler, ii, player, player.world, pos.getX(), pos.getY(), pos.getZ());
 
@@ -101,6 +114,10 @@ public class KeyBindingHandle implements IMessage {
                                         player.sendMessage(PlayerMessages.OutOfRange.get());
                                     } else {
                                         IGridNode gridNode = obj.getActionableNode();
+                                        if (gridNode == null) {
+                                            player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                                            continue;
+                                        }
                                         IGrid grid = gridNode.getGrid();
                                         if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                                             IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
@@ -126,6 +143,10 @@ public class KeyBindingHandle implements IMessage {
                         }
                     } else if (container instanceof ContainerMEMonitorable c) {
                         IGridNode gridNode = c.getNetworkNode();
+                        if (gridNode == null) {
+                            player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                            return null;
+                        }
                         IGrid grid = gridNode.getGrid();
                         if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                             IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
@@ -142,6 +163,18 @@ public class KeyBindingHandle implements IMessage {
                     }
                     break;
                 case "StartCraft":
+                    UUID playUUID = player.getUniqueID();
+                    long worldTime = Instant.now().getEpochSecond();
+                    if (map.containsKey(playUUID)){
+                        if (map.get(playUUID) < worldTime){
+                            map.put(playUUID,worldTime);
+                        } else {
+                            player.sendMessage(new TextComponentTranslation("text.rc.warn"));
+                            return null;
+                        }
+                    } else {
+                        map.put(playUUID,worldTime);
+                    }
                     item.setCount(1);
                     if (!message.isAE) {
                         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
@@ -163,15 +196,40 @@ public class KeyBindingHandle implements IMessage {
                                         player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                                         return null;
                                     }
+
                                     WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler, ii, player, player.world, pos.getX(), pos.getY(), pos.getZ());
 
                                     if (!obj.rangeCheck()) {
                                         player.sendMessage(PlayerMessages.OutOfRange.get());
                                     } else {
                                         IGridNode gridNode = obj.getActionableNode();
+                                        if (gridNode == null) {
+                                            player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                                            return null;
+                                        }
                                         IGrid grid = gridNode.getGrid();
                                         if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
-                                            var aeItem = AEItemStack.fromItemStack(item);
+                                            IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+                                            var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+
+                                            Iterator<IAEItemStack> iterator = iItemStorageChannel.getStorageList().iterator();
+                                            boolean isCraftable = false;
+                                            IAEItemStack aeItem = null;
+                                            while (iterator.hasNext()){
+                                                aeItem = iterator.next();
+                                                if (aeItem.isCraftable()){
+                                                    if (aeItem.equals(item)){
+                                                        aeItem = aeItem.copy().setStackSize(1);
+                                                        isCraftable = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if (!isCraftable){
+                                                player.sendMessage(new TextComponentTranslation("text.rc.craft"));
+                                                return null;
+                                            }
+
                                             Platform.openGUI(player,i,GuiBridge.GUI_CRAFTING_AMOUNT,false);
 
                                             if (player.openContainer instanceof ContainerCraftAmount cca){
@@ -190,11 +248,32 @@ public class KeyBindingHandle implements IMessage {
                         }
                     } else if (container instanceof ContainerMEMonitorable c) {
                         IGridNode gridNode = c.getNetworkNode();
+                        if (gridNode == null) {
+                            player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                            return null;
+                        }
                         IGrid grid = gridNode.getGrid();
                         if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
+                            Iterator<IAEItemStack> iterator = ((AccessorContainerMEMonitorable)c).getMonitor().getStorageList().iterator();
+                            boolean isCraftable = false;
+                            IAEItemStack aeItem = null;
+                            while (iterator.hasNext()){
+                                aeItem = iterator.next();
+                                if (aeItem.isCraftable()){
+                                    if (aeItem.equals(item)){
+                                        aeItem = aeItem.copy().setStackSize(1);
+                                        isCraftable = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isCraftable){
+                                player.sendMessage(new TextComponentTranslation("text.rc.craft"));
+                                return null;
+                            }
+
                             var host = c.getTarget();
                             if (host instanceof IActionHost h) {
-                                var aeItem = AEItemStack.fromItemStack(item);
                                 Platform.openGUI(player,c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);
 
                                 if (player.openContainer instanceof ContainerCraftAmount cca){
@@ -237,9 +316,33 @@ public class KeyBindingHandle implements IMessage {
                             player.sendMessage(PlayerMessages.OutOfRange.get());
                         } else {
                             IGridNode gridNode = obj.getActionableNode();
+                            if (gridNode == null) {
+                                player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                                return;
+                            }
                             IGrid grid = gridNode.getGrid();
                             if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
-                                var aeItem = AEItemStack.fromItemStack(exitem);
+                                IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+                                var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+
+                                Iterator<IAEItemStack> iterator = iItemStorageChannel.getStorageList().iterator();
+                                boolean isCraftable = false;
+                                IAEItemStack aeItem = null;
+                                while (iterator.hasNext()){
+                                    aeItem = iterator.next();
+                                    if (aeItem.isCraftable()){
+                                        if (aeItem.equals(item)){
+                                            aeItem = aeItem.copy().setStackSize(1);
+                                            isCraftable = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!isCraftable){
+                                    player.sendMessage(new TextComponentTranslation("text.rc.craft"));
+                                    return;
+                                }
+
                                 Platform.openGUI(player,i,GuiBridge.GUI_CRAFTING_AMOUNT,true);
 
                                 if (player.openContainer instanceof ContainerCraftAmount cca){
@@ -267,14 +370,14 @@ public class KeyBindingHandle implements IMessage {
                     String unparsedKey = handler.getEncryptionKey(item);
                     if (unparsedKey.isEmpty()) {
                         player.sendMessage(PlayerMessages.DeviceNotLinked.get());
-                        return;
+                        continue;
                     }
                     long parsedKey = Long.parseLong(unparsedKey);
                     ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
                     if (securityStation instanceof TileSecurityStation t) {
                         if (!handler.hasPower(player, 1000F, item)) {
                             player.sendMessage(PlayerMessages.DeviceNotPowered.get());
-                            return;
+                            continue;
                         }
                         WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler, item, player, player.world, pos.getX(), pos.getY(), pos.getZ());
 
@@ -282,6 +385,10 @@ public class KeyBindingHandle implements IMessage {
                             player.sendMessage(PlayerMessages.OutOfRange.get());
                         } else {
                             IGridNode gridNode = obj.getActionableNode();
+                            if (gridNode == null) {
+                                player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                                continue;
+                            }
                             IGrid grid = gridNode.getGrid();
                             if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                                 IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);

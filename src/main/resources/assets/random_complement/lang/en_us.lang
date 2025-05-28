@@ -36,3 +36,6 @@ commands.ftbnbtedit.item.usage=/ftbnbtedit item
 
 key.retrieve_item.desc=Retrieve item from AE
 key.start_craft.desc=Request craft from AE
+
+text.rc.craft=This item has no corresponding crafting
+text.rc.warn=You shouldn't have tried so quickly

@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2.jei;
 
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.common.network.KeyBindingHandle;
 import com.circulation.random_complement.common.util.Function;
 import com.glodblock.github.common.item.fake.FakeFluids;
@@ -12,7 +13,6 @@ import mezz.jei.input.IClickedIngredient;
 import mezz.jei.input.InputHandler;
 import mezz.jei.input.MouseHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,8 +27,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
-
-import static com.circulation.random_complement.client.KeyBindings.*;
 
 @Mixin(value = InputHandler.class,remap = false)
 public class MixinInputHandler {
@@ -70,27 +68,26 @@ public class MixinInputHandler {
         } else {
             eventKey = Keyboard.getEventKey();
         }
-        for (KeyBinding k : allKeyBinding) {
+        for (KeyBindings kb : KeyBindings.values()) {
+            var k = kb.getKeyBinding();
             if (k.isActiveAndMatches(eventKey)
             && k.getKeyModifier().isActive(k.getKeyConflictContext())) {
-                var ing = randomComplement$leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
-                if (ing == null)return false;
-                if (isMouse && !Mouse.isButtonDown(m)){
+                if (kb.needItem()) {
+                    var ing = randomComplement$leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
+                    if (ing == null) return false;
+                    if (isMouse && !Mouse.isButtonDown(m)) {
+                        return true;
+                    }
+                    ItemStack item = ItemStack.EMPTY;
+                    if (ing.getValue() instanceof ItemStack i) {
+                        item = i.copy();
+                    } else if (Function.modLoaded("ae2fc")) {
+                        item = randomComplement$ae2fcWork(ing);
+                    }
+                    if (item.isEmpty()) return false;
+                    RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandle(kb.name(), item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
                     return true;
                 }
-                ItemStack item = ItemStack.EMPTY;
-                if (ing.getValue() instanceof ItemStack i){
-                    item = i.copy();
-                } else if (Function.modLoaded("ae2fc")){
-                    item = randomComplement$ae2fcWork(ing);
-                }
-                if (item.isEmpty())return false;
-                if (k == RetrieveItem.getKeyBinding()) {
-                    RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandle(RetrieveItem.name(),item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
-                } else if (k == StartCraft.getKeyBinding()) {
-                    RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandle(StartCraft.name(),item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
-                }
-                return true;
             }
         }
         return false;

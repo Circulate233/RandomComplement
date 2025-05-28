@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -72,6 +73,7 @@ public class WirelessPickBlock implements IMessage {
                 if (map.get(playUUID) < worldTime){
                     map.put(playUUID,worldTime);
                 } else {
+                    player.sendMessage(new TextComponentTranslation("text.rc.warn"));
                     return null;
                 }
             } else {
@@ -87,8 +89,9 @@ public class WirelessPickBlock implements IMessage {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack item = player.inventory.getStackInSlot(i);
                 if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    work(item, player,needItem,message.slot,new BlockPos(i,0,Integer.MIN_VALUE));
-                    return null;
+                    if (work(item, player,needItem,message.slot,new BlockPos(i,0,Integer.MIN_VALUE))) {
+                        return null;
+                    }
                 }
             }
 
@@ -104,18 +107,19 @@ public class WirelessPickBlock implements IMessage {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
                 ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
                 if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    work(item, player,exitem,slot,new BlockPos(i,1,Integer.MIN_VALUE));
-                    return;
+                    if (work(item, player, exitem, slot, new BlockPos(i, 1, Integer.MIN_VALUE))) {
+                        return;
+                    }
                 }
             }
         }
 
-        private void work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, BlockPos pos) {
-            if (Platform.isClient()) return;
+        private boolean work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, BlockPos pos) {
+            if (Platform.isClient()) return false;
             int handItemConnt = 0;
             if (!player.inventory.getStackInSlot(slot).isEmpty()){
                 ItemStack vitem = player.inventory.getStackInSlot(slot);
-                if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return;
+                if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return false;
                 handItemConnt = player.inventory.getStackInSlot(slot).getCount();
             }
 
@@ -123,14 +127,14 @@ public class WirelessPickBlock implements IMessage {
             String unparsedKey = handler.getEncryptionKey(item);
             if (unparsedKey.isEmpty()) {
                 player.sendMessage(PlayerMessages.DeviceNotLinked.get());
-                return;
+                return false;
             }
             long parsedKey = Long.parseLong(unparsedKey);
             ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
             if (securityStation instanceof TileSecurityStation t) {
                 if (!handler.hasPower(player, 1000F, item)) {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
-                    return;
+                    return false;
                 }
                 WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler,item,player, player.world, pos.getX(), pos.getY(), pos.getZ());
 
@@ -138,6 +142,7 @@ public class WirelessPickBlock implements IMessage {
                     player.sendMessage(PlayerMessages.OutOfRange.get());
                 } else {
                     IGridNode gridNode = obj.getActionableNode();
+                    if (gridNode == null)return false;
                     IGrid grid = gridNode.getGrid();
                     if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                         IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
@@ -147,10 +152,12 @@ public class WirelessPickBlock implements IMessage {
                             var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, t));
 
                             player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
+                            return true;
                         }
                     }
                 }
             }
+            return false;
         }
 
         private boolean securityCheck(final EntityPlayer player, IGrid gridNode, final SecurityPermissions requiredPermission) {
