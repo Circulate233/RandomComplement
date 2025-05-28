@@ -20,8 +20,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     static {
         try {
-            var mmversionField = ModularMachinery.class.getField("VERSION");
-            if (modLoaded("modularmachinery") && !VersionParser.MinimumVersion((String) mmversionField.get(null),"2.1.5")){
+            var mmVersionField = ModularMachinery.class.getField("VERSION");
+            if (modLoaded("modularmachinery") && !VersionParser.MinimumVersion((String) mmVersionField.get(null),"2.1.5")){
                 addMixinCFG("mixins.random_complement.mmce.json");
                 addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
             }

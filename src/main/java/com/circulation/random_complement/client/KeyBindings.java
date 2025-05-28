@@ -3,6 +3,7 @@ package com.circulation.random_complement.client;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum KeyBindings {
     RetrieveItem(new KeyBinding("key.retrieve_item.desc", KeyConflictContext.GUI, KeyModifier.CONTROL,-98,ClientProxy.categoryJEI),true),
@@ -22,5 +23,11 @@ public enum KeyBindings {
 
     public boolean needItem() {
         return this.needItem;
+    }
+
+    public static void init(){
+        for (KeyBindings k : KeyBindings.values()) {
+            ClientRegistry.registerKeyBinding(k.keyBinding);
+        }
     }
 }

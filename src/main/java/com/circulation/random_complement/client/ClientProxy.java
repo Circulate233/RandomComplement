@@ -2,6 +2,7 @@ package com.circulation.random_complement.client;
 
 import com.circulation.random_complement.client.handler.InputHandler;
 import com.circulation.random_complement.common.CommonProxy;
+import com.circulation.random_complement.common.util.Function;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +29,9 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
+        if (Function.modLoaded("appliedenergistics2")){
+            KeyBindings.init();
+        }
     }
 
     @Override
