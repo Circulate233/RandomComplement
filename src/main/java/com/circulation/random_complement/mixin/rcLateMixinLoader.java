@@ -3,6 +3,7 @@ package com.circulation.random_complement.mixin;
 import com.circulation.random_complement.common.util.VersionParser;
 import hellfirepvp.modularmachinery.ModularMachinery;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.ILateMixinLoader;
@@ -20,10 +21,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     static {
         try {
-            var mmVersionField = ModularMachinery.class.getField("VERSION");
-            if (modLoaded("modularmachinery") && !VersionParser.MinimumVersion((String) mmVersionField.get(null),"2.1.5")){
-                addMixinCFG("mixins.random_complement.mmce.json");
-                addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
+            if (modLoaded("modularmachinery")){
+                MMCEInit();
             }
         } catch (IllegalAccessException | NoSuchFieldException ignored) {
         }
@@ -46,6 +45,15 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.botania.json", "botania");
         addModdedMixinCFG("mixins.random_complement.cofhcore.json", "cofhcore");
         addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
+    }
+
+    @Optional.Method(modid = "modularmachinery")
+    public static void MMCEInit() throws NoSuchFieldException, IllegalAccessException {
+        var mmVersionField = ModularMachinery.class.getField("VERSION");
+        if (!VersionParser.MinimumVersion((String) mmVersionField.get(null),"2.1.5")){
+            addMixinCFG("mixins.random_complement.mmce.json");
+            addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
+        }
     }
 
     @Override
