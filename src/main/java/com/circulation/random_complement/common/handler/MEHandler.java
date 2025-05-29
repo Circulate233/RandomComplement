@@ -28,7 +28,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -115,12 +114,12 @@ public class MEHandler {
         }
     }
 
-    @Optional.Method(modid = "ae2fc")
+    @Optional.Method(modid = "appliedenergistics2")
     public static WirelessTerminalGuiObject getTerminalGuiObject(EntityPlayer player) {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
             if (item.getItem() instanceof ToolWirelessTerminal) {
-                return getTerminalGuiObject(item,player,new BlockPos(i,0,Integer.MIN_VALUE));
+                return getTerminalGuiObject(item,player,i,0,Integer.MIN_VALUE);
             }
         }
 
@@ -130,12 +129,12 @@ public class MEHandler {
         return null;
     }
 
-    @Optional.Method(modid = "ae2fc")
+    @Optional.Method(modid = "appliedenergistics2")
     public static WirelessTerminalGuiObject getTerminalGuiObject(InventoryPlayer player) {
         for (int i = 0; i < player.getSizeInventory(); i++) {
             ItemStack item = player.getStackInSlot(i);
             if (item.getItem() instanceof ToolWirelessTerminal) {
-                return getTerminalGuiObject(item,player.player,new BlockPos(i,0,Integer.MIN_VALUE));
+                return getTerminalGuiObject(item,player.player,i,0,Integer.MIN_VALUE);
             }
         }
 
@@ -150,34 +149,36 @@ public class MEHandler {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
             if (item.getItem() instanceof ToolWirelessTerminal) {
-                return getTerminalGuiObject(item,player,new BlockPos(i,1,Integer.MIN_VALUE));
+                return getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
             }
         }
         return null;
     }
 
-    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, BlockPos pos) {
+    @Optional.Method(modid = "appliedenergistics2")
+    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, int x,int y,int z) {
         if (Platform.isClient())return null;
-        ToolWirelessTerminal wt = (ToolWirelessTerminal) item.getItem();
-        IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
-        if (!registry.isWirelessTerminal(item)) {
-            player.sendMessage(PlayerMessages.DeviceNotWirelessTerminal.get());
-            return null;
-        }
-        IWirelessTermHandler handler = registry.getWirelessTerminalHandler(item);
-        String unparsedKey = handler.getEncryptionKey(item);
-        if (unparsedKey.isEmpty()) {
-            player.sendMessage(PlayerMessages.DeviceNotLinked.get());
-            return null;
-        }
-        long parsedKey = Long.parseLong(unparsedKey);
-        ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
-        if (securityStation instanceof TileSecurityStation t) {
-            if (!handler.hasPower(player, 1000F, item)) {
-                player.sendMessage(PlayerMessages.DeviceNotPowered.get());
+        if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
+            IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
+            if (!registry.isWirelessTerminal(item)) {
+                player.sendMessage(PlayerMessages.DeviceNotWirelessTerminal.get());
                 return null;
             }
-            return new WirelessTerminalGuiObject(wt, item, player, player.world, pos.getX(), pos.getY(), pos.getZ());
+            IWirelessTermHandler handler = registry.getWirelessTerminalHandler(item);
+            String unparsedKey = handler.getEncryptionKey(item);
+            if (unparsedKey.isEmpty()) {
+                player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+                return null;
+            }
+            long parsedKey = Long.parseLong(unparsedKey);
+            ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
+            if (securityStation instanceof TileSecurityStation t) {
+                if (!handler.hasPower(player, 1000F, item)) {
+                    player.sendMessage(PlayerMessages.DeviceNotPowered.get());
+                    return null;
+                }
+                return new WirelessTerminalGuiObject(wt, item, player, player.world, x,y,z);
+            }
         }
         return null;
     }
