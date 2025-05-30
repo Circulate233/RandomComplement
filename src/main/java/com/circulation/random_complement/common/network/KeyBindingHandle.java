@@ -282,7 +282,7 @@ public class KeyBindingHandle implements IMessage {
                 WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
 
                 if (obj == null){
-                    return;
+                    continue;
                 }
 
                 if (!obj.rangeCheck()) {
@@ -291,7 +291,7 @@ public class KeyBindingHandle implements IMessage {
                     IGridNode gridNode = obj.getActionableNode();
                     if (gridNode == null) {
                         player.sendMessage(PlayerMessages.DeviceNotLinked.get());
-                        return;
+                        continue;
                     }
                     openWirelessCraft(player,exitem,gridNode,i,true);
                     return;
@@ -306,7 +306,7 @@ public class KeyBindingHandle implements IMessage {
                 WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
 
                 if (obj == null){
-                    return;
+                    continue;
                 }
 
                 if (!obj.rangeCheck()) {

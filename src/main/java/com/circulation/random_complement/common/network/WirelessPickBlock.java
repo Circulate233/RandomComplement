@@ -20,7 +20,6 @@ import baubles.api.BaublesApi;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
@@ -89,7 +88,7 @@ public class WirelessPickBlock implements IMessage {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack item = player.inventory.getStackInSlot(i);
                 if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    if (work(item, player,needItem,message.slot,new BlockPos(i,0,Integer.MIN_VALUE))) {
+                    if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
                         return null;
                     }
                 }
@@ -107,14 +106,14 @@ public class WirelessPickBlock implements IMessage {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
                 ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
                 if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    if (work(item, player, exitem, slot, new BlockPos(i, 1, Integer.MIN_VALUE))) {
+                    if (work(item, player, exitem, slot, i, 1, Integer.MIN_VALUE)) {
                         return;
                     }
                 }
             }
         }
 
-        private boolean work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, BlockPos pos) {
+        private boolean work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, int x,int y,int z) {
             if (Platform.isClient()) return false;
             int handItemConnt = 0;
             if (!player.inventory.getStackInSlot(slot).isEmpty()){
@@ -136,7 +135,7 @@ public class WirelessPickBlock implements IMessage {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                     return false;
                 }
-                WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler,item,player, player.world, pos.getX(), pos.getY(), pos.getZ());
+                WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler,item,player, player.world, x,y,z);
 
                 if (!obj.rangeCheck()) {
                     player.sendMessage(PlayerMessages.OutOfRange.get());
