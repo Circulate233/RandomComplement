@@ -49,8 +49,9 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     @Optional.Method(modid = "modularmachinery")
     public static void MMCEInit() throws NoSuchFieldException, IllegalAccessException {
-        var mmVersionField = ModularMachinery.class.getField("VERSION");
-        if (!VersionParser.MinimumVersion((String) mmVersionField.get(null),"2.1.5")){
+        var mmVersionField = (String) ModularMachinery.class.getField("VERSION").get(null);
+        if (VersionParser.MinimumVersion(mmVersionField,"2.1.0")
+                && !VersionParser.MinimumVersion(mmVersionField,"2.1.6")){
             addMixinCFG("mixins.random_complement.mmce.json");
             addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
         }

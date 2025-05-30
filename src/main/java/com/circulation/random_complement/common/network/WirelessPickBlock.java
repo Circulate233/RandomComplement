@@ -3,7 +3,6 @@ package com.circulation.random_complement.common.network;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.features.ILocatable;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -13,10 +12,10 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.core.localization.PlayerMessages;
 import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.me.helpers.PlayerSource;
-import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
+import com.circulation.random_complement.common.handler.MEHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -114,45 +113,35 @@ public class WirelessPickBlock implements IMessage {
         }
 
         private boolean work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, int x,int y,int z) {
-            if (Platform.isClient()) return false;
+            if (Platform.isClient()) return true;
             int handItemConnt = 0;
             if (!player.inventory.getStackInSlot(slot).isEmpty()){
                 ItemStack vitem = player.inventory.getStackInSlot(slot);
-                if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return false;
+                if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return true;
                 handItemConnt = player.inventory.getStackInSlot(slot).getCount();
             }
 
-            IWirelessTermHandler handler = AEApi.instance().registries().wireless().getWirelessTerminalHandler(item);
-            String unparsedKey = handler.getEncryptionKey(item);
-            if (unparsedKey.isEmpty()) {
-                player.sendMessage(PlayerMessages.DeviceNotLinked.get());
+            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y,z);
+
+            if (obj == null){
                 return false;
             }
-            long parsedKey = Long.parseLong(unparsedKey);
-            ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
-            if (securityStation instanceof TileSecurityStation t) {
-                if (!handler.hasPower(player, 1000F, item)) {
-                    player.sendMessage(PlayerMessages.DeviceNotPowered.get());
-                    return false;
-                }
-                WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(handler,item,player, player.world, x,y,z);
 
-                if (!obj.rangeCheck()) {
-                    player.sendMessage(PlayerMessages.OutOfRange.get());
-                } else {
-                    IGridNode gridNode = obj.getActionableNode();
-                    if (gridNode == null)return false;
-                    IGrid grid = gridNode.getGrid();
-                    if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
-                        IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-                        var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                        var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.SIMULATE, new PlayerSource(player, t));
-                        if (aeItem != null && aeItem.getStackSize() > 0) {
-                            var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, t));
+            if (!obj.rangeCheck()) {
+                player.sendMessage(PlayerMessages.OutOfRange.get());
+            } else {
+                IGridNode gridNode = obj.getActionableNode();
+                if (gridNode == null) return false;
+                IGrid grid = gridNode.getGrid();
+                if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
+                    IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+                    var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                    var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.SIMULATE, new PlayerSource(player, obj));
+                    if (aeItem != null && aeItem.getStackSize() > 0) {
+                        var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, obj));
 
-                            player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
-                            return true;
-                        }
+                        player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
+                        return true;
                     }
                 }
             }
