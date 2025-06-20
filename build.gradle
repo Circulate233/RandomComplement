@@ -12,8 +12,6 @@ plugins {
     id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
     id 'com.gtnewhorizons.retrofuturagradle' version '1.4.1'
-    id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
-    id 'com.modrinth.minotaur' version '2.+' apply false
     id 'org.jetbrains.changelog' version '2.2.1'
 }
 
@@ -234,6 +232,7 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:ftb-utilities-237102:3157548')
     compileOnly rfg.deobf("curse.maven:botania-225643:3330934")
     compileOnly rfg.deobf("curse.maven:Shulker-Tooltip-292899:3321356")
+    implementation rfg.deobf("curse.maven:ex-pattern-provider-892005:4773929")
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

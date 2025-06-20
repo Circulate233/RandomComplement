@@ -1,18 +1,17 @@
-package com.circulation.random_complement.mixin.ae2.me.storage;
+package com.circulation.random_complement.mixin.extendedae;
 
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.me.storage.CreativeCellInventory;
+import com.github.glodblock.eae.common.inventory.InfinityItemCellInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(CreativeCellInventory.class)
-public abstract class MixinCreativeCellInventory implements IMEInventoryHandler<IAEItemStack> {
+@Mixin(value = InfinityItemCellInventory.class,remap = false)
+public class MixinInfinityItemCellInventory {
 
     /**
-     * @author sddsd2332
+     * @author Circulation_
      * @reason 修改创造型ME存储元件存储上限
      *
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/708">代码来自GTNH团队的AE2U。</a>
