@@ -85,7 +85,7 @@ public class MixinInputHandler {
                         item = randomComplement$ae2fcWork(ing);
                     }
                     if (item.isEmpty()) return false;
-                    RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandle(kb.name(), item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
+                    RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandle(kb, item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
                     return true;
                 }
             }

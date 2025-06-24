@@ -21,6 +21,14 @@ public enum KeyBindings {
         return this.keyBinding;
     }
 
+    public static KeyBindings getKeyFromID(int id){
+        return KeyBindings.values()[id];
+    }
+
+    public int getID(){
+        return this.ordinal();
+    }
+
     public boolean needItem() {
         return this.needItem;
     }

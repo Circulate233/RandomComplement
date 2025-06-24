@@ -19,6 +19,7 @@ import appeng.me.helpers.PlayerSource;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
+import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.mixin.ae2.container.AccessorContainerMEMonitorable;
 import io.netty.buffer.ByteBuf;
@@ -44,18 +45,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KeyBindingHandle implements IMessage {
 
     ItemStack stack = ItemStack.EMPTY;
-    String key = "";
+    KeyBindings key;
     boolean isAE = false;
 
     public KeyBindingHandle(){
 
     }
 
-    public KeyBindingHandle(String key){
+    public KeyBindingHandle(KeyBindings key){
         this.key = key;
     }
 
-    public KeyBindingHandle(String key,ItemStack item,boolean isAE){
+    public KeyBindingHandle(KeyBindings key, ItemStack item, boolean isAE){
         this.key = key;
         this.stack = item;
         this.isAE = isAE;
@@ -64,14 +65,14 @@ public class KeyBindingHandle implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.stack = ByteBufUtils.readItemStack(buf);
-        this.key = ByteBufUtils.readUTF8String(buf);
+        this.key = KeyBindings.getKeyFromID(buf.readInt());
         this.isAE = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, this.stack);
-        ByteBufUtils.writeUTF8String(buf,this.key);
+        buf.writeInt(this.key.getID());
         buf.writeBoolean(this.isAE);
     }
 
@@ -85,8 +86,8 @@ public class KeyBindingHandle implements IMessage {
             var container = player.openContainer;
             var item = message.stack;
             switch (message.key){
-                case "RetrieveItem" -> retrieveItem(player,container,item,message.isAE);
-                case "StartCraft" -> startCraft(player,container,item,message.isAE);
+                case RetrieveItem -> retrieveItem(player,container,item,message.isAE);
+                case StartCraft -> startCraft(player,container,item,message.isAE);
             }
             return null;
         }
