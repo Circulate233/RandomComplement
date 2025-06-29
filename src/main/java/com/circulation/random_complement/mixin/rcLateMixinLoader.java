@@ -46,6 +46,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.cofhcore.json", "cofhcore");
         addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
         addModdedMixinCFG("mixins.random_complement.extendedae.json", "extendedae");
+        addModdedMixinCFG("mixins.random_complement.fluxnetworks.json", "fluxnetworks");
     }
 
     @Optional.Method(modid = "modularmachinery")
