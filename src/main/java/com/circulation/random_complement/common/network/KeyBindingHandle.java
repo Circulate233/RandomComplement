@@ -19,7 +19,6 @@ import appeng.me.helpers.PlayerSource;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
-import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.mixin.ae2.container.AccessorContainerMEMonitorable;
 import io.netty.buffer.ByteBuf;
@@ -35,28 +34,24 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.time.Instant;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class KeyBindingHandle implements IMessage {
 
     ItemStack stack = ItemStack.EMPTY;
-    KeyBindings key;
+    String key;
     boolean isAE = false;
 
     public KeyBindingHandle(){
 
     }
 
-    public KeyBindingHandle(KeyBindings key){
+    public KeyBindingHandle(String key){
         this.key = key;
     }
 
-    public KeyBindingHandle(KeyBindings key, ItemStack item, boolean isAE){
+    public KeyBindingHandle(String key, ItemStack item, boolean isAE){
         this.key = key;
         this.stack = item;
         this.isAE = isAE;
@@ -65,20 +60,18 @@ public class KeyBindingHandle implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.stack = ByteBufUtils.readItemStack(buf);
-        this.key = KeyBindings.getKeyFromID(buf.readInt());
+        this.key = ByteBufUtils.readUTF8String(buf);
         this.isAE = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, this.stack);
-        buf.writeInt(this.key.getID());
+        ByteBufUtils.writeUTF8String(buf,this.key);
         buf.writeBoolean(this.isAE);
     }
 
     public static class Handler implements IMessageHandler<KeyBindingHandle, IMessage> {
-
-        private static final Map<UUID,Long> map = new ConcurrentHashMap<>();
 
         @Override
         public IMessage onMessage(KeyBindingHandle message, MessageContext ctx) {
@@ -86,8 +79,8 @@ public class KeyBindingHandle implements IMessage {
             var container = player.openContainer;
             var item = message.stack;
             switch (message.key){
-                case RetrieveItem -> retrieveItem(player,container,item,message.isAE);
-                case StartCraft -> startCraft(player,container,item,message.isAE);
+                case "RetrieveItem" -> retrieveItem(player,container,item,message.isAE);
+                case "StartCraft" -> startCraft(player,container,item,message.isAE);
             }
             return null;
         }
@@ -164,18 +157,6 @@ public class KeyBindingHandle implements IMessage {
         }
 
         private void startCraft(EntityPlayerMP player, Container container, ItemStack item, boolean isAE){
-            UUID playUUID = player.getUniqueID();
-            long worldTime = Instant.now().getEpochSecond();
-            if (map.containsKey(playUUID)){
-                if (map.get(playUUID) < worldTime){
-                    map.put(playUUID,worldTime);
-                } else {
-                    player.sendMessage(new TextComponentTranslation("text.rc.warn"));
-                    return;
-                }
-            } else {
-                map.put(playUUID,worldTime);
-            }
             item.setCount(1);
             if (!isAE) {
                 for (int i = 0; i < player.inventory.getSizeInventory(); i++) {

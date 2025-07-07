@@ -8,6 +8,7 @@
     "MixinBlockInscriber",
     "MixinPacketMEInventoryUpdate",
     "MixinSecurityCache",
+    "MixinTunnelType",
     "MixinWirelessTerminalGuiObject",
     "container.AccessorContainerMEMonitorable",
     "container.MixinContainerCraftingCPU",
