@@ -19,7 +19,6 @@
   ],
   "server": [],
   "client": [
-    "MixinPacketMEInventoryUpdate",
     "gui.MixinGuiExtendedFluidPatternTerminal",
     "gui.MixinGuiFluidPatternTerminal",
     "gui.MixinGuiUltimateEncoder",

@@ -37,7 +37,7 @@ public abstract class MixinItemOrPartGuiFactory<T> extends GuiType.TileGuiFactor
                 terminal = randomComplement$getStackInBaubleSlot(player, pos.getX());
             }
 
-            if (terminal == null || terminal.isEmpty()) {
+            if (terminal.isEmpty()) {
                 return null;
             }
 
@@ -53,6 +53,6 @@ public abstract class MixinItemOrPartGuiFactory<T> extends GuiType.TileGuiFactor
     @Unique
     @Optional.Method(modid = "baubles")
     private static ItemStack randomComplement$getStackInBaubleSlot(EntityPlayer player, int slot) {
-        return slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots() ? BaublesApi.getBaublesHandler(player).getStackInSlot(slot) : null;
+        return slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots() ? BaublesApi.getBaublesHandler(player).getStackInSlot(slot) : ItemStack.EMPTY;
     }
 }

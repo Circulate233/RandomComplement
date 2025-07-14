@@ -80,7 +80,7 @@ public class KeyBindingHandle implements IMessage {
             var item = message.stack;
             switch (message.key){
                 case "RetrieveItem" -> retrieveItem(player,container,item,message.isAE);
-                case "StartCraft" -> startCraft(player,container,item,message.isAE);
+                case "StartCraft" -> player.getServer().addScheduledTask(() -> startCraft(player,container,item,message.isAE));
             }
             return null;
         }

@@ -8,8 +8,7 @@
   "mixins": [
     "MixinContainerArcaneTerminal",
     "MixinForgeUtil",
-    "MixinMERepo",
-    "MixinPacketMEInventoryUpdate"
+    "MixinMERepo"
   ],
   "server": [],
   "client": [

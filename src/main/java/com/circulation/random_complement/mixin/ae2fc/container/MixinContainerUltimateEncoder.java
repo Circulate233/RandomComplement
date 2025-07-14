@@ -10,7 +10,6 @@ import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketMEInventoryUpdate;
 import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -20,7 +19,7 @@ import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import com.circulation.random_complement.common.interfaces.SpecialPacket;
+import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.interfaces.PatternConsumer;
@@ -108,8 +107,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
     @Unique
     private void randomComplement$queueInventory(WirelessTerminalGuiObject w,EntityPlayerMP playerMP) {
         try {
-            PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
-            ((SpecialPacket)piu).r$setId(1);
+            var piu = new RCPacketMEInventoryUpdate((short) 4);
 
             for (IAEItemStack send : w.getStorageList()) {
                 if (send.isCraftable()) {
@@ -117,8 +115,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
                         piu.appendItem(send);
                     } catch (BufferOverflowException var7) {
                         NetworkHandler.instance().sendTo(piu,playerMP);
-                        piu = new PacketMEInventoryUpdate();
-                        ((SpecialPacket)piu).r$setId(1);
+                        piu = new RCPacketMEInventoryUpdate((short) 4);
                         piu.appendItem(send);
                     }
                 }

@@ -5,8 +5,10 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinAppEngClientPacketHandler",
+    "MixinAppEngServerPacketHandler",
     "MixinBlockInscriber",
-    "MixinPacketMEInventoryUpdate",
+    "MixinPacketTypes",
     "MixinSecurityCache",
     "MixinTunnelType",
     "MixinWirelessTerminalGuiObject",

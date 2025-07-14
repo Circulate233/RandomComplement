@@ -13,10 +13,9 @@ import appeng.container.AEBaseContainer;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketMEInventoryUpdate;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
-import com.circulation.random_complement.common.interfaces.SpecialPacket;
+import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,7 +54,7 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
     @Inject(method = "detectAndSendChanges",at = @At("TAIL"))
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer() && randomComplement$incomplete) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,2);
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,1);
             randomComplement$incomplete = false;
         }
     }
@@ -63,15 +62,14 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
     @Inject(method = "onContainerClosed",at = @At("TAIL"))
     public void onClosedMixin(EntityPlayer player, CallbackInfo ci){
         if (Platform.isServer()) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,4);
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,2);
         }
     }
 
     @Unique
     private void randomComplement$queueInventory(EntityPlayerMP playerMP,int id) {
         try {
-            PacketMEInventoryUpdate piu = new PacketMEInventoryUpdate();
-            ((SpecialPacket)piu).r$setId(id);
+            var piu = new RCPacketMEInventoryUpdate((short) id);
             List<IAEItemStack> items = new ArrayList<>();
             var node = this.networkNode;
             if (node == null) {
@@ -96,8 +94,7 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
                     piu.appendItem(send);
                 } catch (BufferOverflowException var7) {
                     NetworkHandler.instance().sendTo(piu,playerMP);
-                    piu = new PacketMEInventoryUpdate();
-                    ((SpecialPacket)piu).r$setId(id);
+                    piu = new RCPacketMEInventoryUpdate((short) id);
                     piu.appendItem(send);
                 }
             }
