@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.RayTraceResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -15,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MessageEditNBTRequest.class, remap = false)
 public abstract class MixinMessageEditNBTRequest {
 
-
-    @Unique
     @Inject(method = "editNBT",at = @At("HEAD"), cancellable = true)
     private static void ftbeditNBT(CallbackInfo ci) {
         if (!RCConfig.FTBU.ModifyCmdEditNBT) {

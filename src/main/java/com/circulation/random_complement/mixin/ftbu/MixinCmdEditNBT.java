@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = CmdEditNBT.class,remap = false)
 public class MixinCmdEditNBT {
 
-
     @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "nbtedit"))
     private static String setCmdNBT(String constant) {
         if (RCConfig.FTBU.ModifyCmdEditNBT) {
@@ -17,7 +16,6 @@ public class MixinCmdEditNBT {
         } else {
             return constant;
         }
-
     }
 
 
