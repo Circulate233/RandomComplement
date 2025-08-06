@@ -48,7 +48,10 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
         ItemStack itemStack = ItemStack.EMPTY;
         if (o instanceof AEItemStack aeItemStack) {
-            aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            try {
+                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            } catch (Exception ignored) {
+            }
         } else if (o instanceof ItemStack stack) {
             itemStack = stack;
         } else {
