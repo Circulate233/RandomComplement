@@ -81,8 +81,9 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
     public String addItemInformation(Object n) {
-        if (!randomComplement$getItemInformation(n).isEmpty()) {
-            return randomComplement$getItemDisplayName(n) + randomComplement$getItemInformation(n);
+        String out;
+        if (!(out = randomComplement$getItemInformation(n)).isEmpty()) {
+            return randomComplement$getItemDisplayName(n) + out;
         } else {
             return randomComplement$getItemDisplayName(n);
         }
