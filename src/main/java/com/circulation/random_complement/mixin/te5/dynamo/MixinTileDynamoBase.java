@@ -7,7 +7,6 @@ import cofh.api.tileentity.ISteamInfo;
 import cofh.core.block.TileInventory;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.thermalexpansion.block.dynamo.TileDynamoBase;
-import cofh.thermalexpansion.block.machine.TileMachineBase;
 import com.circulation.random_complement.RCConfig;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.inventory.ISidedInventory;
@@ -27,12 +26,12 @@ public abstract class MixinTileDynamoBase extends TileInventory implements ITick
     protected abstract int getBasePower(int level);
 
     @Redirect(method = "installAugmentToSlot", at = @At(value = "INVOKE", target = "Lcofh/thermalexpansion/block/dynamo/TileDynamoBase;getBasePower(I)I"))
-    public int setBasePower(TileDynamoBase instance, int level, @Local(ordinal = 0) int slot) {
+    public int setBasePower(TileDynamoBase instance, int level, @Local(ordinal = 0, argsOnly = true) int slot) {
         return getBasePower(level) * this.augments[slot].getCount();
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 0))
-    private int setDynamoEfficiency(int constant, @Local(ordinal = 0) int slot) {
+    private int setDynamoEfficiency(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
         return RCConfig.TE5.FuelCatalyzerQuantityChanges ? RCConfig.TE5.FuelCatalyzer * this.augments[slot].getCount() : RCConfig.TE5.FuelCatalyzer;
     }
 

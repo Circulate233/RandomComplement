@@ -39,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 @Mixin(GuiCraftingCPU.class)
 public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSource {
 
-
     @Shadow(remap = false)
     @Final
     private ContainerCraftingCPU craftingCpu;
@@ -76,10 +75,9 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/704">代码来自GTNH团队的AE2U。</a>
      */
     @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z",ordinal = 1), remap = false)
-    public void getHoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 0) IAEItemStack stack) {
+    public void getHoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(name = "refStack") IAEItemStack stack) {
         randomComplement$hoveredAEStack = stack;
     }
-
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
     public String addItemInformation(Object n) {
@@ -120,7 +118,10 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         }
         ItemStack itemStack = ItemStack.EMPTY;
         if (o instanceof AEItemStack aeItemStack) {
-            aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            try {
+                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            } catch (Exception ignored) {
+            }
         } else if (o instanceof ItemStack stack) {
             itemStack = stack;
         } else {

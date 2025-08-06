@@ -39,7 +39,6 @@ public class RandomComplement {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
         int start = 0;
         if (Function.modLoaded("appliedenergistics2")) {
             NET_CHANNEL.registerMessage(WirelessPickBlock.Handler.class, WirelessPickBlock.class, start++, Side.SERVER);

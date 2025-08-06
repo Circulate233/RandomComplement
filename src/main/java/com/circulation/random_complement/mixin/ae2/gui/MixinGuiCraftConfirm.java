@@ -30,9 +30,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         } else {
             return randomComplement$getItemDisplayName(n);
         }
-
     }
-
 
     @Unique
     private static String randomComplement$getItemInformation(final Object o) {

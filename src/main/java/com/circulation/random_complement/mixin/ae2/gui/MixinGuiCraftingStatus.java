@@ -1,10 +1,10 @@
 package com.circulation.random_complement.mixin.ae2.gui;
 
-import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.implementations.GuiCraftingCPU;
 import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.container.implementations.CraftingCPUStatus;
 import com.circulation.random_complement.common.integration.ae2.core.GuiColors;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -58,24 +58,6 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
         return (a << 24) | (r << 16) | (g << 8) | (b);
     }
 
-    @Unique
-    private int randomComplement$yPos;
-
-    @Unique
-    private CraftingCPUStatus randomComplement$cpuStatus;
-
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/client/gui/implementations/GuiCraftingStatus;drawTexturedModalRect(IIIIII)V", ordinal = 0))
-    private void setYPos(GuiCraftingStatus instance, int x, int y, int textureX, int textureY, int width, int height) {
-        randomComplement$yPos = y;
-        drawTexturedModalRect(x, y, textureX, textureY, width, height);
-    }
-
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/CraftingCPUStatus;getCrafting()Lappeng/api/storage/data/IAEItemStack;", ordinal = 0))
-    private IAEItemStack getCpuStatus(CraftingCPUStatus instance) {
-        randomComplement$cpuStatus = instance;
-        return instance.getCrafting();
-    }
-
     /**
      * @author sddsd2332
      * @reason 在制作 cpu 表中增加进度表
@@ -83,10 +65,12 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/698">代码来自GTNH团队的AE2U。</a>
      */
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", ordinal = 2))
-    private void draw() {
-        GL11.glPushMatrix();
-        double craftingPercentage = (double) (randomComplement$cpuStatus.getTotalItems() - Math.max(randomComplement$cpuStatus.getRemainingItems(), 0)) / (double) randomComplement$cpuStatus.getTotalItems();
-        drawRect(-85, randomComplement$yPos + 23 - 3, -85 + (int) ((67 - 1) * craftingPercentage), randomComplement$yPos + 23 - 2, this.randomComplement$calculateGradientColor(craftingPercentage));
+    private void draw(@Local(name = "hoveredCpu") CraftingCPUStatus cpuStatus) {
+        if (cpuStatus != null) {
+            GL11.glPushMatrix();
+            double craftingPercentage = (double) (cpuStatus.getTotalItems() - Math.max(cpuStatus.getRemainingItems(), 0)) / (double) cpuStatus.getTotalItems();
+            drawRect(-85, 20, -85 + (int) (66 * craftingPercentage), 21, this.randomComplement$calculateGradientColor(craftingPercentage));
+        }
     }
 
 }
