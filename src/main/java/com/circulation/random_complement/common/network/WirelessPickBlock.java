@@ -18,6 +18,7 @@ import baubles.api.BaublesApi;
 import com.circulation.random_complement.common.handler.MEHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
@@ -64,7 +65,7 @@ public class WirelessPickBlock implements IMessage {
 
         @Override
         public IMessage onMessage(WirelessPickBlock message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             UUID playUUID = player.getUniqueID();
             Long worldTime = Instant.now().getEpochSecond();
             if (map.containsKey(playUUID)){
@@ -84,24 +85,29 @@ public class WirelessPickBlock implements IMessage {
                 else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
             }
 
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack item = player.inventory.getStackInSlot(i);
-                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
-                        return null;
-                    }
-                }
-            }
+            player.getServer().addScheduledTask(() -> readPlayer(player,needItem,message));
 
-            if (Loader.isModLoaded("baubles")) {
-                readBaubles(player,needItem, message.slot);
+            if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
+                player.getServer().addScheduledTask(() -> readBaubles(player,needItem, message.slot));
             }
 
             return null;
         }
 
+        public void readPlayer(EntityPlayerMP player, ItemStack needItem, WirelessPickBlock message){
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack item = player.inventory.getStackInSlot(i);
+                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
+                    if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
+                        needItem.setCount(0);
+                        return;
+                    }
+                }
+            }
+        }
+
         @Optional.Method(modid = "baubles")
-        public void readBaubles(EntityPlayer player,ItemStack exitem,int slot) {
+        public void readBaubles(EntityPlayerMP player,ItemStack exitem,int slot) {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
                 ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
                 if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
@@ -112,7 +118,7 @@ public class WirelessPickBlock implements IMessage {
             }
         }
 
-        private boolean work(ItemStack item, EntityPlayer player, ItemStack exItem, int slot, int x,int y,int z) {
+        private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y, int z) {
             if (Platform.isClient()) return true;
             int handItemConnt = 0;
             if (!player.inventory.getStackInSlot(slot).isEmpty()){
