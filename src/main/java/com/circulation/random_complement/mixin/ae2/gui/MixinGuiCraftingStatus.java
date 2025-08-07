@@ -65,7 +65,7 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/698">代码来自GTNH团队的AE2U。</a>
      */
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", ordinal = 2))
-    private void draw(@Local(name = "hoveredCpu") CraftingCPUStatus cpuStatus) {
+    private void draw(@Local(name = "cpu") CraftingCPUStatus cpuStatus) {
         if (cpuStatus != null) {
             GL11.glPushMatrix();
             double craftingPercentage = (double) (cpuStatus.getTotalItems() - Math.max(cpuStatus.getRemainingItems(), 0)) / (double) cpuStatus.getTotalItems();
