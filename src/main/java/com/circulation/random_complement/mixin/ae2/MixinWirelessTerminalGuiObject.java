@@ -1,15 +1,17 @@
 package com.circulation.random_complement.mixin.ae2;
 
 import appeng.helpers.WirelessTerminalGuiObject;
+import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigManagerHost;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
 import com.circulation.random_complement.common.util.RCConfigManager;
-import net.minecraft.item.ItemStack;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.NBTTagCompound;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,14 +23,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableObject, RCIConfigManagerHost {
 
     @Shadow
-    @Final
-    private ItemStack effectiveItem;
-
-    @Shadow
     public abstract void saveChanges();
 
     @Unique
     private RCIConfigManager randomComplement$rcSettings;
+
+    @Unique
+    private boolean r$init = false;
 
     @Unique
     @Override
@@ -42,19 +43,32 @@ public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableO
     }
 
     @Inject(method = "saveChanges()V",at = @At("TAIL"))
-    public void saveChanges(CallbackInfo ci) {
-        NBTTagCompound data = this.effectiveItem.getTagCompound();
+    public void saveChanges(CallbackInfo ci , @Local(name = "data") NBTTagCompound data) {
         this.randomComplement$rcSettings.writeToNBT(data);
     }
 
-    @Inject(method = "loadFromNBT",at = @At("TAIL"))
+    @Inject(method = "loadFromNBT",at = @At("HEAD"), cancellable = true)
     public void loadFromNBT(CallbackInfo ci) {
         this.randomComplement$rcSettings = new RCConfigManager(this);
         this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
+        if (Loader.isModLoaded("ae2exttable") && r$init()){
+            ci.cancel();
+        }
+    }
 
-        NBTTagCompound data = this.effectiveItem.getTagCompound();
+    @Unique
+    @Optional.Method(modid = "ae2exttable")
+    private boolean r$init(){
+        final boolean i = r$init;
+        r$init = true;
+        return i;
+    }
+
+    @Inject(method = "loadFromNBT",at = @At("TAIL"))
+    public void loadFromNBT(CallbackInfo ci, @Local(name = "data") NBTTagCompound data) {
         if (data != null) {
             this.randomComplement$rcSettings.readFromNBT(data);
+            RandomComplement.LOGGER.info("标记{}",data);
         }
     }
 }
