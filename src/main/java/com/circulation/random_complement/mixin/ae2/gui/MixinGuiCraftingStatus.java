@@ -6,11 +6,11 @@ import appeng.container.implementations.CraftingCPUStatus;
 import com.circulation.random_complement.common.integration.ae2.core.GuiColors;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.InventoryPlayer;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = GuiCraftingStatus.class, remap = false)
 public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
@@ -64,12 +64,11 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
      *
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/698">代码来自GTNH团队的AE2U。</a>
      */
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", ordinal = 2))
-    private void draw(@Local(name = "cpu") CraftingCPUStatus cpuStatus) {
-        if (cpuStatus != null) {
-            GL11.glPushMatrix();
-            double craftingPercentage = (double) (cpuStatus.getTotalItems() - Math.max(cpuStatus.getRemainingItems(), 0)) / (double) cpuStatus.getTotalItems();
-            drawRect(-85, 20, -85 + (int) (66 * craftingPercentage), 21, this.randomComplement$calculateGradientColor(craftingPercentage));
+    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V",ordinal = 2,shift = At.Shift.AFTER))
+    private void draw(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(name = "cpu") CraftingCPUStatus cpu, @Local(name = "x") int x, @Local(name = "y") int y) {
+        if (cpu != null) {
+            double craftingPercentage = (double) (cpu.getTotalItems() - Math.max(cpu.getRemainingItems(), 0)) / (double) cpu.getTotalItems();
+            drawRect(x, y + 1, x + (int) (66 * craftingPercentage), y + 2, this.randomComplement$calculateGradientColor(craftingPercentage));
         }
     }
 

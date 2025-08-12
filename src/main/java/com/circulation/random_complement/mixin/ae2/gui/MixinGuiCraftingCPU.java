@@ -17,10 +17,10 @@ import com.google.common.base.Joiner;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,10 +59,10 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
     public int getCumulativeTime(FontRenderer instance, String text, int x, int y, int color) {
         if (craftingCpu instanceof getCraftingCPUCluster craftingCPU) {
             long getTime = craftingCPU.elapsedTime();
-            if (getTime > 0L && !this.visual.isEmpty()){
+            if (getTime > 0L && !this.visual.isEmpty()) {
                 long elapsedTime = TimeUnit.MILLISECONDS.convert(getTime, TimeUnit.NANOSECONDS);
                 String etaTimeText = DurationFormatUtils.formatDuration(elapsedTime, GuiText.ETAFormat.getLocal());
-                text = text + " " + I18n.translateToLocal("gui.appliedenergistics2.CraftingStatusCumulativeTime") + " - " + etaTimeText;
+                text = text + " " + I18n.format("gui.appliedenergistics2.CraftingStatusCumulativeTime") + " - " + etaTimeText;
             }
         }
         return instance.drawString(text, x, y, color);
@@ -74,7 +74,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
      *
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/704">代码来自GTNH团队的AE2U。</a>
      */
-    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z",ordinal = 1), remap = false)
+    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1), remap = false)
     public void getHoveredAEStack(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(name = "refStack") IAEItemStack stack) {
         randomComplement$hoveredAEStack = stack;
     }
