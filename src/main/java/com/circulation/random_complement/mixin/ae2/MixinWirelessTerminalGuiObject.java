@@ -1,7 +1,7 @@
 package com.circulation.random_complement.mixin.ae2;
 
 import appeng.helpers.WirelessTerminalGuiObject;
-import com.circulation.random_complement.RandomComplement;
+import com._0xc4de.ae2exttable.client.gui.WirelessTerminalGuiObjectTwo;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
@@ -49,26 +49,29 @@ public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableO
 
     @Inject(method = "loadFromNBT",at = @At("HEAD"), cancellable = true)
     public void loadFromNBT(CallbackInfo ci) {
-        this.randomComplement$rcSettings = new RCConfigManager(this);
-        this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
         if (Loader.isModLoaded("ae2exttable") && r$init()){
             ci.cancel();
+            return;
         }
+        this.randomComplement$rcSettings = new RCConfigManager(this);
+        this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
     }
 
     @Unique
     @Optional.Method(modid = "ae2exttable")
-    private boolean r$init(){
-        final boolean i = r$init;
-        r$init = true;
-        return i;
+    private boolean r$init() {
+        if ((Class<?>) this.getClass() == WirelessTerminalGuiObjectTwo.class) {
+            final boolean i = r$init;
+            r$init = true;
+            return i;
+        }
+        return false;
     }
 
-    @Inject(method = "loadFromNBT",at = @At("TAIL"))
+    @Inject(method = "loadFromNBT", at = @At("TAIL"))
     public void loadFromNBT(CallbackInfo ci, @Local(name = "data") NBTTagCompound data) {
         if (data != null) {
             this.randomComplement$rcSettings.readFromNBT(data);
-            RandomComplement.LOGGER.info("标记{}",data);
         }
     }
 }
