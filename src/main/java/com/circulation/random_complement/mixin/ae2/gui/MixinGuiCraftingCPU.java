@@ -58,7 +58,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I", ordinal = 0), remap = false)
     public int getCumulativeTime(FontRenderer instance, String text, int x, int y, int color) {
         if (craftingCpu instanceof getCraftingCPUCluster craftingCPU) {
-            long getTime = craftingCPU.elapsedTime();
+            long getTime = craftingCPU.randomComplement$elapsedTime();
             if (getTime > 0L && !this.visual.isEmpty()) {
                 long elapsedTime = TimeUnit.MILLISECONDS.convert(getTime, TimeUnit.NANOSECONDS);
                 String etaTimeText = DurationFormatUtils.formatDuration(elapsedTime, GuiText.ETAFormat.getLocal());

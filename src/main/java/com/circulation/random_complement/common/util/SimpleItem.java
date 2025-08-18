@@ -1,5 +1,6 @@
 package com.circulation.random_complement.common.util;
 
+import appeng.api.storage.data.IAEItemStack;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutionException;
 
 public final class SimpleItem {
+    @NotNull
     public String str;
     private static final SimpleItem empty = new SimpleItem("e");
 
@@ -20,7 +22,7 @@ public final class SimpleItem {
         this.str = key.toString();
     }
 
-    private SimpleItem(String str){
+    private SimpleItem(@NotNull String str){
         this.str = str;
     }
 
@@ -46,6 +48,10 @@ public final class SimpleItem {
         } catch (ExecutionException e) {
             return empty;
         }
+    }
+
+    public static SimpleItem getInstance(@NotNull IAEItemStack itemStack) {
+        return getInstance(itemStack.getDefinition().copy());
     }
 
     public boolean isEmpty(){

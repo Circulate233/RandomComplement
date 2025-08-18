@@ -9,7 +9,6 @@ import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.PlayerMessages;
 import appeng.helpers.WirelessTerminalGuiObject;
-import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -118,7 +117,7 @@ public class MEHandler {
     public static WirelessTerminalGuiObject getTerminalGuiObject(EntityPlayer player) {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
-            if (item.getItem() instanceof ToolWirelessTerminal) {
+            if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
                 return getTerminalGuiObject(item,player,i,0,Integer.MIN_VALUE);
             }
         }
@@ -133,7 +132,7 @@ public class MEHandler {
     public static WirelessTerminalGuiObject getTerminalGuiObject(InventoryPlayer player) {
         for (int i = 0; i < player.getSizeInventory(); i++) {
             ItemStack item = player.getStackInSlot(i);
-            if (item.getItem() instanceof ToolWirelessTerminal) {
+            if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
                 return getTerminalGuiObject(item,player.player,i,0,Integer.MIN_VALUE);
             }
         }
@@ -148,7 +147,7 @@ public class MEHandler {
     public static WirelessTerminalGuiObject readBaubles(EntityPlayer player) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-            if (item.getItem() instanceof ToolWirelessTerminal) {
+            if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
                 return getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
             }
         }

@@ -1,0 +1,47 @@
+package com.circulation.random_complement.mixin.ae2;
+
+import appeng.api.networking.IGrid;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.me.cache.CraftingGridCache;
+import com.circulation.random_complement.common.util.CraftableItemMap;
+import com.circulation.random_complement.common.util.RCCraftingGridCache;
+import com.circulation.random_complement.common.util.SimpleItem;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multiset;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Map;
+
+@Mixin(value = CraftingGridCache.class, remap = false)
+public class MixinCraftingGridCache implements RCCraftingGridCache {
+
+    @Mutable
+    @Shadow
+    @Final
+    private Object2ObjectMap<IAEItemStack, ImmutableList<ICraftingPatternDetails>> craftableItems;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(IGrid grid, CallbackInfo ci) {
+        craftableItems = new CraftableItemMap();
+    }
+
+    @Unique
+    @Override
+    public Multiset<SimpleItem> rc$getCanCraftableItems() {
+        if (craftableItems instanceof CraftableItemMap map) {
+            return map.getCanCraftableItems();
+        }
+        return HashMultiset.create(0);
+    }
+
+    @Override
+    public Map<IAEItemStack, ImmutableList<ICraftingPatternDetails>> rc$getCraftableItems() {
+        return craftableItems;
+    }
+}

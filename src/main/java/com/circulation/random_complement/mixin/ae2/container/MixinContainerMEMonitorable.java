@@ -16,10 +16,12 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
+import com.circulation.random_complement.common.util.RCAEBaseContainer;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(value = ContainerMEMonitorable.class)
-public abstract class MixinContainerMEMonitorable extends AEBaseContainer implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEItemStack> {
+public abstract class MixinContainerMEMonitorable extends AEBaseContainer implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEItemStack>, RCAEBaseContainer {
 
     @Shadow(remap = false)
     @Final
@@ -43,6 +45,10 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
 
     @Shadow(remap = false)
     private IGridNode networkNode;
+
+    @Unique
+    @SuppressWarnings("FieldCanBeLocal")
+    private Container rc$oldContainer;
 
     public MixinContainerMEMonitorable(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
@@ -103,5 +109,17 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
         } catch (IOException e) {
             AELog.debug(e);
         }
+    }
+
+    @Unique
+    @Override
+    public void rc$setOldContainer(Container old) {
+        rc$oldContainer = old;
+    }
+
+    @Unique
+    @Override
+    public Container rc$getOldContainer() {
+        return rc$oldContainer;
     }
 }

@@ -16,6 +16,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
 import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.util.Packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,7 +26,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.time.Instant;
@@ -33,10 +33,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WirelessPickBlock implements IMessage {
+public class WirelessPickBlock implements Packet<WirelessPickBlock> {
 
     private int slot;
     private ItemStack stack = ItemStack.EMPTY;
+
+    private static final Map<UUID,Long> map = new ConcurrentHashMap<>();
 
     public WirelessPickBlock(){
 
@@ -59,105 +61,99 @@ public class WirelessPickBlock implements IMessage {
         buf.writeInt(this.slot);
     }
 
-    public static class Handler implements IMessageHandler<WirelessPickBlock, IMessage> {
-
-        private static final Map<UUID,Long> map = new ConcurrentHashMap<>();
-
-        @Override
-        public IMessage onMessage(WirelessPickBlock message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
-            UUID playUUID = player.getUniqueID();
-            Long worldTime = Instant.now().getEpochSecond();
-            if (map.containsKey(playUUID)){
-                if (map.get(playUUID) < worldTime){
-                    map.put(playUUID,worldTime);
-                } else {
-                    player.sendMessage(new TextComponentTranslation("text.rc.warn"));
-                    return null;
-                }
-            } else {
+    @Override
+    public IMessage onMessage(WirelessPickBlock message, MessageContext ctx) {
+        EntityPlayerMP player = ctx.getServerHandler().player;
+        UUID playUUID = player.getUniqueID();
+        Long worldTime = Instant.now().getEpochSecond();
+        if (map.containsKey(playUUID)){
+            if (map.get(playUUID) < worldTime){
                 map.put(playUUID,worldTime);
-            }
-            ItemStack handItem = player.inventory.getStackInSlot(message.slot);
-            ItemStack needItem = message.stack.copy();
-            if (!handItem.isEmpty()) {
-                if (handItem.getCount() >= handItem.getItem().getItemStackLimit(handItem)) return null;
-                else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
-            }
-
-            player.getServer().addScheduledTask(() -> readPlayer(player,needItem,message));
-
-            if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
-                player.getServer().addScheduledTask(() -> readBaubles(player,needItem, message.slot));
-            }
-
-            return null;
-        }
-
-        public void readPlayer(EntityPlayerMP player, ItemStack needItem, WirelessPickBlock message){
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack item = player.inventory.getStackInSlot(i);
-                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
-                        needItem.setCount(0);
-                        return;
-                    }
-                }
-            }
-        }
-
-        @Optional.Method(modid = "baubles")
-        public void readBaubles(EntityPlayerMP player,ItemStack exitem,int slot) {
-            for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
-                ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-                if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                    if (work(item, player, exitem, slot, i, 1, Integer.MIN_VALUE)) {
-                        return;
-                    }
-                }
-            }
-        }
-
-        private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y, int z) {
-            if (Platform.isClient()) return true;
-            int handItemConnt = 0;
-            if (!player.inventory.getStackInSlot(slot).isEmpty()){
-                ItemStack vitem = player.inventory.getStackInSlot(slot);
-                if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return true;
-                handItemConnt = player.inventory.getStackInSlot(slot).getCount();
-            }
-
-            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y,z);
-
-            if (obj == null){
-                return false;
-            }
-
-            if (!obj.rangeCheck()) {
-                player.sendMessage(PlayerMessages.OutOfRange.get());
             } else {
-                IGridNode gridNode = obj.getActionableNode();
-                if (gridNode == null) return false;
-                IGrid grid = gridNode.getGrid();
-                if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
-                    IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-                    var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                    var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.SIMULATE, new PlayerSource(player, obj));
-                    if (aeItem != null && aeItem.getStackSize() > 0) {
-                        var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, obj));
+                player.sendMessage(new TextComponentTranslation("text.rc.warn"));
+                return null;
+            }
+        } else {
+            map.put(playUUID,worldTime);
+        }
+        ItemStack handItem = player.inventory.getStackInSlot(message.slot);
+        ItemStack needItem = message.stack.copy();
+        if (!handItem.isEmpty()) {
+            if (handItem.getCount() >= handItem.getItem().getItemStackLimit(handItem)) return null;
+            else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
+        }
 
-                        player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
-                        return true;
-                    }
+        player.getServer().addScheduledTask(() -> readPlayer(player,needItem,message));
+
+        if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
+            player.getServer().addScheduledTask(() -> readBaubles(player,needItem, message.slot));
+        }
+
+        return null;
+    }
+
+    public void readPlayer(EntityPlayerMP player, ItemStack needItem, WirelessPickBlock message){
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack item = player.inventory.getStackInSlot(i);
+            if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
+                if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
+                    needItem.setCount(0);
+                    return;
                 }
             }
+        }
+    }
+
+    @Optional.Method(modid = "baubles")
+    public void readBaubles(EntityPlayerMP player,ItemStack exitem,int slot) {
+        for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
+            ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
+            if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
+                if (work(item, player, exitem, slot, i, 1, Integer.MIN_VALUE)) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y, int z) {
+        if (Platform.isClient()) return true;
+        int handItemConnt = 0;
+        if (!player.inventory.getStackInSlot(slot).isEmpty()){
+            ItemStack vitem = player.inventory.getStackInSlot(slot);
+            if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return true;
+            handItemConnt = player.inventory.getStackInSlot(slot).getCount();
+        }
+
+        WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y,z);
+
+        if (obj == null){
             return false;
         }
 
-        private boolean securityCheck(final EntityPlayer player, IGrid gridNode, final SecurityPermissions requiredPermission) {
-            final ISecurityGrid sg = gridNode.getCache(ISecurityGrid.class);
-            return sg.hasPermission(player, requiredPermission);
-        }
+        if (!obj.rangeCheck()) {
+            player.sendMessage(PlayerMessages.OutOfRange.get());
+        } else {
+            IGridNode gridNode = obj.getActionableNode();
+            if (gridNode == null) return false;
+            IGrid grid = gridNode.getGrid();
+            if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
+                IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+                var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.SIMULATE, new PlayerSource(player, obj));
+                if (aeItem != null && aeItem.getStackSize() > 0) {
+                    var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, obj));
 
+                    player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean securityCheck(final EntityPlayer player, IGrid gridNode, final SecurityPermissions requiredPermission) {
+        final ISecurityGrid sg = gridNode.getCache(ISecurityGrid.class);
+        return sg.hasPermission(player, requiredPermission);
     }
 }

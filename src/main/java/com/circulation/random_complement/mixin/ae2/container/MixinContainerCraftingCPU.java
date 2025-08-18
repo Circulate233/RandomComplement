@@ -30,17 +30,17 @@ public abstract class MixinContainerCraftingCPU extends AEBaseContainer implemen
      */
     @Redirect(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/me/cluster/implementations/CraftingCPUCluster;getElapsedTime()J"))
     public long getElapsedTime(CraftingCPUCluster instance) {
-        eta2 = instance.getElapsedTime();
-        return eta2;
+        randomComplement$eta2 = instance.getElapsedTime();
+        return randomComplement$eta2;
     }
 
     @GuiSync(1)
     @Unique
-    public long eta2 = -1L;
+    public long randomComplement$eta2 = -1L;
 
     @Override
-    public long elapsedTime() {
-        return eta2;
+    public long randomComplement$elapsedTime() {
+        return randomComplement$eta2;
     }
 
 

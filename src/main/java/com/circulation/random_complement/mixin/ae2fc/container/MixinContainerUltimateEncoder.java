@@ -1,6 +1,7 @@
 package com.circulation.random_complement.mixin.ae2fc.container;
 
 import appeng.api.AEApi;
+import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
@@ -20,6 +21,7 @@ import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
 import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
+import com.circulation.random_complement.common.util.RCCraftingGridCache;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.interfaces.PatternConsumer;
@@ -37,6 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
 import java.nio.BufferOverflowException;
+import java.util.Set;
 
 @Mixin(value = ContainerUltimateEncoder.class,remap = false)
 public abstract class MixinContainerUltimateEncoder extends AEBaseContainer implements IOptionalSlotHost, PatternConsumer, PatternTermConfigs {
@@ -107,15 +110,24 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
     @Unique
     private void randomComplement$queueInventory(WirelessTerminalGuiObject w,EntityPlayerMP playerMP) {
         try {
-            var piu = new RCPacketMEInventoryUpdate((short) 4);
+            var piu = new RCPacketMEInventoryUpdate((short) 3);
 
-            for (IAEItemStack send : w.getStorageList()) {
+            RCCraftingGridCache cgc = w.getActionableNode().getGrid().getCache(ICraftingGrid.class);
+            boolean isCraftable = false;
+            IAEItemStack aeItem = null;
+            Set<IAEItemStack> set = cgc.rc$getCraftableItems().keySet();
+
+            if (set.isEmpty()) {
+                return;
+            }
+
+            for (IAEItemStack send : set) {
                 if (send.isCraftable()) {
                     try {
                         piu.appendItem(send);
                     } catch (BufferOverflowException var7) {
                         NetworkHandler.instance().sendTo(piu,playerMP);
-                        piu = new RCPacketMEInventoryUpdate((short) 4);
+                        piu = new RCPacketMEInventoryUpdate((short) 3);
                         piu.appendItem(send);
                     }
                 }

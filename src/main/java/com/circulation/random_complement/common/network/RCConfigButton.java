@@ -5,13 +5,13 @@ import appeng.util.Platform;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
+import com.circulation.random_complement.common.util.Packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class RCConfigButton implements IMessage {
+public class RCConfigButton implements Packet<RCConfigButton> {
     private RCSettings option;
     private boolean rotationDirection;
 
@@ -36,19 +36,16 @@ public class RCConfigButton implements IMessage {
         buf.writeBoolean(rotationDirection);
     }
 
-    public static class Handler implements IMessageHandler<RCConfigButton, IMessage> {
-
-        @Override
-        public IMessage onMessage(RCConfigButton message, MessageContext ctx) {
-            EntityPlayerMP sender = ctx.getServerHandler().player;
-            if (sender.openContainer instanceof AEBaseContainer baseContainer) {
-                if (baseContainer.getTarget() instanceof RCIConfigurableObject obj) {
-                    RCIConfigManager cm = obj.r$getConfigManager();
-                    Enum<?> newState = Platform.rotateEnum(cm.getSetting(message.option), message.rotationDirection, message.option.getPossibleValues());
-                    cm.putSetting(message.option, newState);
-                }
+    @Override
+    public IMessage onMessage(RCConfigButton message, MessageContext ctx) {
+        EntityPlayerMP sender = ctx.getServerHandler().player;
+        if (sender.openContainer instanceof AEBaseContainer baseContainer) {
+            if (baseContainer.getTarget() instanceof RCIConfigurableObject obj) {
+                RCIConfigManager cm = obj.r$getConfigManager();
+                Enum<?> newState = Platform.rotateEnum(cm.getSetting(message.option), message.rotationDirection, message.option.getPossibleValues());
+                cm.putSetting(message.option, newState);
             }
-            return null;
         }
+        return null;
     }
 }
