@@ -118,7 +118,7 @@ public class MEHandler {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player,i,0,Integer.MIN_VALUE);
+                return getTerminalGuiObject(item,player,i,0);
             }
         }
 
@@ -133,7 +133,7 @@ public class MEHandler {
         for (int i = 0; i < player.getSizeInventory(); i++) {
             ItemStack item = player.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player.player,i,0,Integer.MIN_VALUE);
+                return getTerminalGuiObject(item,player.player,i,0);
             }
         }
 
@@ -148,14 +148,14 @@ public class MEHandler {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
+                return getTerminalGuiObject(item,player,i,1);
             }
         }
         return null;
     }
 
     @Optional.Method(modid = "appliedenergistics2")
-    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, int x,int y,int z) {
+    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, int slot,int isBauble) {
         if (Platform.isClient())return null;
         if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
             IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
@@ -176,7 +176,7 @@ public class MEHandler {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                     return null;
                 }
-                return new WirelessTerminalGuiObject(wt, item, player, player.world, x,y,z);
+                return new WirelessTerminalGuiObject(wt, item, player, player.world, slot,isBauble,Integer.MIN_VALUE);
             }
         }
         return null;

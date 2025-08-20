@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ContainerCraftConfirm.class, remap = false)
 public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
 
-    @Shadow public abstract void setAutoStart(boolean autoStart);
+    @Shadow
+    public abstract void setAutoStart(boolean autoStart);
 
     @Inject(
         method = "startJob()V",

@@ -96,7 +96,7 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                if (work(item, player,needItem,message.slot,i,0,Integer.MIN_VALUE)) {
+                if (work(item, player,needItem,message.slot,i,0)) {
                     needItem.setCount(0);
                     return;
                 }
@@ -109,14 +109,14 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                if (work(item, player, exitem, slot, i, 1, Integer.MIN_VALUE)) {
+                if (work(item, player, exitem, slot, i, 1)) {
                     return;
                 }
             }
         }
     }
 
-    private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y, int z) {
+    private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y) {
         if (Platform.isClient()) return true;
         int handItemConnt = 0;
         if (!player.inventory.getStackInSlot(slot).isEmpty()){
@@ -125,7 +125,7 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             handItemConnt = player.inventory.getStackInSlot(slot).getCount();
         }
 
-        WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y,z);
+        WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y);
 
         if (obj == null){
             return false;

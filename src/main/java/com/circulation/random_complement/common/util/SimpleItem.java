@@ -51,7 +51,7 @@ public final class SimpleItem {
     }
 
     public static SimpleItem getInstance(@NotNull IAEItemStack itemStack) {
-        return getInstance(itemStack.getDefinition().copy());
+        return getInstance(itemStack.getDefinition());
     }
 
     public boolean isEmpty(){

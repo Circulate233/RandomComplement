@@ -98,7 +98,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         if (!isAE) {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
-                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0,Integer.MIN_VALUE);
+                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0);
 
                 if (obj == null){
                     continue;
@@ -169,7 +169,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         if (!isAE) {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
-                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0,Integer.MIN_VALUE);
+                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0);
 
                 if (obj == null){
                     continue;
@@ -310,7 +310,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     private void readBaublesS(EntityPlayerMP player,ItemStack exitem) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
+            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1);
 
             if (obj == null){
                 continue;
@@ -334,7 +334,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     private void readBaublesR(EntityPlayerMP player,ItemStack exitem,long targetCount) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1,Integer.MIN_VALUE);
+            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1);
 
             if (obj == null){
                 continue;

@@ -4,7 +4,6 @@ import net.minecraft.util.text.translation.I18n;
 
 public interface localizationAPI {
 
-
     String root();
 
     default String getLocal() {

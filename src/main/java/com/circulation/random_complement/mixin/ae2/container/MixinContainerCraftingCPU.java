@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = ContainerCraftingCPU.class, remap = false)
 public abstract class MixinContainerCraftingCPU extends AEBaseContainer implements IMEMonitorHandlerReceiver<IAEItemStack>, ICustomNameObject, getCraftingCPUCluster {
 
-
     public MixinContainerCraftingCPU(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
     }

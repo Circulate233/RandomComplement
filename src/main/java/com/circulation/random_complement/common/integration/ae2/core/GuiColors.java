@@ -4,7 +4,6 @@ import appeng.core.AELog;
 
 public enum GuiColors implements localizationAPI {
 
-
     // ARGB Colors: Name and default value
     SearchboxFocused(0x6E000000),
     SearchboxUnfocused(0x00000000),

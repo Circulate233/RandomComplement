@@ -2,13 +2,17 @@ package com.circulation.random_complement.mixin;
 
 import com.circulation.random_complement.common.util.VersionParser;
 import hellfirepvp.modularmachinery.ModularMachinery;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.ILateMixinLoader;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import static com.circulation.random_complement.common.util.Function.modLoaded;
@@ -61,7 +65,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     @Override
     public List<String> getMixinConfigs() {
-        return new ArrayList<>(MIXIN_CONFIGS.keySet());
+        return new ObjectArrayList<>(MIXIN_CONFIGS.keySet());
     }
 
     @Override

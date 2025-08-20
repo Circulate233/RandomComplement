@@ -1,6 +1,6 @@
 package com.circulation.random_complement.client;
 
-import com.circulation.random_complement.client.handler.InputHandler;
+import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Function;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +22,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit() {
         super.preInit();
         if (Loader.isModLoaded("appliedenergistics2")) {
-            MinecraftForge.EVENT_BUS.register(InputHandler.INSTANCE);
+            MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
         }
     }
 

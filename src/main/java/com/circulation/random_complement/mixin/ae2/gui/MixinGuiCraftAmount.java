@@ -7,7 +7,7 @@ import appeng.client.gui.widgets.GuiTabButton;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketCraftRequest;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.handler.InputHandler;
+import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -43,22 +43,17 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
                     target = "Lappeng/client/gui/AEBaseGui;actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V",
                     shift = At.Shift.AFTER), cancellable = true)
     public void onActionPerformed(GuiButton btn, CallbackInfo ci) {
-        if (InputHandler.oldGui == null)return;
-        try {
-            if (btn == this.originalGuiBtn) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
+        if (RCInputHandler.oldGui == null) return;
+        if (btn == this.originalGuiBtn || btn == this.next) {
+            try {
+                if (btn == this.originalGuiBtn) {
                     GuiScreen oldGui;
-                    if ((oldGui = InputHandler.oldGui) != null) {
-                        InputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
+                    if ((oldGui = RCInputHandler.oldGui) != null) {
+                        RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
                         RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
                         ci.cancel();
                     }
-                });
-                if (InputHandler.oldGui != null) {
-                    ci.cancel();
-                }
-            } else if (btn == this.next) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
+                } else if (btn == this.next) {
                     double resultD = MathExpressionParser.parse(this.amountToCraft.getText());
                     int result;
                     if (!(resultD <= (double) 0.0F) && !Double.isNaN(resultD)) {
@@ -71,17 +66,17 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
 
                     if (isShift) {
                         GuiScreen oldGui;
-                        if ((oldGui = InputHandler.oldGui) != null) {
-                            InputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
+                        if ((oldGui = RCInputHandler.oldGui) != null) {
+                            RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
                         }
                     }
 
                     NetworkHandler.instance().sendToServer(new PacketCraftRequest(result, isShift));
-                });
+                }
+                ci.cancel();
+            } catch (NumberFormatException var5) {
+                this.amountToCraft.setText("1");
             }
-            ci.cancel();
-        } catch (NumberFormatException var5) {
-            this.amountToCraft.setText("1");
         }
     }
 }

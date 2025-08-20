@@ -12,6 +12,7 @@ import com.circulation.random_complement.common.util.SimpleItem;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.BufferOverflowException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -54,7 +54,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
         this.empty = true;
         this.data = null;
         this.compressFrame = null;
-        this.list = new ArrayList<>();
+        this.list = new ObjectArrayList<>();
         this.ref = stream.readByte();
         this.id = stream.readShort();
         GZIPInputStream gzReader = new GZIPInputStream(new InputStream() {

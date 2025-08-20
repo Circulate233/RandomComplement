@@ -1,7 +1,7 @@
 package com.circulation.random_complement.common.network;
 
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.handler.InputHandler;
+import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.util.Packet;
 import com.circulation.random_complement.common.util.RCAEBaseContainer;
 import io.netty.buffer.ByteBuf;
@@ -24,24 +24,22 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
         switch (ctx.side) {
             case SERVER -> {
                 var entityPlayerMP = ctx.getServerHandler().player;
-                entityPlayerMP.getServer().addScheduledTask(() -> {
-                    var newContainer = entityPlayerMP.openContainer;
-                    if (newContainer instanceof RCAEBaseContainer rac) {
-                        var oldContainer = rac.rc$getOldContainer();
-                        if (oldContainer != null) {
-                            if (oldContainer instanceof ContainerPlayer) {
-                                entityPlayerMP.closeContainer();
-                            } else {
-                                entityPlayerMP.getNextWindowId();
-                                entityPlayerMP.closeContainer();
-                                int windowId = entityPlayerMP.currentWindowId;
-                                entityPlayerMP.openContainer = oldContainer;
-                                entityPlayerMP.openContainer.windowId = windowId;
-                            }
+                var newContainer = entityPlayerMP.openContainer;
+                if (newContainer instanceof RCAEBaseContainer rac) {
+                    var oldContainer = rac.rc$getOldContainer();
+                    if (oldContainer != null) {
+                        if (oldContainer instanceof ContainerPlayer) {
+                            entityPlayerMP.closeContainer();
+                        } else {
+                            entityPlayerMP.getNextWindowId();
+                            entityPlayerMP.closeContainer();
+                            int windowId = entityPlayerMP.currentWindowId;
+                            entityPlayerMP.openContainer = oldContainer;
+                            entityPlayerMP.openContainer.windowId = windowId;
                         }
                     }
-                    RandomComplement.NET_CHANNEL.sendTo(message, entityPlayerMP);
-                });
+                }
+                RandomComplement.NET_CHANNEL.sendTo(message, entityPlayerMP);
             }
             case CLIENT -> ClientRun();
         }
@@ -50,10 +48,10 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
 
     @SideOnly(Side.CLIENT)
     public void ClientRun() {
-        if (InputHandler.delayMethod != null) {
-            InputHandler.delayMethod.run();
-            InputHandler.delayMethod = null;
-            InputHandler.oldGui = null;
+        if (RCInputHandler.delayMethod != null) {
+            RCInputHandler.delayMethod.run();
+            RCInputHandler.delayMethod = null;
+            RCInputHandler.oldGui = null;
         }
     }
 }

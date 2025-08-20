@@ -26,8 +26,13 @@ import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutpu
 import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
 import com.circulation.random_complement.common.handler.InscriberItemHandler;
-import com.circulation.random_complement.common.interfaces.*;
+import com.circulation.random_complement.common.interfaces.ItemHandlerTool;
+import com.circulation.random_complement.common.interfaces.RCIConfigManager;
+import com.circulation.random_complement.common.interfaces.RCIConfigManagerHost;
+import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
+import com.circulation.random_complement.common.interfaces.RCTileInscriber;
 import com.circulation.random_complement.common.util.RCConfigManager;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -47,7 +52,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Mixin(value = TileInscriber.class,remap = false)
 public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject,RCIConfigManagerHost, ItemHandlerTool, RCTileInscriber {
@@ -75,7 +84,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     private IItemHandler randomComplement$sideItemHandlerExtern;
 
     @Unique
-    private final List<IItemHandler> randomComplement$list = new ArrayList<>();
+    private final List<IItemHandler> randomComplement$list = new ObjectArrayList<>();
 
     @Unique
     private IItemHandlerModifiable randomComplement$input;

@@ -4,7 +4,7 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import com.circulation.random_complement.client.handler.InputHandler;
+import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
@@ -23,7 +23,11 @@ import thaumicenergistics.container.ContainerBaseTerminal;
 import thaumicenergistics.container.slot.SlotGhost;
 import thaumicenergistics.container.slot.SlotME;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -88,7 +92,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
             for (int i = 0; i < cycle; i++) {
                 int amount = Math.min(slots.size() - i * 9,9);
                 int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
-                        ? InputHandler.counter * 18
+                        ? RCInputHandler.counter * 18
                         : (randomComplement$textureIndex - 3) * 18;
 
                 this.drawTexturedModalRect(
