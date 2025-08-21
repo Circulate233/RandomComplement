@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.ae2.gui;
 
 import appeng.api.storage.data.IAEItemStack;
-import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.ItemRepo;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
@@ -37,9 +36,9 @@ public abstract class MixinItemRepo {
 
     @Unique
     private boolean randomComplement$isPriorityItem(IAEItemStack stack) {
-        if (Platform.isClient() && Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable g) {
+        if (Platform.isClient() && Minecraft.getMinecraft().currentScreen instanceof SpecialLogic g) {
             SimpleItem item = SimpleItem.getInstance(stack.getDefinition());
-            var list = ((SpecialLogic) g).r$getList();
+            var list = g.r$getList();
             return list.contains(item);
         }
         return false;

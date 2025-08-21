@@ -1,4 +1,4 @@
-package com.circulation.random_complement.common.util;
+package com.circulation.random_complement.common.interfaces;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

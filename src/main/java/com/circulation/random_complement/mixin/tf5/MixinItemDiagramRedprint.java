@@ -21,7 +21,7 @@ public abstract class MixinItemDiagramRedprint extends ItemDiagram implements II
      * 该修改可以帮助在批量放置TE设备时，蹲下且未能放置TE设备导致红图配置清除问题
      */
     @Redirect(method = "onItemUseFirst", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;isSneaking()Z"))
-    public boolean addEnumHand(EntityPlayer instance, @Local(ordinal = 0) EnumHand hand) {
+    public boolean addEnumHand(EntityPlayer instance, @Local(ordinal = 0, argsOnly = true) EnumHand hand) {
         if (RCConfig.TF5.RedDiagramOfTheDeputy) {
             return instance.isSneaking() && hand != EnumHand.OFF_HAND;
         } else {

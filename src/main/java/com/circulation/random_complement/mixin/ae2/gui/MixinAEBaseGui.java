@@ -11,6 +11,7 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -25,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     protected abstract List<Slot> getInventorySlots();
 
     @Unique
-    private Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     public MixinAEBaseGui(Container inventorySlotsIn) {
         super(inventorySlotsIn);

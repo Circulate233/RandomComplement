@@ -7,13 +7,18 @@ import appeng.container.AEBaseContainer;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
+import appeng.helpers.WirelessTerminalGuiObject;
+import appeng.parts.reporting.PartInterfaceTerminal;
 import com.circulation.random_complement.common.interfaces.SpecialInvTracker;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +39,13 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
 
     @Shadow(remap = false)
     @Final
+    @Mutable
     private Map<IInterfaceHost,Object> diList;
+
+    @Shadow(remap = false)
+    @Final
+    @Mutable
+    private Map<Long, Object> byId;
 
     @Unique
     public boolean randomComplement$missing = false;
@@ -44,6 +55,18 @@ public class MixinContainerInterfaceTerminal extends AEBaseContainer {
 
     @Unique
     private static Constructor<?> randomComplement$constructor;
+
+    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/helpers/WirelessTerminalGuiObject;Z)V",at = @At("TAIL"))
+    private void onInit(InventoryPlayer ip, WirelessTerminalGuiObject guiObject, boolean bindInventory, CallbackInfo ci){
+        diList = new Object2ObjectOpenHashMap<>();
+        byId = new Long2ObjectOpenHashMap<>();
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/parts/reporting/PartInterfaceTerminal;)V",at = @At("TAIL"))
+    private void onInit(InventoryPlayer ip, PartInterfaceTerminal anchor, CallbackInfo ci){
+        diList = new Object2ObjectOpenHashMap<>();
+        byId = new Long2ObjectOpenHashMap<>();
+    }
 
     @Inject(method = "<clinit>",at = @At("TAIL"))
     private static void onClinit(CallbackInfo ci){

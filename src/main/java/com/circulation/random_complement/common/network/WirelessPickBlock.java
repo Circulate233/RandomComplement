@@ -16,7 +16,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import baubles.api.BaublesApi;
 import com.circulation.random_complement.common.handler.MEHandler;
-import com.circulation.random_complement.common.util.Packet;
+import com.circulation.random_complement.common.interfaces.Packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

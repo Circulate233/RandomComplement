@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 @Mixin(value = TunnelType.class,remap = false)
 public class MixinTunnelType {
+
     @Shadow
     private Supplier<ItemStack> partItemStackSupplier;
 

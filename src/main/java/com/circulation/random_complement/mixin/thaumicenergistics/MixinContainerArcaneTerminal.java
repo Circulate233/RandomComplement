@@ -11,6 +11,7 @@ import appeng.util.Platform;
 import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
 import com.circulation.random_complement.common.util.SimpleItem;
 import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,6 @@ import thaumicenergistics.part.PartSharedTerminal;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,13 +46,13 @@ public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal
     }
 
     @Unique
-    private static final Set<SimpleItem> randomComplement$craftableCacheS = new HashSet<>();
+    private static final Set<SimpleItem> randomComplement$craftableCacheS = new ObjectOpenHashSet<>();
 
     @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
-    private Set<SimpleItem> randomComplement$mergedCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     @Unique
     private int randomComplement$a = 0;

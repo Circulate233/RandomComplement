@@ -16,6 +16,7 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.mekeng.github.common.me.data.IAEGasStack;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -37,7 +37,7 @@ import java.util.stream.StreamSupport;
 public class MixinGuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatternTerm {
 
     @Unique
-    private Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     public MixinGuiExtendedFluidPatternTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te);

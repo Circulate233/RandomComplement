@@ -8,6 +8,8 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,9 +25,7 @@ import thaumicenergistics.container.ContainerBaseTerminal;
 import thaumicenergistics.container.slot.SlotGhost;
 import thaumicenergistics.container.slot.SlotME;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,13 +44,13 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
-    public Set<SimpleItem> randomComplement$cpuCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$cpuCache = new ObjectOpenHashSet<>();
 
     @Unique
-    private Set<SimpleItem> randomComplement$mergedCache = new HashSet<>();
+    private Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
@@ -75,7 +75,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     private void drawPin(float f, int x, int y, CallbackInfo ci){
         var items = this.r$getList();
         if (!items.isEmpty()) {
-            List<SlotME<?>> slots = new ArrayList<>();
+            List<SlotME<?>> slots = new ObjectArrayList<>();
             for (Slot slot : this.inventorySlots.inventorySlots) {
                 if (slot instanceof SlotME<?> slotME) {
                     if (items.contains(SimpleItem.getInstance(slotME.getStack()))) {

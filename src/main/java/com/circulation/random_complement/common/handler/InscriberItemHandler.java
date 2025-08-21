@@ -9,12 +9,12 @@ import appeng.util.Platform;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.circulation.random_complement.common.interfaces.ItemHandlerTool;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +34,7 @@ public class InscriberItemHandler implements IAEItemFilter {
             var sr = new SimpleRecipe(recipe);
             sr.top.forEach(top -> {
                 if (recipes.get(top) == null) {
-                    Set<SimpleRecipe> list = new HashSet<>();
+                    Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
                     recipes.put(top,list);
                 } else {
@@ -43,7 +43,7 @@ public class InscriberItemHandler implements IAEItemFilter {
             });
             sr.button.forEach(button -> {
                 if (recipes.get(button) == null) {
-                    Set<SimpleRecipe> list = new HashSet<>();
+                    Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
                     recipes.put(button,list);
                 } else {
@@ -52,7 +52,7 @@ public class InscriberItemHandler implements IAEItemFilter {
             });
             sr.input.forEach(input -> {
                 if (recipesi.get(input) == null) {
-                    Set<SimpleRecipe> list = new HashSet<>();
+                    Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
                     recipesi.put(input,list);
                 } else {
@@ -110,13 +110,13 @@ public class InscriberItemHandler implements IAEItemFilter {
     }
 
     public List<SimpleItem> allSlotSimpleItem(List<IItemHandler> itemHandlers){
-        List<SimpleItem> list = new ArrayList<>();
+        List<SimpleItem> list = new ObjectArrayList<>();
         itemHandlers.forEach(itemHandler -> list.add(SimpleItem.getInstance(itemHandler.getStackInSlot(0))));
         return list;
     }
 
     public List<ItemStack> allSlotItem(List<IItemHandler> itemHandlers){
-        List<ItemStack> list = new ArrayList<>();
+        List<ItemStack> list = new ObjectArrayList<>();
         itemHandlers.forEach(itemHandler -> list.add(itemHandler.getStackInSlot(0)));
         return list;
     }
@@ -132,13 +132,13 @@ public class InscriberItemHandler implements IAEItemFilter {
         private final boolean isTwo;
 
         public SimpleRecipe(IInscriberRecipe recipe){
-            Set<SimpleItem> input = new HashSet<>();
+            Set<SimpleItem> input = new ObjectOpenHashSet<>();
             recipe.getInputs().forEach(item -> input.add(SimpleItem.getInstance(item)));
             this.input = input;
-            Set<SimpleItem> top = new HashSet<>();
+            Set<SimpleItem> top = new ObjectOpenHashSet<>();
             recipe.getTopInputs().forEach(item -> top.add(SimpleItem.getInstance(item)));
             this.top = top;
-            Set<SimpleItem> button = new HashSet<>();
+            Set<SimpleItem> button = new ObjectOpenHashSet<>();
             recipe.getBottomInputs().forEach(item -> button.add(SimpleItem.getInstance(item)));
             this.button = button;
 
@@ -157,7 +157,7 @@ public class InscriberItemHandler implements IAEItemFilter {
     }
 
     public Set<SimpleItem> getUsableItems(List<SimpleItem> slots, IItemHandler inv){
-        final Set<SimpleItem> out = new HashSet<>();
+        final Set<SimpleItem> out = new ObjectOpenHashSet<>();
         final var item = slots.get(0).isEmpty() ? slots.get(1) : slots.get(0);
         final var slot2 = slots.get(2);
         if (slot2.isEmpty()){

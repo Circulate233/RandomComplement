@@ -2,8 +2,8 @@ package com.circulation.random_complement.common.network;
 
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.handler.RCInputHandler;
-import com.circulation.random_complement.common.util.Packet;
-import com.circulation.random_complement.common.util.RCAEBaseContainer;
+import com.circulation.random_complement.common.interfaces.Packet;
+import com.circulation.random_complement.common.interfaces.RCAEBaseContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

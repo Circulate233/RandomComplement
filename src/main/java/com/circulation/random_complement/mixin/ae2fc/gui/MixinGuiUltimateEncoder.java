@@ -20,6 +20,7 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.mekeng.github.common.me.data.IAEGasStack;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
@@ -36,14 +37,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(value = GuiUltimateEncoder.class,remap = false)
 public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements SpecialLogic {
 
     @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
+    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;

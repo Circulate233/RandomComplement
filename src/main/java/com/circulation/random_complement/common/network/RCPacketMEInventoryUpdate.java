@@ -1,7 +1,6 @@
 package com.circulation.random_complement.common.network;
 
 import appeng.api.storage.data.IAEItemStack;
-import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.core.AELog;
 import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
@@ -9,7 +8,6 @@ import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
-import com.glodblock.github.client.GuiUltimateEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -151,9 +149,9 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
         if (id != 0) {
             switch (id) {
                 case 1 -> {
-                    GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-                    if (gui instanceof GuiMEMonitorable) {
-                        ((SpecialLogic) gui).r$setList(this.list.stream()
+                    GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+                    if (screen instanceof SpecialLogic gui) {
+                        gui.r$setList(this.list.stream()
                                 .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                                 .collect(Collectors.toSet()));
                     }
@@ -171,9 +169,9 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     public void ae2fcClientPacketData(){
         switch (id) {
             case 3 -> {
-                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-                if (gui instanceof GuiUltimateEncoder) {
-                    ((SpecialLogic) gui).r$addAllList(this.list.stream()
+                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+                if (screen instanceof SpecialLogic gui) {
+                    gui.r$addAllList(this.list.stream()
                             .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
                             .collect(Collectors.toSet()));
                 }

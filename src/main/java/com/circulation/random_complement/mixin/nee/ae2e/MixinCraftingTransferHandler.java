@@ -51,7 +51,8 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
     @Shadow
     private IngredientRequester requester;
 
-    @Inject(method="transferRecipe", at = @At(value="HEAD"), cancellable=true)
+    @SuppressWarnings("AmbiguousMixinReference")
+    @Inject(method = "transferRecipe", at = @At(value="HEAD"), cancellable=true)
     public void transferRecipeMixin(@Nonnull C container, @Nonnull IRecipeLayout recipeLayout, @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer, CallbackInfoReturnable<Object> cir) {
         GuiScreen parent = GuiUtils.getParentScreen();
         if (parent instanceof com._0xc4de.ae2exttable.client.gui.GuiCraftingTerm craftingTerm) {

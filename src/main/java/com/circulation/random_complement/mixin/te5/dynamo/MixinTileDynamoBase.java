@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = TileDynamoBase.class, remap = false)
 public abstract class MixinTileDynamoBase extends TileInventory implements ITickable, IAccelerable, IEnergyProvider, IReconfigurableFacing, ISidedInventory, IEnergyInfo, ISteamInfo {
 
-
     @Shadow
     protected abstract int getBasePower(int level);
 

@@ -13,6 +13,7 @@ import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import org.lwjgl.input.Mouse;
@@ -24,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(value = GuiMEMonitorable.class)
@@ -36,11 +36,12 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
 
     @Shadow (remap = false)
     protected int jeiOffset;
-    @Unique
-    public final Set<SimpleItem> randomComplement$craftableCache = new HashSet<>();
 
     @Unique
-    private final Set<SimpleItem> randomComplement$mergedCache = new HashSet<>();
+    public final Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+
+    @Unique
+    private final Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;

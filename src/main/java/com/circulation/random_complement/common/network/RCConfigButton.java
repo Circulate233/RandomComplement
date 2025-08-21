@@ -3,15 +3,16 @@ package com.circulation.random_complement.common.network;
 import appeng.container.AEBaseContainer;
 import appeng.util.Platform;
 import com.circulation.random_complement.client.RCSettings;
+import com.circulation.random_complement.common.interfaces.Packet;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import com.circulation.random_complement.common.util.Packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class RCConfigButton implements Packet<RCConfigButton> {
+
     private RCSettings option;
     private boolean rotationDirection;
 

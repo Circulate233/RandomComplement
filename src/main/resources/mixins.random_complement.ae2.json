@@ -14,7 +14,6 @@
     "MixinSecurityCache",
     "MixinTunnelType",
     "MixinWirelessTerminalGuiObject",
-    "container.AccessorContainerMEMonitorable",
     "container.MixinAEBaseContainer",
     "container.MixinContainerCraftConfirm",
     "container.MixinContainerCraftingCPU",

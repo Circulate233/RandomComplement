@@ -17,6 +17,8 @@ import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,14 +35,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class MEHandler {
 
-    public static final Set<SimpleItem> craftableCacheS = new HashSet<>();
+    public static final Set<SimpleItem> craftableCacheS = new ObjectOpenHashSet<>();
 
     public static void drawPlus(int x, int y) {
         Tessellator tessellator = Tessellator.getInstance();
@@ -182,7 +182,7 @@ public class MEHandler {
         return null;
     }
 
-    private static final Map<Integer, ResourceLocation> randomComplement$textures = new HashMap<>();
+    private static final Map<Integer, ResourceLocation> randomComplement$textures = new Object2ObjectOpenHashMap<>();
 
     static {
         randomComplement$textures.put(0,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));

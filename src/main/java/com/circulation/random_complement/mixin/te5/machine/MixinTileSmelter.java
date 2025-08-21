@@ -11,14 +11,13 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = TileSmelter.class, remap = false)
 public abstract class MixinTileSmelter extends TileMachineBase {
 
-
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 0))
-    private int setMachineSmelterReuseChance(int constant, @Local(ordinal = 0) int slot) {
+    private int setMachineSmelterReuseChance(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
         return constant * this.augments[slot].getCount();
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 1))
-    private int setMachineSmelterEnergyMod(int constant, @Local(ordinal = 0) int slot) {
+    private int setMachineSmelterEnergyMod(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
         return RCConfig.TE5.IncreasedEnergyConsumption ? constant * this.augments[slot].getCount() : constant;
     }
 }
