@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2.gui;
 
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.client.me.ItemRepo;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.container.implementations.ContainerPatternEncoder;
 import com.circulation.random_complement.RandomComplement;
@@ -36,6 +37,10 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
 
     @Shadow (remap = false)
     protected int jeiOffset;
+
+    @Shadow(remap = false)
+    @Final
+    protected ItemRepo repo;
 
     @Unique
     public final Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
@@ -105,6 +110,12 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
     @Override
     public void r$addAllList(Set<SimpleItem> list) {
         randomComplement$craftableCache.addAll(list);
+    }
+
+    @Unique
+    @Override
+    public ItemRepo r$getRepo(){
+        return this.repo;
     }
 
 }

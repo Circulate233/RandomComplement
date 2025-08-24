@@ -4,6 +4,7 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.client.me.ItemRepo;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
@@ -88,7 +89,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
             final int cycle = (slots.size() + 8) / 9;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            MEHandler.randomComplement$bindTexture(this.mc,randomComplement$textureIndex);
+            MEHandler.bindTexture(this.mc,randomComplement$textureIndex);
             for (int i = 0; i < cycle; i++) {
                 int amount = Math.min(slots.size() - i * 9,9);
                 int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
@@ -162,6 +163,12 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
         @Accessor
         IItemList<T> getList();
 
+    }
+
+    @Unique
+    @Override
+    public ItemRepo r$getRepo(){
+        return null;
     }
 
 }

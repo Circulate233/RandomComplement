@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.me.ItemRepo;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCGuiButton;
@@ -132,4 +133,9 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
         randomComplement$craftableCache.addAll(list);
     }
 
+    @Unique
+    @Override
+    public ItemRepo r$getRepo(){
+        return null;
+    }
 }

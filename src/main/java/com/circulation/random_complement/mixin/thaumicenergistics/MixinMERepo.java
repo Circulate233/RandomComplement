@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import thaumicenergistics.client.gui.helpers.MERepo;
 import thaumicenergistics.client.gui.helpers.ThEItemSorters;
-import thaumicenergistics.client.gui.part.GuiArcaneTerminal;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,9 +48,9 @@ public class MixinMERepo<T extends IAEStack<T>> {
 
     @Unique
     private boolean randomComplement$isPriorityItem(IAEStack<?> stack) {
-        if (Platform.isClient() && stack instanceof IAEItemStack s && Minecraft.getMinecraft().currentScreen instanceof GuiArcaneTerminal g) {
+        if (Platform.isClient() && stack instanceof IAEItemStack s && Minecraft.getMinecraft().currentScreen instanceof SpecialLogic g) {
             SimpleItem item = SimpleItem.getInstance(s.getDefinition());
-            var list = ((SpecialLogic) g).r$getList();
+            var list = g.r$getList();
             return list.contains(item);
         }
         return false;

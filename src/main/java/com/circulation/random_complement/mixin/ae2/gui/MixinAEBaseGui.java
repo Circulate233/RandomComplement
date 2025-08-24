@@ -4,7 +4,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
-import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.handler.RCInputHandler;
@@ -47,13 +46,14 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     }
 
     @Unique
-    private Set<IAEItemStack> randomComplement$getStorage(GuiMEMonitorable gui) {
-        IItemList<IAEItemStack> all = ((AccessorGuiMEMonitorable) gui).getRepo().getList();
+    private Set<IAEItemStack> randomComplement$getStorage(SpecialLogic gui) {
+        var repo = gui.r$getRepo();
+        IItemList<IAEItemStack> all = repo != null ? repo.getList() : null;
         return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
     }
 
     @Unique
-    private Set<SimpleItem> randomComplement$getCraftables(GuiMEMonitorable gui) {
+    private Set<SimpleItem> randomComplement$getCraftables(SpecialLogic gui) {
         if (randomComplement$craftableCache.isEmpty()) {
             randomComplement$craftableCache = this.randomComplement$getStorage(gui)
                     .stream()
@@ -77,7 +77,8 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable patternTerm) {
+        if (Minecraft.getMinecraft().currentScreen instanceof SpecialLogic patternTerm) {
+            if (patternTerm.r$notMonitorable())return;
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
                     if (randomComplement$getCraftables(patternTerm).contains(SimpleItem.getInstance(slotFake.getDisplayStack()))) {
@@ -93,8 +94,9 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V",remap = false, shift = At.Shift.AFTER))
     private void drawPin(float f, int x, int y, CallbackInfo ci){
-        if ((Object)this instanceof GuiMEMonitorable monitorable){
-            var items = ((SpecialLogic)monitorable).r$getList();
+        if ((Object)this instanceof SpecialLogic monitorable){
+            if (monitorable.r$notMonitorable())return;
+            var items = monitorable.r$getList();
             if (!items.isEmpty()) {
                 List<SlotME> slots = new ArrayList<>();
                 for (Slot slot : this.getInventorySlots()) {
@@ -109,7 +111,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
                 final int cycle = (slots.size() + 8) / 9;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                MEHandler.randomComplement$bindTexture(this.mc,randomComplement$textureIndex);
+                MEHandler.bindTexture(this.mc,randomComplement$textureIndex);
                 for (int i = 0; i < cycle; i++) {
                     int amount = Math.min(slots.size() - i * 9,9);
                     int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)

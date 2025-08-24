@@ -1,13 +1,14 @@
 package com.circulation.random_complement.mixin.ae2fc.gui;
 
+import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.client.gui.implementations.GuiPatternTerm;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.util.SimpleItem;
-import com.circulation.random_complement.mixin.ae2.gui.AccessorGuiMEMonitorable;
 import com.glodblock.github.client.GuiFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.item.ItemGasPacket;
@@ -16,6 +17,7 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
@@ -32,14 +34,18 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Mixin(value = GuiFluidPatternTerminal.class)
-public class MixinGuiFluidPatternTerminal {
+public class MixinGuiFluidPatternTerminal extends GuiPatternTerm {
+
+    public MixinGuiFluidPatternTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+        super(inventoryPlayer, te);
+    }
 
     @Unique
     private Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
-        IItemList<IAEItemStack> all = ((AccessorGuiMEMonitorable)this).getRepo().getList();
+        IItemList<IAEItemStack> all = this.repo.getList();
         return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
     }
 
