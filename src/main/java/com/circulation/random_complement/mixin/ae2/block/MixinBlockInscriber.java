@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.ae2;
+package com.circulation.random_complement.mixin.ae2.block;
 
 import appeng.block.AEBaseTileBlock;
 import appeng.block.misc.BlockInscriber;
