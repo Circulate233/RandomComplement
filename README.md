@@ -15,6 +15,11 @@ Some fixes and content expansion
  - For [MMCE](https://github.com/NovaEngineering-Source/ModularMachinery-Community-Edition):
    - ME Machinery Pattern Provider joins AE2 interface terminal! While custom naming is not supported, the ME Machinery Pattern Provider within the Interface Terminal will dynamically render its designated name from the Modular Machinery.
    - Conducted bug fixes for the compatibility between MMCE Structure Preview and the Pattern Terminal support.
+ - For Botania:
+   - Allow flor geradora to directly link to the mana pool
+   - Allow the use of sparks on Runic Alta
+   - Allow the use of sparks on Botanical Brewery
+   - By default, they are turned off and you need to go to config to open them yourself
  - Fix bug in [AE2FluidCraft-Rework](https://github.com/Circulate233/AE2FluidCraft-Rework) ([#175](https://github.com/AE2-UEL/AE2FluidCraft-Rework/issues/175),PR Already created,After the version update, it will be removed)
  - Related projects with [NotEnoughEnergistics](https://github.com/vfyjxf/NotEnoughEnergistics):
    - The compatibility with [Extended Crafting Terminals for Applied Energistics 2](https://github.com/0xC4DE/Extended-Crafting-Terminals-For-AE2) has been added. Now you can use Ctrl+click on [+] to request the items.
