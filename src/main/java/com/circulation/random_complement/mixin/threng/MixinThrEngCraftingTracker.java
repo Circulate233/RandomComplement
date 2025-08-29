@@ -7,7 +7,6 @@ import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
-import com.circulation.random_complement.RCConfig;
 import gnu.trove.map.TObjectIntMap;
 import io.github.phantamanta44.threng.util.ThrEngCraftingTracker;
 import net.minecraft.item.ItemStack;
@@ -45,9 +44,6 @@ public abstract class MixinThrEngCraftingTracker {
 
     @Inject(method = "requestCrafting",at = @At("HEAD"), cancellable = true)
     public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir){
-        if (!RCConfig.LazyAE.EnableRepair){
-            return;
-        }
         if (item != null) {
             ItemStack inputStack = item.getCachedItemStack(item.getStackSize());
             ItemStack remaining = ItemStack.EMPTY;
@@ -108,9 +104,6 @@ public abstract class MixinThrEngCraftingTracker {
 
     @Inject(method = "isSlotOpen",at = @At("HEAD"))
     public void isSlotOpenMixin(int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!RCConfig.LazyAE.EnableRepair){
-            return;
-        }
         if (this.links[i] != null && (this.links[i].isCanceled() || this.links[i].isDone())) {
             this.linksInv.remove(this.links[i]);
             this.links[i] = null;
@@ -123,9 +116,6 @@ public abstract class MixinThrEngCraftingTracker {
      */
     @Inject(method = "updateLinks",at = @At("HEAD"), cancellable = true)
     private void updateLinks(CallbackInfo ci){
-        if (!RCConfig.LazyAE.EnableRepair){
-            return;
-        }
         ci.cancel();
         //这东西究竟是怎么无限循环的？？？
     }

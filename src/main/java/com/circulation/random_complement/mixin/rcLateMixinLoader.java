@@ -1,8 +1,13 @@
 package com.circulation.random_complement.mixin;
 
+import com.circulation.random_complement.RCConfig;
+import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.common.util.VersionParser;
 import hellfirepvp.modularmachinery.ModularMachinery;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.ILateMixinLoader;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -21,18 +25,19 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     public static final Logger LOG = LogManager.getLogger("RC");
     public static final String LOG_PREFIX = "[RC]" + ' ';
-    private static final Map<String, BooleanSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
+    private static final Map<String, BooleanSupplier> MIXIN_CONFIGS = new Object2ObjectLinkedOpenHashMap<>();
 
     static {
+        ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
         try {
-            if (modLoaded("modularmachinery")){
+            if (modLoaded("modularmachinery")) {
                 MMCEInit();
             }
         } catch (IllegalAccessException | NoSuchFieldException ignored) {
         }
-        if (modLoaded("appliedenergistics2")){
+        if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
-            addModdedMixinCFG("mixins.random_complement.ae2.jei.json","jei");
+            addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
             if (modLoaded("neenergistics")) {
                 addMixinCFG("mixins.random_complement.nee.json");
@@ -40,14 +45,22 @@ public class rcLateMixinLoader implements ILateMixinLoader {
                 addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
             }
         }
-        addModdedMixinCFG("mixins.random_complement.threng.json", "threng");
+        if (modLoaded("botania")) {
+            addMixinCFG("mixins.random_complement.botania.json",
+                    () -> RCConfig.Botania.BugFix);
+            addMixinCFG("mixins.random_complement.botania.flower.json",
+                    () -> RCConfig.Botania.FlowerLinkPool);
+            addMixinCFG("mixins.random_complement.botania.spark.json",
+                    () -> RCConfig.Botania.SparkSupport);
+        }
+        addMixinCFG("mixins.random_complement.threng.json",
+                () -> modLoaded("threng") && RCConfig.LazyAE.EnableRepair);
         addModdedMixinCFG("mixins.random_complement.ae2fc.json", "ae2fc");
         addModdedMixinCFG("mixins.random_complement.ic2.json", "ic2");
         addModdedMixinCFG("mixins.random_complement.te5.json", "thermalexpansion");
         addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json", "thaumicenergistics");
         addModdedMixinCFG("mixins.random_complement.ftbu.json", "ftbutilities");
         addModdedMixinCFG("mixins.random_complement.tf5.json", "thermalfoundation");
-        addModdedMixinCFG("mixins.random_complement.botania.json", "botania");
         addModdedMixinCFG("mixins.random_complement.cofhcore.json", "cofhcore");
         addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
         addModdedMixinCFG("mixins.random_complement.extendedae.json", "extendedae");
@@ -57,8 +70,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     @Optional.Method(modid = "modularmachinery")
     public static void MMCEInit() throws NoSuchFieldException, IllegalAccessException {
         var mmVersionField = (String) ModularMachinery.class.getField("VERSION").get(null);
-        if (VersionParser.MinimumVersion(mmVersionField,"2.1.0")
-                && !VersionParser.MinimumVersion(mmVersionField,"2.1.6")){
+        if (VersionParser.MinimumVersion(mmVersionField, "2.1.0")
+                && !VersionParser.MinimumVersion(mmVersionField, "2.1.6")) {
             addMixinCFG("mixins.random_complement.mmce.json");
             addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
         }

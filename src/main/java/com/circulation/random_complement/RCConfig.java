@@ -122,10 +122,30 @@ public class RCConfig {
     }
 
     public static class Botania{
-        @Config.Comment({"If the Mana Spreader output mana is greater than the maximum value of the Mana Spreader after installing the Mana Lens, the output will be based on the maximum value of the Mana Spreader"})
-        @Config.Name("ManaSpreaderFix")
+        @Config.Comment({"Fix some bugs. If there is a problem as a result, it should be closed"})
+        @Config.Name("BugFix")
         @Config.RequiresMcRestart
-        public boolean ManaSpreaderFix = true;
+        public boolean BugFix = true;
+
+        @Config.Comment({"Allow flor geradora to directly link to the mana pool"})
+        @Config.Name("FlowerLinkPool")
+        @Config.RequiresMcRestart
+        public boolean FlowerLinkPool = false;
+
+        @Config.Comment({"If false, Spark Support will not take effect"})
+        @Config.Name("SparkSupport")
+        @Config.RequiresMcRestart
+        public boolean SparkSupport = false;
+
+        @Config.Comment({"Allow the use of sparks on Runic Altar"})
+        @Config.Name("RuneAltarSparkSupport")
+        @Config.RequiresMcRestart
+        public boolean RuneAltarSparkSupport = false;
+
+        @Config.Comment({"Allow the use of sparks on Botanical Brewery"})
+        @Config.Name("BrewerySparkSupport")
+        @Config.RequiresMcRestart
+        public boolean BrewerySparkSupport = false;
     }
 
     public static class COFHCORE {

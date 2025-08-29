@@ -1,6 +1,5 @@
 package com.circulation.random_complement.mixin.botania;
 
-import com.circulation.random_complement.RCConfig;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.util.ITickable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ public abstract class MixinTileSpreader extends TileSimpleInventory implements I
 
     @Inject(method = "getBurst", at = @At(value = "INVOKE", target = "Lvazkii/botania/common/entity/EntityManaBurst;setSourceLens(Lnet/minecraft/item/ItemStack;)V"))
     public void Fixtransfersettings(boolean fake, CallbackInfoReturnable<EntityManaBurst> cir, @Local(ordinal = 0) BurstProperties burstProperties) {
-        if (RCConfig.Botania.ManaSpreaderFix && burstProperties.maxMana > getMaxMana()) {
+        if (burstProperties.maxMana > getMaxMana()) {
             burstProperties.maxMana = getMaxMana();
         }
     }

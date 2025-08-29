@@ -18,7 +18,6 @@ import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
-import com.circulation.random_complement.RCConfig;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
@@ -75,9 +74,6 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
      */
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     protected void tick(CallbackInfo ci) {
-        if (!RCConfig.LazyAE.EnableRepair) {
-            return;
-        }
         if (!this.world.isRemote) {
             this.aeGrid().ifPresent((grid) -> {
                 if (this.sleepTicks <= 0) {
@@ -131,9 +127,6 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
      */
     @Inject(method = "injectCraftedItems", at = @At("HEAD"), cancellable = true)
     public void injectCraftedItems(ICraftingLink link, IAEItemStack stack, Actionable mode, CallbackInfoReturnable<IAEItemStack> cir) {
-        if (!RCConfig.LazyAE.EnableRepair) {
-            return;
-        }
         if (stack == null) {
             cir.setReturnValue(null);
         } else {

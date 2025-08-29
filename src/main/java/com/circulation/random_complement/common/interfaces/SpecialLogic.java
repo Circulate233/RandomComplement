@@ -15,7 +15,9 @@ public interface SpecialLogic {
 
     void r$addAllList(Set<SimpleItem> list);
 
-    ItemRepo r$getRepo();
+    default ItemRepo r$getRepo(){
+        return null;
+    }
 
     default boolean r$notMonitorable(){
         return r$getRepo() == null;

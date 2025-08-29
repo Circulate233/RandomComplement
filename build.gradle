@@ -230,7 +230,7 @@ dependencies {
     compileOnly rfg.deobf("curse.maven:nae2-884359:5380800")
     compileOnly rfg.deobf('curse.maven:ftb-library-237167:2985811')
     compileOnly rfg.deobf('curse.maven:ftb-utilities-237102:3157548')
-    compileOnly rfg.deobf("curse.maven:botania-225643:3330934")
+    implementation(rfg.deobf("curse.maven:botania-225643:3330934"))
     compileOnly rfg.deobf("curse.maven:Shulker-Tooltip-292899:3321356")
     compileOnly rfg.deobf("curse.maven:ex-pattern-provider-892005:4773929")
     compileOnly rfg.deobf("curse.maven:Flux-Networks-248020:3178199")

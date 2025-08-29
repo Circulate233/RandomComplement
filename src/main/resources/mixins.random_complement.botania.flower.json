@@ -1,5 +1,5 @@
 {
-  "package": "com.circulation.random_complement.mixin.botania",
+  "package": "com.circulation.random_complement.mixin.botania.flower",
   "required": true,
   "refmap": "mixins.random_complement.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,10 +9,12 @@
     "maxShiftBy": 2
   },
   "mixins": [
-    "MixinModelBrewery",
-    "MixinTileSpreader"
+    "MixinItemObedienceStick",
+    "MixinManaNetworkHandler",
+    "MixinTilePool"
   ],
   "server": [],
   "client": [
-	]
+    "MixinInternalMethodHandler"
+  ]
 }

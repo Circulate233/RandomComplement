@@ -4,7 +4,6 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import appeng.client.me.ItemRepo;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
@@ -55,7 +54,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
-        IItemList<IAEItemStack> all = ((AccessorMERepo<IAEItemStack>)this.getRepo()).getList();
+        IItemList<IAEItemStack> all = ((AccessorMERepo<IAEItemStack>) this.getRepo()).getList();
         return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
     }
 
@@ -73,7 +72,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     }
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At("TAIL"))
-    private void drawPin(float f, int x, int y, CallbackInfo ci){
+    private void drawPin(float f, int x, int y, CallbackInfo ci) {
         var items = this.r$getList();
         if (!items.isEmpty()) {
             List<SlotME<?>> slots = new ObjectArrayList<>();
@@ -89,9 +88,9 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
             final int cycle = (slots.size() + 8) / 9;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            MEHandler.bindTexture(this.mc,randomComplement$textureIndex);
+            MEHandler.bindTexture(this.mc, randomComplement$textureIndex);
             for (int i = 0; i < cycle; i++) {
-                int amount = Math.min(slots.size() - i * 9,9);
+                int amount = Math.min(slots.size() - i * 9, 9);
                 int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
                         ? RCInputHandler.counter * 18
                         : (randomComplement$textureIndex - 3) * 18;
@@ -109,7 +108,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     @Override
-    public void drawSlot(Slot slot){
+    public void drawSlot(Slot slot) {
         super.drawSlot(slot);
         if (slot instanceof SlotME<?> slotME) {
             var aeStack = slotME.getAEStack();
@@ -130,7 +129,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     @Unique
     @Override
     public Set<SimpleItem> r$getList() {
-        if (randomComplement$mergedCache.isEmpty()){
+        if (randomComplement$mergedCache.isEmpty()) {
             randomComplement$mergedCache.addAll(MEHandler.craftableCacheS);
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
             MEHandler.craftableCacheS.clear();
@@ -157,18 +156,12 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
         randomComplement$craftableCache.addAll(list);
     }
 
-    @Mixin(value = MERepo.class,remap = false)
+    @Mixin(value = MERepo.class, remap = false)
     public interface AccessorMERepo<T extends IAEStack<T>> {
 
         @Accessor
         IItemList<T> getList();
 
-    }
-
-    @Unique
-    @Override
-    public ItemRepo r$getRepo(){
-        return null;
     }
 
 }

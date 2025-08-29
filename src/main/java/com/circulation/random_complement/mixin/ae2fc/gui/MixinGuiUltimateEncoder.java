@@ -2,7 +2,6 @@ package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
-import appeng.client.me.ItemRepo;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCGuiButton;
@@ -57,30 +56,30 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
         super(container);
     }
 
-    @Inject(method = "initGui",at = @At(value = "INVOKE", target = "Lappeng/client/gui/widgets/GuiImgButton;<init>(IILjava/lang/Enum;Ljava/lang/Enum;)V",ordinal = 3,remap = false),remap = true)
+    @Inject(method = "initGui", at = @At(value = "INVOKE", target = "Lappeng/client/gui/widgets/GuiImgButton;<init>(IILjava/lang/Enum;Ljava/lang/Enum;)V", ordinal = 3, remap = false), remap = true)
     public void initGuiMixin(CallbackInfo ci) {
         int i = 0;
-        this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18,this.guiTop + i++ * 20 + 8, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));
+        this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18, this.guiTop + i++ * 20 + 8, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));
         this.randomComplement$AutoFillPattern.setEXMessage(I18n.format("gui.pattern_term.auto_fill_pattern.ex.text"));
     }
 
-    @Inject(method = "drawFG",at = @At("HEAD"),remap = false)
+    @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFGMixin(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
         if (this.randomComplement$AutoFillPattern != null) {
             this.randomComplement$AutoFillPattern.set(((PatternTermConfigs) this.container).r$getAutoFillPattern());
         }
     }
 
-    @Inject(method = "actionPerformed",at = @At("TAIL"),remap = true)
-    protected void actionPerformedMixin(GuiButton btn, CallbackInfo ci){
+    @Inject(method = "actionPerformed", at = @At("TAIL"), remap = true)
+    protected void actionPerformedMixin(GuiButton btn, CallbackInfo ci) {
         boolean backwards = Mouse.isButtonDown(1);
         if (btn == this.randomComplement$AutoFillPattern) {
             var option = this.randomComplement$AutoFillPattern.getRCSetting();
-            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option,backwards));
+            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
         }
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "HEAD"),remap = true)
+    @Inject(method = "drawSlot", at = @At(value = "HEAD"), remap = true)
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (!this.randomComplement$craftableCache.isEmpty() && slot instanceof SlotFake slotFake) {
             var item = slotFake.getDisplayStack();
@@ -101,7 +100,7 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot){
+    private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot) {
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
             if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
@@ -131,11 +130,5 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
     @Override
     public void r$addAllList(Set<SimpleItem> list) {
         randomComplement$craftableCache.addAll(list);
-    }
-
-    @Unique
-    @Override
-    public ItemRepo r$getRepo(){
-        return null;
     }
 }
