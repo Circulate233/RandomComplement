@@ -66,8 +66,9 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
             at = @At(
                     value = "INVOKE",
                     target = "Lappeng/client/gui/AEBaseGui;actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V",
-                    shift = At.Shift.AFTER
-            ), cancellable = true,remap = false)
+                    shift = At.Shift.AFTER,
+                    remap = false
+            ), cancellable = true)
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
         if (RCInputHandler.oldGui == null)return;
         if (btn == this.start || btn == this.cancel) {
@@ -79,8 +80,6 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
                 }
             }
 
-            if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown())rc$addMissBookmark();
-
             GuiScreen oldGui;
             if ((oldGui = RCInputHandler.oldGui) != null) {
                 RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
@@ -88,6 +87,8 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
             }
             ci.cancel();
         }
+
+        if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown())rc$addMissBookmark();
     }
 
     @Unique

@@ -21,10 +21,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = GuiFCCraftConfirm.class,remap = false)
+@Mixin(value = GuiFCCraftConfirm.class)
 public class MixinGuiFCCraftConfirm extends GuiCraftConfirm {
 
-    @Shadow
+    @Shadow(remap = false)
     private GuiButton cancel;
 
     public MixinGuiFCCraftConfirm(InventoryPlayer inventoryPlayer, ITerminalHost te) {
@@ -44,7 +44,8 @@ public class MixinGuiFCCraftConfirm extends GuiCraftConfirm {
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/glodblock/github/inventory/InventoryHandler;switchGui(Lcom/glodblock/github/inventory/GuiType;)V",
-                    shift = At.Shift.AFTER
+                    shift = At.Shift.AFTER,
+                    remap = false
             ))
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
         if (Loader.isModLoaded("jei") && isShiftKeyDown())rc$addMissBookmark();
