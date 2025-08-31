@@ -30,7 +30,6 @@
   ],
   "server": [],
   "client": [
-    "gui.AccessorGuiCraftConfirm",
     "gui.MixinAEBaseGui",
     "gui.MixinGuiCraftAmount",
     "gui.MixinGuiCraftConfirm",

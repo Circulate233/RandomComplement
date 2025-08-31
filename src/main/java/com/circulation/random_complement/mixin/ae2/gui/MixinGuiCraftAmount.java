@@ -36,12 +36,7 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
         super(container);
     }
 
-    @Inject(
-            method = "actionPerformed",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lappeng/client/gui/AEBaseGui;actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V",
-                    shift = At.Shift.AFTER), cancellable = true)
+    @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true, remap = true)
     public void onActionPerformed(GuiButton btn, CallbackInfo ci) {
         if (RCInputHandler.oldGui == null) return;
         if (btn == this.originalGuiBtn || btn == this.next) {
@@ -72,8 +67,8 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
                     }
 
                     NetworkHandler.instance().sendToServer(new PacketCraftRequest(result, isShift));
+                    ci.cancel();
                 }
-                ci.cancel();
             } catch (NumberFormatException var5) {
                 this.amountToCraft.setText("1");
             }

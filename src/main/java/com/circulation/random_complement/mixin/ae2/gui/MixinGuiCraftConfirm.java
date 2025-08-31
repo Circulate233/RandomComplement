@@ -10,12 +10,13 @@ import appeng.core.sync.packets.PacketValueConfig;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.RCGuiCraftConfirm;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
+import com.circulation.random_complement.common.util.AEBookmarkGroup;
 import com.google.common.base.Joiner;
 import mezz.jei.Internal;
 import mezz.jei.bookmarks.BookmarkGroup;
-import mezz.jei.bookmarks.BookmarkItem;
 import mezz.jei.bookmarks.BookmarkList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(value = GuiCraftConfirm.class,priority = 999)
-public abstract class MixinGuiCraftConfirm extends AEBaseGui {
+public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCraftConfirm {
     public MixinGuiCraftConfirm(Container container) {
         super(container);
     }
@@ -54,23 +55,17 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     @Final
     private IItemList<IAEItemStack> missing;
 
-    @Inject(method = "drawFG",at = @At("TAIL"),remap = false)
-    private void onDrawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci){
-        if (this.cancel.isMouseOver() && Loader.isModLoaded("jei")){
-            this.drawHoveringText(I18n.format("text.rc.confirm_cancel"),mouseX - offsetX,mouseY - offsetY);
+    @Inject(method = "drawFG", at = @At("TAIL"), remap = false)
+    private void onDrawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
+        if (this.cancel.isMouseOver() && Loader.isModLoaded("jei")) {
+            this.drawHoveringText(I18n.format("text.rc.confirm_cancel"), mouseX - offsetX, mouseY - offsetY);
         }
     }
 
-    @Inject(
-            method = "actionPerformed",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lappeng/client/gui/AEBaseGui;actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V",
-                    shift = At.Shift.AFTER,
-                    remap = false
-            ), cancellable = true)
+    @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
-        if (RCInputHandler.oldGui == null)return;
+        if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown()) rc$addMissBookmark();
+        if (RCInputHandler.oldGui == null) return;
         if (btn == this.start || btn == this.cancel) {
             if (btn == this.start) {
                 try {
@@ -87,20 +82,14 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
             }
             ci.cancel();
         }
-
-        if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown())rc$addMissBookmark();
     }
 
     @Unique
+    @Override
     @Optional.Method(modid = "jei")
-    private void rc$addMissBookmark(){
+    public void rc$addMissBookmark() {
         BookmarkList bookmarkList = Internal.getBookmarkList();
-        BookmarkGroup group = new BookmarkGroup(bookmarkList.nextId());
-        for (IAEItemStack iaeItemStack : this.missing) {
-            var item = new BookmarkItem<>(iaeItemStack.createItemStack());
-            item.amount = iaeItemStack.getStackSize();
-            group.addItem(item);
-        }
+        BookmarkGroup group = new AEBookmarkGroup(bookmarkList.nextId(),this.missing);
         bookmarkList.add(group);
     }
 

@@ -9,10 +9,10 @@
     "maxShiftBy": 2
   },
   "mixins": [
-    "MixinModelBrewery",
     "MixinTileSpreader"
   ],
   "server": [],
   "client": [
-	]
+    "MixinModelBrewery"
+  ]
 }
