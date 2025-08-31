@@ -1,5 +1,7 @@
 package com.circulation.random_complement.mixin.ae2.gui;
 
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiCraftConfirm;
 import appeng.core.AELog;
@@ -11,12 +13,20 @@ import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.google.common.base.Joiner;
+import mezz.jei.Internal;
+import mezz.jei.bookmarks.BookmarkGroup;
+import mezz.jei.bookmarks.BookmarkItem;
+import mezz.jei.bookmarks.BookmarkList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,6 +50,17 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     @Shadow(remap = false)
     private GuiButton start;
 
+    @Shadow(remap = false)
+    @Final
+    private IItemList<IAEItemStack> missing;
+
+    @Inject(method = "drawFG",at = @At("TAIL"),remap = false)
+    private void onDrawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci){
+        if (this.cancel.isMouseOver() && Loader.isModLoaded("jei")){
+            this.drawHoveringText(I18n.format("text.rc.confirm_cancel"),mouseX - offsetX,mouseY - offsetY);
+        }
+    }
+
     @Inject(
             method = "actionPerformed",
             at = @At(
@@ -49,7 +70,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
             ), cancellable = true,remap = false)
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
         if (RCInputHandler.oldGui == null)return;
-        if (btn == this.start || btn == cancel) {
+        if (btn == this.start || btn == this.cancel) {
             if (btn == this.start) {
                 try {
                     NetworkHandler.instance().sendToServer(new PacketValueConfig("Terminal.Start", "Start"));
@@ -58,13 +79,28 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
                 }
             }
 
+            if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown())rc$addMissBookmark();
+
             GuiScreen oldGui;
             if ((oldGui = RCInputHandler.oldGui) != null) {
                 RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
                 RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
-                ci.cancel();
             }
+            ci.cancel();
         }
+    }
+
+    @Unique
+    @Optional.Method(modid = "jei")
+    private void rc$addMissBookmark(){
+        BookmarkList bookmarkList = Internal.getBookmarkList();
+        BookmarkGroup group = new BookmarkGroup(bookmarkList.nextId());
+        for (IAEItemStack iaeItemStack : this.missing) {
+            var item = new BookmarkItem<>(iaeItemStack.createItemStack());
+            item.amount = iaeItemStack.getStackSize();
+            group.addItem(item);
+        }
+        bookmarkList.add(group);
     }
 
     @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)

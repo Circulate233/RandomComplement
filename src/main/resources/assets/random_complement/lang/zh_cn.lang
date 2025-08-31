@@ -39,3 +39,5 @@ key.start_craft.desc=向AE请求合成
 
 text.rc.craft=此物品无对应合成
 text.rc.warn=你不应该如此快速的尝试
+
+text.rc.confirm_cancel=按下shift时点击将缺失的材料全部加入HEI书签

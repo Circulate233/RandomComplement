@@ -22,21 +22,21 @@ public abstract class MixinIngredientListBatchRenderer {
     @Shadow
     @Final
     @Mutable
-    private List<IngredientListSlot> slots;
+    protected List<List<IngredientListSlot>> slots;
     @Shadow
     @Final
     @Mutable
-    private List<ItemStackFastRenderer> renderItems2d;
+    protected List<ItemStackFastRenderer> renderItems2d;
     @Shadow
     @Final
     @Mutable
-    private List<ItemStackFastRenderer> renderItems3d;
+    protected List<ItemStackFastRenderer> renderItems3d;
     @Shadow
     @Final
     @Mutable
-    private List<IngredientRenderer<?>> renderOther;
+    protected List<IngredientRenderer<?>> renderOther;
 
-    @Inject(method = "<init>",at = @At("TAIL"))
+    @Inject(method = "<init>(Z)V",at = @At("TAIL"))
     public void onInit(CallbackInfo ci){
         slots = ObjectLists.synchronize(new ObjectArrayList<>());
         renderItems2d = ObjectLists.synchronize(new ObjectArrayList<>());

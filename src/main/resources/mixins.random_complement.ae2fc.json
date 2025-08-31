@@ -20,6 +20,7 @@
   "server": [],
   "client": [
     "gui.MixinGuiExtendedFluidPatternTerminal",
+    "gui.MixinGuiFCCraftConfirm",
     "gui.MixinGuiFluidPatternTerminal",
     "gui.MixinGuiUltimateEncoder",
     "gui.MixinGuiWirelessFluidPatternTerminal"

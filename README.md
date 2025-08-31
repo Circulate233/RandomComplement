@@ -15,7 +15,7 @@ Some fixes and content expansion
  - For [MMCE](https://github.com/NovaEngineering-Source/ModularMachinery-Community-Edition):
    - ME Machinery Pattern Provider joins AE2 interface terminal! While custom naming is not supported, the ME Machinery Pattern Provider within the Interface Terminal will dynamically render its designated name from the Modular Machinery.
    - Conducted bug fixes for the compatibility between MMCE Structure Preview and the Pattern Terminal support.
- - For Botania:
+ - For [Botania](https://github.com/VazkiiMods/Botania):
    - Allow flor geradora to directly link to the mana pool
    - Allow the use of sparks on Runic Alta
    - Allow the use of sparks on Botanical Brewery
