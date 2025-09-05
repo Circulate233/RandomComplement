@@ -4,11 +4,13 @@ import appeng.api.AEApi;
 import appeng.block.crafting.BlockCraftingUnit;
 import co.neeve.nae2.NAE2;
 import com.circulation.random_complement.common.util.SimpleItem;
+import dev.rlnt.extracpus.setup.ModBlocks;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
@@ -65,6 +67,7 @@ public class CraftingUnitHandler {
     public static void register() {
         registerAE();
         if (Loader.isModLoaded("nae2")) registerNAE2();
+        if (Loader.isModLoaded("extracpus")) registerEXCPU();
     }
 
     private static void registerAE() {
@@ -87,5 +90,28 @@ public class CraftingUnitHandler {
         addMatch(materials.cellPart1024K().maybeStack(1).get(), blocks.storageCrafting1024K().maybeBlock().get());
         addMatch(materials.cellPart4096K().maybeStack(1).get(), blocks.storageCrafting4096K().maybeBlock().get());
         addMatch(materials.cellPart16384K().maybeStack(1).get(), blocks.storageCrafting16384K().maybeBlock().get());
+    }
+
+    /*
+     * 没人知道这玩意会不会出问题，起码我不能
+     * 我受够了
+     */
+    @Optional.Method(modid = "extracpus")
+    private static void registerEXCPU() {
+        if (Loader.isModLoaded("extracells")) {
+            Item item = Item.getByNameOrId("extracells:storage.component");
+            int i = 0;
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_256K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), Block.getBlockFromName("extracpus:crafting_storage_16384k"));
+        } else if (Loader.isModLoaded("aeadditions")) {
+            Item item = Item.getByNameOrId("aeadditions:storage.component");
+            int i = 0;
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_256K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock().get());
+            addMatch(new ItemStack(item, 1, i++), Block.getBlockFromName("extracpus:crafting_storage_16384k"));
+        }
     }
 }

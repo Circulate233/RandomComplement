@@ -234,6 +234,8 @@ dependencies {
     compileOnly rfg.deobf("curse.maven:Shulker-Tooltip-292899:3321356")
     compileOnly rfg.deobf("curse.maven:ex-pattern-provider-892005:4773929")
     compileOnly rfg.deobf("curse.maven:Flux-Networks-248020:3178199")
+    compileOnly(rfg.deobf("curse.maven:ae-additions-extra-cells-2-fork-493962:3814371"))
+    compileOnly(rfg.deobf("curse.maven:extracpus-408089:3479639"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
