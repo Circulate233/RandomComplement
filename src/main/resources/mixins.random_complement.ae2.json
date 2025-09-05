@@ -11,6 +11,7 @@
     "MixinGuiBridge",
     "MixinPacketCraftRequest",
     "MixinPacketTypes",
+    "MixinQuantumCluster",
     "MixinSecurityCache",
     "MixinTunnelType",
     "MixinWirelessTerminalGuiObject",
@@ -26,7 +27,8 @@
     "container.MixinContainerWirelessPatternTerminal",
     "me.storage.MixinCreativeCellInventory",
     "part.MixinAbstractPartEncoder",
-    "tile.MixinTileInscriber"
+    "tile.MixinTileInscriber",
+    "tile.MixinTileQuantumBridge"
   ],
   "server": [],
   "client": [
