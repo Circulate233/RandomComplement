@@ -26,12 +26,6 @@ public abstract class MixinQuantumCluster implements RCQuantumCluster {
 
     @Unique
     @Override
-    public ConnectionWrapper r$getConnection() {
-        return this.connection;
-    }
-
-    @Unique
-    @Override
     public TileQuantumBridge[] r$getRing() {
         return this.Ring;
     }
