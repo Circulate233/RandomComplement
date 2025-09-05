@@ -12,9 +12,9 @@ import java.util.concurrent.ExecutionException;
 public final class SimpleItem {
     @NotNull
     public String str;
-    private static final SimpleItem empty = new SimpleItem("e");
+    public static final SimpleItem empty = new SimpleItem("e");
 
-    private SimpleItem(ItemStack itemStack){
+    private SimpleItem(ItemStack itemStack) {
         var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
         if (itemStack.hasTagCompound()) {
             key.append(itemStack.getTagCompound().hashCode());
@@ -22,7 +22,7 @@ public final class SimpleItem {
         this.str = key.toString();
     }
 
-    private SimpleItem(@NotNull String str){
+    private SimpleItem(@NotNull String str) {
         this.str = str;
     }
 
@@ -39,7 +39,7 @@ public final class SimpleItem {
 
     public static SimpleItem getInstance(@NotNull ItemStack itemStack) {
         try {
-            if (itemStack.isEmpty())return empty;
+            if (itemStack.isEmpty()) return empty;
             var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
             if (itemStack.hasTagCompound()) {
                 key.append(itemStack.getTagCompound().hashCode());
@@ -54,7 +54,7 @@ public final class SimpleItem {
         return getInstance(itemStack.getDefinition());
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this == empty;
     }
 
@@ -67,12 +67,12 @@ public final class SimpleItem {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.str;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.str.hashCode();
     }
 

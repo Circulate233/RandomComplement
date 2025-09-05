@@ -41,3 +41,5 @@ text.rc.craft=This item has no corresponding crafting
 text.rc.warn=You shouldn't have tried so quickly
 
 text.rc.confirm_cancel=Click while holding Shift to add all missing materials to HEI bookmarks
+
+error.rc.cpu=§6The CPU is working!

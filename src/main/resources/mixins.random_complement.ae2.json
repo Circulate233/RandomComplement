@@ -16,6 +16,7 @@
     "MixinTunnelType",
     "MixinWirelessTerminalGuiObject",
     "block.MixinBlockController",
+    "block.MixinBlockCraftingUnit",
     "block.MixinBlockInscriber",
     "container.MixinAEBaseContainer",
     "container.MixinContainerCraftConfirm",
