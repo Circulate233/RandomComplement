@@ -4,13 +4,13 @@ import net.minecraft.util.text.translation.I18n;
 
 public interface localizationAPI {
 
-    String root();
+    String getRoot();
 
     default String getLocal() {
         return I18n.translateToLocal(this.getUnlocalized());
     }
 
     default String getUnlocalized() {
-        return this.root() + '.' + this;
+        return this.getRoot() + '.' + this;
     }
 }

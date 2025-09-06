@@ -51,8 +51,8 @@ public class MixinPacketCraftRequest {
                 int windowId = entityPlayerMP.currentWindowId;
                 var newContainer = new ContainerCraftConfirm(p.inventory,
                         MEHandler.getTerminalGuiObject(
-                                isBauble ? r$readBaubles(p,slot): p.inventory.getStackInSlot(slot),
-                                p,slot,isBauble ? 1 : 0
+                                isBauble ? r$readBaubles(p, slot) : p.inventory.getStackInSlot(slot),
+                                p, slot, isBauble ? 1 : 0
                         ));
                 entityPlayerMP.openContainer = newContainer;
                 entityPlayerMP.openContainer.windowId = windowId;
@@ -79,7 +79,7 @@ public class MixinPacketCraftRequest {
 
     @Unique
     @Optional.Method(modid = "baubles")
-    private static ItemStack r$readBaubles(EntityPlayer player,int slot) {
+    private static ItemStack r$readBaubles(EntityPlayer player, int slot) {
         return BaublesApi.getBaublesHandler(player).getStackInSlot(slot);
     }
 

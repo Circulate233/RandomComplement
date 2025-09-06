@@ -48,10 +48,10 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
 
     @SideOnly(Side.CLIENT)
     public void ClientRun() {
-        if (RCInputHandler.delayMethod != null) {
-            RCInputHandler.delayMethod.run();
-            RCInputHandler.delayMethod = null;
-            RCInputHandler.oldGui = null;
+        if (RCInputHandler.getDelayMethod() != null) {
+            RCInputHandler.getDelayMethod().run();
+            RCInputHandler.setDelayMethod(null);
+            RCInputHandler.setOldGui(null);
         }
     }
 }

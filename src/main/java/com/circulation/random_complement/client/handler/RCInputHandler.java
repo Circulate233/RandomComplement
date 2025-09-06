@@ -2,6 +2,8 @@ package com.circulation.random_complement.client.handler;
 
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,18 +28,23 @@ public class RCInputHandler {
     public static RCInputHandler INSTANCE = new RCInputHandler();
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static int tick = 0;
-    public static int counter = 0;
+    @Getter
+    private static int counter = 0;
     private static int counter1 = 0;
-    public static GuiScreen oldGui = null;
-    public static Runnable delayMethod = null;
+    @Setter
+    @Getter
+    private static GuiScreen oldGui = null;
+    @Setter
+    @Getter
+    private static Runnable delayMethod = null;
 
-    private RCInputHandler(){
+    private RCInputHandler() {
 
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event){
-        if (tick > 0){
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (tick > 0) {
             tick--;
         }
         counter = (counter + ((++counter1 & 1) == 0 ? 1 : 0)) % 14;
@@ -61,7 +68,8 @@ public class RCInputHandler {
 
                 if (state.getBlock().isAir(state, world, target.getBlockPos())) return;
 
-                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state)) te = world.getTileEntity(target.getBlockPos());
+                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
+                    te = world.getTileEntity(target.getBlockPos());
 
                 result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player);
             }
@@ -74,7 +82,7 @@ public class RCInputHandler {
                 Minecraft.getMinecraft().storeTEInStack(result, te);
             }
 
-            if (player.isSneaking()){
+            if (player.isSneaking()) {
                 result.setCount(1);
             } else {
                 result.setCount(result.getItem().getItemStackLimit(result));
@@ -83,20 +91,20 @@ public class RCInputHandler {
             int slot = player.inventory.getSlotFor(result);
             if (InventoryPlayer.isHotbar(slot)) {
                 player.inventory.currentItem = slot;
-            } else if (slot != -1){
+            } else if (slot != -1) {
                 return;
             }
 
             if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
                 for (int i = 0; i < 9; i++) {
-                    if (player.inventory.getStackInSlot(i).isEmpty()){
+                    if (player.inventory.getStackInSlot(i).isEmpty()) {
                         player.inventory.currentItem = i;
                         break;
                     }
                 }
             }
 
-            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result,player.inventory.currentItem));
+            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
             tick = 20;
         }
     }
@@ -119,7 +127,8 @@ public class RCInputHandler {
 
                 if (state.getBlock().isAir(state, world, target.getBlockPos())) return;
 
-                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state)) te = world.getTileEntity(target.getBlockPos());
+                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
+                    te = world.getTileEntity(target.getBlockPos());
 
                 result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player);
             }
@@ -132,7 +141,7 @@ public class RCInputHandler {
                 Minecraft.getMinecraft().storeTEInStack(result, te);
             }
 
-            if (player.isSneaking()){
+            if (player.isSneaking()) {
                 result.setCount(1);
             } else {
                 result.setCount(result.getItem().getItemStackLimit(result));
@@ -141,20 +150,20 @@ public class RCInputHandler {
             int slot = player.inventory.getSlotFor(result);
             if (InventoryPlayer.isHotbar(slot)) {
                 player.inventory.currentItem = slot;
-            } else if (slot != -1){
+            } else if (slot != -1) {
                 return;
             }
 
             if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
                 for (int i = 0; i < 9; i++) {
-                    if (player.inventory.getStackInSlot(i).isEmpty()){
+                    if (player.inventory.getStackInSlot(i).isEmpty()) {
                         player.inventory.currentItem = i;
                         break;
                     }
                 }
             }
 
-            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result,player.inventory.currentItem));
+            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
             tick = 20;
         }
     }

@@ -8,6 +8,7 @@
     "MixinAppEngClientPacketHandler",
     "MixinAppEngServerPacketHandler",
     "MixinCraftingGridCache",
+    "MixinCraftingJob",
     "MixinGuiBridge",
     "MixinPacketCraftRequest",
     "MixinPacketTypes",

@@ -43,7 +43,7 @@ public class RCConfigButton implements Packet<RCConfigButton> {
         if (sender.openContainer instanceof AEBaseContainer baseContainer) {
             if (baseContainer.getTarget() instanceof RCIConfigurableObject obj) {
                 RCIConfigManager cm = obj.r$getConfigManager();
-                Enum<?> newState = Platform.rotateEnum(cm.getSetting(message.option), message.rotationDirection, message.option.getPossibleValues());
+                Enum<?> newState = Platform.rotateEnum(cm.getSetting(message.option), message.rotationDirection, message.option.getValues());
                 cm.putSetting(message.option, newState);
             }
         }

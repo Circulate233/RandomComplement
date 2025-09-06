@@ -38,13 +38,13 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true, remap = true)
     public void onActionPerformed(GuiButton btn, CallbackInfo ci) {
-        if (RCInputHandler.oldGui == null) return;
+        if (RCInputHandler.getOldGui() == null) return;
         if (btn == this.originalGuiBtn || btn == this.next) {
             try {
                 if (btn == this.originalGuiBtn) {
                     GuiScreen oldGui;
-                    if ((oldGui = RCInputHandler.oldGui) != null) {
-                        RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
+                    if ((oldGui = RCInputHandler.getOldGui()) != null) {
+                        RCInputHandler.setDelayMethod(() -> Minecraft.getMinecraft().displayGuiScreen(oldGui));
                         RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
                         ci.cancel();
                     }
@@ -61,8 +61,8 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
 
                     if (isShift) {
                         GuiScreen oldGui;
-                        if ((oldGui = RCInputHandler.oldGui) != null) {
-                            RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
+                        if ((oldGui = RCInputHandler.getOldGui()) != null) {
+                            RCInputHandler.setDelayMethod(() -> Minecraft.getMinecraft().displayGuiScreen(oldGui));
                         }
                     }
 

@@ -4,6 +4,7 @@ import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutpu
 import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
+import lombok.Getter;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -14,6 +15,7 @@ public enum RCSettings {
     InscriberMaxStackLimit(EnumSet.allOf(InscriberMaxStackLimit.class)),
     PatternTermAutoFillPattern(EnumSet.allOf(PatternTermAutoFillPattern.class));
 
+    @Getter
     private final EnumSet<? extends Enum<?>> values;
 
     RCSettings(@Nonnull EnumSet<? extends Enum<?>> possibleOptions) {
@@ -22,10 +24,6 @@ public enum RCSettings {
         } else {
             this.values = possibleOptions;
         }
-    }
-
-    public EnumSet<? extends Enum<?>> getPossibleValues() {
-        return this.values;
     }
 
 }

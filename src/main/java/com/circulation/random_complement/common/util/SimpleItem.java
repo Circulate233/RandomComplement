@@ -1,6 +1,7 @@
 package com.circulation.random_complement.common.util;
 
 import appeng.api.storage.data.IAEItemStack;
+import com.github.bsideup.jabel.Desugar;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -9,22 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 
-public final class SimpleItem {
-    @NotNull
-    public String str;
+@Desugar
+public record SimpleItem(@NotNull String str) {
     public static final SimpleItem empty = new SimpleItem("e");
-
-    private SimpleItem(ItemStack itemStack) {
-        var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
-        if (itemStack.hasTagCompound()) {
-            key.append(itemStack.getTagCompound().hashCode());
-        }
-        this.str = key.toString();
-    }
-
-    private SimpleItem(@NotNull String str) {
-        this.str = str;
-    }
 
     private static final LoadingCache<String, SimpleItem> CRAFTABLE_ITEM_POOL =
             CacheBuilder.newBuilder()
@@ -67,13 +55,8 @@ public final class SimpleItem {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.str;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.str.hashCode();
     }
 
 }

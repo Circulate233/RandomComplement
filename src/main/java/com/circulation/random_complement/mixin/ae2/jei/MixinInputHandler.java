@@ -85,7 +85,7 @@ public class MixinInputHandler {
                     RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandler(kb.name(), item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
 
                     if (kb == KeyBindings.StartCraft) {
-                        RCInputHandler.oldGui = oldGui;
+                        RCInputHandler.setOldGui(oldGui);
                     }
                     return true;
                 }

@@ -15,10 +15,13 @@ public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
     public abstract void setAutoStart(boolean autoStart);
 
     @Inject(
-        method = "startJob()V",
-        at = @At(
-            value = "INVOKE",
-        target = "Lappeng/api/networking/crafting/ICraftingGrid;submitJob(Lappeng/api/networking/crafting/ICraftingJob;Lappeng/api/networking/crafting/ICraftingRequester;Lappeng/api/networking/crafting/ICraftingCPU;ZLappeng/api/networking/security/IActionSource;)Lappeng/api/networking/crafting/ICraftingLink;",shift = At.Shift.AFTER), cancellable = true)
+            method = "startJob()V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lappeng/api/networking/crafting/ICraftingGrid;submitJob(Lappeng/api/networking/crafting/ICraftingJob;Lappeng/api/networking/crafting/ICraftingRequester;Lappeng/api/networking/crafting/ICraftingCPU;ZLappeng/api/networking/security/IActionSource;)Lappeng/api/networking/crafting/ICraftingLink;",
+                    shift = At.Shift.AFTER
+            ),
+            cancellable = true)
     public void startJob0(CallbackInfo ci) {
         if (this.rc$getOldContainer() != null) {
             this.setAutoStart(false);

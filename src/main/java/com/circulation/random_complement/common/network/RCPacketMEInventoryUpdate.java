@@ -11,6 +11,7 @@ import com.circulation.random_complement.common.util.SimpleItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,6 +44,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     @Nullable
     private final GZIPOutputStream compressFrame;
     private int writtenBytes;
+    @Getter
     private boolean empty;
 
     private final short id;
@@ -137,10 +139,6 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
 
     public int getLength() {
         return this.data.readableBytes();
-    }
-
-    public boolean isEmpty() {
-        return this.empty;
     }
 
     @Override

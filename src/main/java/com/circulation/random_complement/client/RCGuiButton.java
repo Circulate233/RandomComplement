@@ -8,6 +8,7 @@ import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
 import com.circulation.random_complement.client.buttonsetting.InterfaceButton;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
+import com.github.bsideup.jabel.Desugar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -171,28 +172,22 @@ public class RCGuiButton extends GuiImgButton {
         }
     }
 
-    public static final class RCEnumPair {
-        final Enum<?> setting;
-        final Enum<?> value;
-
-        RCEnumPair(Enum<?> a, Enum<?> b) {
-            this.setting = a;
-            this.value = b;
-        }
+    @Desugar
+    public record RCEnumPair(Enum<?> setting, Enum<?> value) {
 
         public int hashCode() {
-            return this.setting.hashCode() ^ this.value.hashCode();
-        }
+                return this.setting.hashCode() ^ this.value.hashCode();
+            }
 
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            } else if (this.getClass() != obj.getClass()) {
-                return false;
-            } else {
-                RCEnumPair other = (RCEnumPair)obj;
-                return other.setting == this.setting && other.value == this.value;
+            public boolean equals(Object obj) {
+                if (obj == null) {
+                    return false;
+                } else if (this.getClass() != obj.getClass()) {
+                    return false;
+                } else {
+                    RCEnumPair other = (RCEnumPair) obj;
+                    return other.setting == this.setting && other.value == this.value;
+                }
             }
         }
-    }
 }

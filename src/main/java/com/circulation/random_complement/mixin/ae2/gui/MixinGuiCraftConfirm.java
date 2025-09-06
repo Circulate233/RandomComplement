@@ -65,7 +65,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
         if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown()) rc$addMissBookmark();
-        if (RCInputHandler.oldGui == null) return;
+        if (RCInputHandler.getOldGui() == null) return;
         if (btn == this.start || btn == this.cancel) {
             if (btn == this.start) {
                 try {
@@ -76,8 +76,8 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
             }
 
             GuiScreen oldGui;
-            if ((oldGui = RCInputHandler.oldGui) != null) {
-                RCInputHandler.delayMethod = () -> Minecraft.getMinecraft().displayGuiScreen(oldGui);
+            if ((oldGui = RCInputHandler.getOldGui()) != null) {
+                RCInputHandler.setDelayMethod(() -> Minecraft.getMinecraft().displayGuiScreen(oldGui));
                 RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
             }
             ci.cancel();

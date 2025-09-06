@@ -1,6 +1,7 @@
 package com.circulation.random_complement.common.integration.ae2.core;
 
 import appeng.core.AELog;
+import lombok.Getter;
 
 public enum GuiColors implements localizationAPI {
 
@@ -146,6 +147,7 @@ public enum GuiColors implements localizationAPI {
     ProcessBarMiddleColor(0XFFE6E600),
     ProcessBarEndColor(0XFF0AE600);
 
+    @Getter
     private final String root;
     private final int color;
 
@@ -170,11 +172,6 @@ public enum GuiColors implements localizationAPI {
             }
         }
         return color;
-    }
-
-    @Override
-    public String root() {
-        return root;
     }
 
 }
