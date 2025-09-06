@@ -20,11 +20,12 @@ public class VersionParser {
 
     }
 
-    public static boolean maxVersion(String nowVersion, String targetVersion) {
-        return !minVersion(nowVersion, targetVersion);
+    public static boolean maxVersion(String modid, String targetVersion) {
+        return !minVersion(modid, targetVersion);
     }
 
-    public static boolean minVersion(String nowVersion, String targetVersion) {
+    public static boolean minVersion(String modid, String targetVersion) {
+        var nowVersion = getModVersion(modid);
         int[] now = parseVersion(nowVersion);
         int[] target = parseVersion(targetVersion);
 
@@ -51,9 +52,9 @@ public class VersionParser {
         return true;
     }
 
-    public static boolean rangeVersion(String nowVersion, String min, String max) {
-        return VersionParser.minVersion(nowVersion, min)
-                && VersionParser.maxVersion(nowVersion, max);
+    public static boolean rangeVersion(String modid, String min, String max) {
+        return VersionParser.minVersion(modid, min)
+                && VersionParser.maxVersion(modid, max);
     }
 
     public static String getModVersion(String modid) {
