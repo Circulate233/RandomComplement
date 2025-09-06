@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
         dependencies = "required-after:mixinbooter@[8.0,);" +
                 "after:appliedenergistics2@[v0.56.7,);" +
                 "after:jei@[4.29.6,);" +
+                "after:thaumicenergistics@[2.3.5,);" +
                 "before:shulkertooltip@[1.9.2,);"
 )
 public class RandomComplement {

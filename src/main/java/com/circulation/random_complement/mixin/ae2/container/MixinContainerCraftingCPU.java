@@ -8,7 +8,7 @@ import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerCraftingCPU;
 import appeng.helpers.ICustomNameObject;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
-import com.circulation.random_complement.common.integration.ae2.getCraftingCPUCluster;
+import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;

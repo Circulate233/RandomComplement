@@ -1,5 +1,7 @@
 package com.circulation.random_complement.common.util;
 
+import net.minecraftforge.fml.common.Loader;
+
 public class VersionParser {
 
     public static int[] parseVersion(String version) {
@@ -18,12 +20,16 @@ public class VersionParser {
 
     }
 
-    public static boolean MinimumVersion(String nowVersion,String targetVersion){
+    public static boolean maxVersion(String nowVersion, String targetVersion) {
+        return !minVersion(nowVersion, targetVersion);
+    }
+
+    public static boolean minVersion(String nowVersion, String targetVersion) {
         int[] now = parseVersion(nowVersion);
         int[] target = parseVersion(targetVersion);
 
-        if (now.length != target.length){
-            if (now.length > target.length){
+        if (now.length != target.length) {
+            if (now.length > target.length) {
                 int[] t = new int[now.length];
                 System.arraycopy(target, 0, t, 0, target.length);
                 target = t;
@@ -35,7 +41,7 @@ public class VersionParser {
         }
 
         for (int i = 0; i < now.length; i++) {
-            if (now[i] < target[i]){
+            if (now[i] < target[i]) {
                 return false;
             } else if (now[i] > target[i]) {
                 return true;
@@ -43,6 +49,15 @@ public class VersionParser {
         }
 
         return true;
+    }
+
+    public static boolean rangeVersion(String nowVersion, String min, String max) {
+        return VersionParser.minVersion(nowVersion, min)
+                && VersionParser.maxVersion(nowVersion, max);
+    }
+
+    public static String getModVersion(String modid) {
+        return Loader.instance().getIndexedModList().get(modid).getMetadata().version;
     }
 
 }

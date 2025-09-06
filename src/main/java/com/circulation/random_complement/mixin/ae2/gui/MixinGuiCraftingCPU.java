@@ -12,7 +12,7 @@ import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
-import com.circulation.random_complement.common.integration.ae2.getCraftingCPUCluster;
+import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
 import com.google.common.base.Joiner;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;

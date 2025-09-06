@@ -3,13 +3,11 @@ package com.circulation.random_complement.mixin;
 import com.circulation.random_complement.RCConfig;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.common.util.VersionParser;
-import hellfirepvp.modularmachinery.ModularMachinery;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.ILateMixinLoader;
@@ -29,11 +27,11 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     static {
         ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
-        try {
-            if (modLoaded("modularmachinery")) {
-                MMCEInit();
-            }
-        } catch (IllegalAccessException | NoSuchFieldException ignored) {
+
+        var mmVersion = VersionParser.getModVersion("modularmachinery");
+        if (VersionParser.rangeVersion(mmVersion, "2.1.0", "2.1.6")) {
+            addMixinCFG("mixins.random_complement.mmce.json");
+            addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
         }
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
@@ -65,16 +63,6 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
         addModdedMixinCFG("mixins.random_complement.extendedae.json", "extendedae");
         addModdedMixinCFG("mixins.random_complement.fluxnetworks.json", "fluxnetworks");
-    }
-
-    @Optional.Method(modid = "modularmachinery")
-    public static void MMCEInit() throws NoSuchFieldException, IllegalAccessException {
-        var mmVersionField = (String) ModularMachinery.class.getField("VERSION").get(null);
-        if (VersionParser.MinimumVersion(mmVersionField, "2.1.0")
-                && !VersionParser.MinimumVersion(mmVersionField, "2.1.6")) {
-            addMixinCFG("mixins.random_complement.mmce.json");
-            addModdedMixinCFG("mixins.random_complement.mmce.nae2.json", "nae2");
-        }
     }
 
     @Override

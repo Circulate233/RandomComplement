@@ -215,7 +215,7 @@ dependencies {
     compileOnly rfg.deobf("curse.maven:extended-crafting-268387:2777071")
     implementation(rfg.deobf("curse.maven:libnine-322344:3509087"))
     implementation(rfg.deobf("curse.maven:lazy-ae2-322347:3254160"))
-    implementation(rfg.deobf("curse.maven:modularmachinery-community-edition-817377:6480528"))
+    implementation(rfg.deobf("curse.maven:modularmachinery-community-edition-817377:6945422"))
     implementation(rfg.deobf("curse.maven:extended-crafting-terminals-for-applied-1157825:6895322"))
     implementation(rfg.deobf("curse.maven:cofh-core-69162:2920433"))
     implementation(rfg.deobf("curse.maven:cofh-world-271384:2920434"))
