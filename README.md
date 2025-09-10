@@ -12,6 +12,8 @@ Some fixes and content expansion
    - Changed the time display in Crafting Status to show elapsed time instead; 
    - Creative ME Storage Cell now maintains a capacity of 2^52-1.
    - The feature allows using JEI bookmarks to request crafting from AE networks or retrieve items from AE networks, which can be configured via keybindings in the controls menu. When not in an AE GUI interface, requests will be directed to carried Wireless Terminals. If a single network cannot provide sufficient items, the system will automatically search other connected Wireless Terminals.
+   - Don't require power to connect QNBs
+   - You can install it using the ME Storage Component right-click Crafting Unit, and detach it when performing shift right-click
  - For [MMCE](https://github.com/NovaEngineering-Source/ModularMachinery-Community-Edition):
    - ME Machinery Pattern Provider joins AE2 interface terminal! While custom naming is not supported, the ME Machinery Pattern Provider within the Interface Terminal will dynamically render its designated name from the Modular Machinery.
    - Conducted bug fixes for the compatibility between MMCE Structure Preview and the Pattern Terminal support.
