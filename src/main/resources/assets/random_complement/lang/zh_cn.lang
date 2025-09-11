@@ -1,4 +1,3 @@
-# GUI Colors - ARGB
 gui.color.appliedenergistics2.SearchboxFocused=6E000000
 gui.color.appliedenergistics2.SearchboxUnfocused=00000000
 gui.color.appliedenergistics2.ItemSlotOverlayUnpowered=66111111
@@ -29,6 +28,7 @@ gui.pattern_term.auto_fill_pattern.CLOSE.text=不进行补充
 gui.pattern_term.auto_fill_pattern.ex.text=仅在持有无线终端的时候生效！
 
 commands.ftbnbtedit.usage=/ftbnbtedit
+commands.ftbnbtedit.too_large=NBT size too large!
 commands.ftbnbtedit.block.usage=/ftbnbtedit block <x> <y> <z>
 commands.ftbnbtedit.entity.usage=/ftbnbtedit entity <id>
 commands.ftbnbtedit.player.usage=/ftbnbtedit player <玩家>
@@ -36,6 +36,8 @@ commands.ftbnbtedit.item.usage=/ftbnbtedit 物品
 
 key.retrieve_item.desc=自AE取出物品
 key.start_craft.desc=向AE请求合成
+key.retrieve_item.desc.tooltip=按下 §6%s§r 通过无线终端向自AE取出物品
+key.start_craft.desc.tooltip=按下 §6%s§r 通过无线终端向AE请求该物品合成
 
 text.rc.craft=此物品无对应合成
 text.rc.warn=你不应该如此快速的尝试

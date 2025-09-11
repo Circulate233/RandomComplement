@@ -8,6 +8,7 @@ import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.util.Function;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.integration.mek.FakeGases;
+import lombok.val;
 import mekanism.api.gas.GasStack;
 import mezz.jei.bookmarks.BookmarkItem;
 import mezz.jei.gui.overlay.bookmarks.LeftAreaDispatcher;
@@ -15,8 +16,11 @@ import mezz.jei.input.IClickedIngredient;
 import mezz.jei.input.InputHandler;
 import mezz.jei.input.MouseHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -52,6 +56,18 @@ public class MixinInputHandler {
     }
 
     @Unique
+    @SubscribeEvent
+    public void r$onItemTooltip(ItemTooltipEvent event) {
+        val ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
+        if (ing == null) return;
+        if (GuiScreen.isAltKeyDown()) {
+            event.getToolTip().addAll(KeyBindings.getTooltipList());
+        } else {
+            event.getToolTip().add(I18n.format("hei.tooltip.press_alt"));
+        }
+    }
+
+    @Unique
     private boolean r$work(boolean isMouse) {
         int eventKey;
         int m = 0;
@@ -65,7 +81,7 @@ public class MixinInputHandler {
             var k = kb.getKeyBinding();
             if (k.isActiveAndMatches(eventKey)
                     && k.getKeyModifier().isActive(k.getKeyConflictContext())) {
-                if (kb.needItem()) {
+                if (kb.isNeedItem()) {
                     var ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
                     if (ing == null) return false;
                     if (isMouse && !Mouse.isButtonDown(m)) {
