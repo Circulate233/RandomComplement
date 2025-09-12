@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.mmce;
+package com.circulation.random_complement.mixin.mmce_old;
 
 import github.kasuminova.mmce.client.gui.integration.GuiBlueprintScreenJEI;
 import github.kasuminova.mmce.client.gui.widget.base.WidgetController;

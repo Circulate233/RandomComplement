@@ -5,21 +5,12 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
-  "injectors":{
-    "maxShiftBy": 2
-  },
   "mixins": [
-    "MixinContainerInterfaceTerminal",
-    "MixinDualityInterface",
-    "MixinInvTracker",
-    "MixinMEPatternProvider",
-    "MixinRecipesGui$AccessorRecipeLayout",
-    "MixinRecipesGui$AccessorStructurePreviewWrapper",
-    "MixinStructurePreviewWrapper",
-    "MixinTileMultiblockMachineController"
+    "MixinContainerMEPatternProvider",
+    "MixinMEPatternProvider"
   ],
   "server": [],
   "client": [
-    "MixinRecipesGui"
+    "MixinGuiMEPatternProvider"
   ]
 }

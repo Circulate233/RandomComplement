@@ -31,7 +31,6 @@ import com.glodblock.github.common.part.PartFluidPatternTerminal;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.util.Ae2Reflect;
-import com.google.common.collect.Multiset;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,6 +44,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public class KeyBindingHandler implements Packet<KeyBindingHandler> {
@@ -202,7 +202,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                 RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
                 boolean isCraftable = false;
                 IAEItemStack aeItem = null;
-                Multiset<SimpleItem> set = cgc.rc$getCanCraftableItems();
+                Collection<SimpleItem> set = cgc.rc$getCanCraftableItems();
 
                 if (set.isEmpty()) {
                     for (IAEItemStack iaeItemStack : cgc.rc$getCraftableItems().keySet()) {
@@ -251,7 +251,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
             boolean isCraftable = false;
             IAEItemStack aeItem = null;
-            Multiset<SimpleItem> set = cgc.rc$getCanCraftableItems();
+            Collection<SimpleItem> set = cgc.rc$getCanCraftableItems();
 
             if (set.isEmpty()) {
                 for (IAEItemStack iaeItemStack : cgc.rc$getCraftableItems().keySet()) {

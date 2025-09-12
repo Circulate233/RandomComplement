@@ -8,15 +8,16 @@ public enum InscriberBlockMode implements InterfaceButton {
     OPEN,
     CLOSE;
 
-    @Override
     @SideOnly(Side.CLIENT)
+    private final String key = "gui.inscriber.block_mode." + this.name() + ".text";
+
+    @Override
     public String getName(){
         return I18n.format("gui.inscriber.block_mode.name");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public String getTooltip(){
-        return I18n.format("gui.inscriber.block_mode." + this.name() + ".text");
+        return I18n.format(key);
     }
 }

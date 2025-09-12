@@ -26,6 +26,17 @@ gui.pattern_term.auto_fill_pattern.name=Auto-fill Pattern
 gui.pattern_term.auto_fill_pattern.OPEN.text=Allow automatic retrieval of blank patterns from storage
 gui.pattern_term.auto_fill_pattern.CLOSE.text=Do not supplement
 gui.pattern_term.auto_fill_pattern.ex.text=Only active when holding a Wireless Terminal!
+gui.intelligent_blocking.name=Intelligent Blocking Mode
+gui.intelligent_blocking.OPEN.text=Allow insert same recipe.
+gui.intelligent_blocking.CLOSE.text=Regular blocking mode behavior.
+gui.action.MULTIPLY_2.name=Double the pattern set
+gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text=Will try to double the items set in the pattern
+gui.action.MULTIPLY_3.name=Triple the pattern set
+gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text=Will try to triple the items set in the pattern
+gui.action.DIVIDE_2.name=Divide items set by two
+gui.pattern_term.auto_fill_pattern.DIVIDE_2.text=Will try to divide by 2 the items set in the crafting slots
+gui.action.DIVIDE_3.name=Divide items set by three
+gui.pattern_term.auto_fill_pattern.DIVIDE_3.text=Will try to divide by 3 the items set in the crafting slots
 
 commands.ftbnbtedit.usage=/ftbnbtedit
 commands.ftbnbtedit.too_large=NBT size too large!

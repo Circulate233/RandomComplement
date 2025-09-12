@@ -35,7 +35,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
     @Shadow(remap = false)
     private ContainerMEMonitorable monitorableContainer;
 
-    @Shadow (remap = false)
+    @Shadow(remap = false)
     protected int jeiOffset;
 
     @Shadow(remap = false)
@@ -55,27 +55,27 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
         super(container);
     }
 
-    @Inject(method = "initGui",at = @At(value = "INVOKE", target = "Lappeng/client/gui/widgets/GuiImgButton;<init>(IILjava/lang/Enum;Ljava/lang/Enum;)V",ordinal = 3,remap = false))
+    @Inject(method = "initGui", at = @At("TAIL"))
     public void initGuiMixin(CallbackInfo ci) {
         if (this.monitorableContainer instanceof ContainerPatternEncoder) {
             int offset = this.guiTop + 8 + this.jeiOffset + 100;
-            this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18,offset, RCSettings.PatternTermAutoFillPattern,PatternTermAutoFillPattern.CLOSE));
+            this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18, offset, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));
         }
     }
 
-    @Inject(method = "actionPerformed",at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;isButtonDown(I)Z",remap = false), cancellable = true)
+    @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;isButtonDown(I)Z", remap = false), cancellable = true)
     protected void actionPerformed(GuiButton btn, CallbackInfo ci) {
         if (this.monitorableContainer instanceof ContainerPatternEncoder) {
             boolean backwards = Mouse.isButtonDown(1);
             if (btn == this.randomComplement$AutoFillPattern) {
                 var option = this.randomComplement$AutoFillPattern.getRCSetting();
-                RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option,backwards));
+                RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
                 ci.cancel();
             }
         }
     }
 
-    @Inject(method = "drawFG",at = @At("HEAD"),remap = false)
+    @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
         if (this.monitorableContainer instanceof ContainerPatternEncoder) {
             this.randomComplement$AutoFillPattern.set(((PatternTermConfigs) this.monitorableContainer).r$getAutoFillPattern());
@@ -85,7 +85,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
     @Unique
     @Override
     public Set<SimpleItem> r$getList() {
-        if (randomComplement$mergedCache.isEmpty()){
+        if (randomComplement$mergedCache.isEmpty()) {
             randomComplement$mergedCache.addAll(MEHandler.craftableCacheS);
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
             MEHandler.craftableCacheS.clear();
@@ -114,7 +114,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
 
     @Unique
     @Override
-    public ItemRepo r$getRepo(){
+    public ItemRepo r$getRepo() {
         return this.repo;
     }
 

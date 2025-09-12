@@ -25,7 +25,6 @@ public abstract class MixinTileUltimateEncoder extends AEBaseInvTile implements 
     @Inject(method = "<init>",at = @At("TAIL"),remap = false)
     public void onInit(CallbackInfo ci){
         this.randomComplement$rcSettings = new RCConfigManager(this);
-
         this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
     }
 

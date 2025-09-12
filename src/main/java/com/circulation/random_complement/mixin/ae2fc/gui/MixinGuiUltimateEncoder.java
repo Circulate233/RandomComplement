@@ -56,7 +56,7 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
         super(container);
     }
 
-    @Inject(method = "initGui", at = @At(value = "INVOKE", target = "Lappeng/client/gui/widgets/GuiImgButton;<init>(IILjava/lang/Enum;Ljava/lang/Enum;)V", ordinal = 3, remap = false), remap = true)
+    @Inject(method = "initGui", at = @At("TAIL"), remap = true)
     public void initGuiMixin(CallbackInfo ci) {
         int i = 0;
         this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18, this.guiTop + i++ * 20 + 8, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));

@@ -1,14 +1,14 @@
-package com.circulation.random_complement.mixin.mmce;
+package com.circulation.random_complement.mixin.ae2fc;
 
 import appeng.helpers.DualityInterface;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import github.kasuminova.mmce.common.tile.MEPatternProvider;
+import com.glodblock.github.common.part.PartDualInterface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(value = MEPatternProvider.class,remap = false)
-public abstract class MixinMEPatternProvider implements RCIConfigurableObject {
+@Mixin(value = PartDualInterface.class,remap = false)
+public abstract class MixinPartDualInterface implements RCIConfigurableObject {
     @Shadow
     public abstract DualityInterface getInterfaceDuality();
 

@@ -28,21 +28,25 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     static {
         ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
 
-        addMixinCFG("mixins.random_complement.mmce.json",
-                () -> VersionParser.rangeVersion(
-                        "modularmachinery",
-                        "2.1.0",
-                        "2.1.6"
-                )
-        );
-        addMixinCFG("mixins.random_complement.mmce.nae2.json",
-                () -> modLoaded("nae2")
-                        && VersionParser.rangeVersion(
-                        "modularmachinery",
-                        "2.1.0",
-                        "2.1.6"
-                )
-        );
+        if (modLoaded("modularmachinery")) {
+            addMixinCFG("mixins.random_complement.mmce.old.json",
+                    () -> VersionParser.rangeVersion(
+                            "modularmachinery",
+                            "2.1.0",
+                            "2.1.6"
+                    )
+            );
+            addMixinCFG("mixins.random_complement.mmce.nae2.old.json",
+                    () -> modLoaded("nae2")
+                            && VersionParser.rangeVersion(
+                            "modularmachinery",
+                            "2.1.0",
+                            "2.1.6"
+                    )
+            );
+            addMixinCFG("mixins.random_complement.mmce.json",
+                    () -> VersionParser.minVersion("modularmachinery", "2.1.0"));
+        }
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");

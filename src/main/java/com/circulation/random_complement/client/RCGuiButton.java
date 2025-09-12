@@ -3,12 +3,15 @@ package com.circulation.random_complement.client;
 import appeng.api.config.Settings;
 import appeng.client.gui.widgets.GuiImgButton;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.buttonsetting.Action;
 import com.circulation.random_complement.client.buttonsetting.InscriberAutoOutput;
 import com.circulation.random_complement.client.buttonsetting.InscriberBlockMode;
 import com.circulation.random_complement.client.buttonsetting.InscriberMaxStackLimit;
+import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.client.buttonsetting.InterfaceButton;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.github.bsideup.jabel.Desugar;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +19,6 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -26,23 +28,29 @@ public class RCGuiButton extends GuiImgButton {
     private static final Pattern PATTERN_NEW_LINE = Pattern.compile("\\n", Pattern.LITERAL);
     private static Map<RCEnumPair, RCButtonAppearance> appearances;
     private final Enum<?> buttonSetting;
-    private static final ResourceLocation texture = new ResourceLocation(RandomComplement.MOD_ID , "textures/gui/states.png");
+    private static final ResourceLocation texture = new ResourceLocation(RandomComplement.MOD_ID, "textures/gui/states.png");
     private String exMessage = "";
 
     public RCGuiButton(int x, int y, Enum idx, Enum val) {
         super(x, y, idx, val);
         this.buttonSetting = idx;
         if (appearances == null) {
-            appearances = new HashMap<>();
-            this.registerApp(0,RCSettings.InscriberBlockMode, InscriberBlockMode.OPEN);
-            this.registerApp(1,RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
-            this.registerApp(2,RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
-            this.registerApp(3,RCSettings.InscriberAutoOutput, InscriberAutoOutput.OPEN);
-            this.registerApp(4,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
-            this.registerApp(5,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.MEDIUM);
-            this.registerApp(6,RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.BIG);
-            this.registerApp(7,RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.OPEN);
-            this.registerApp(8,RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
+            appearances = new Object2ObjectOpenHashMap<>();
+            this.registerApp(0, RCSettings.InscriberBlockMode, InscriberBlockMode.OPEN);
+            this.registerApp(1, RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
+            this.registerApp(2, RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
+            this.registerApp(3, RCSettings.InscriberAutoOutput, InscriberAutoOutput.OPEN);
+            this.registerApp(4, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
+            this.registerApp(5, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.MEDIUM);
+            this.registerApp(6, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.BIG);
+            this.registerApp(7, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.OPEN);
+            this.registerApp(8, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
+            this.registerApp(9, RCSettings.ACTIONS, Action.DIVIDE_2);
+            this.registerApp(10, RCSettings.ACTIONS, Action.DIVIDE_3);
+            this.registerApp(11, RCSettings.ACTIONS, Action.MULTIPLY_2);
+            this.registerApp(12, RCSettings.ACTIONS, Action.MULTIPLY_3);
+            this.registerApp(13, RCSettings.IntelligentBlocking, IntelligentBlocking.OPEN);
+            this.registerApp(14, RCSettings.IntelligentBlocking, IntelligentBlocking.CLOSE);
         }
     }
 
@@ -60,7 +68,7 @@ public class RCGuiButton extends GuiImgButton {
     }
 
     public RCSettings getRCSetting() {
-        return (RCSettings)this.buttonSetting;
+        return (RCSettings) this.buttonSetting;
     }
 
     public void drawButton(Minecraft minecraft, int par2, int par3, float partial) {
@@ -70,7 +78,7 @@ public class RCGuiButton extends GuiImgButton {
                 this.width = 8;
                 this.height = 8;
                 GlStateManager.pushMatrix();
-                GlStateManager.translate((float)this.x, (float)this.y, 0.0F);
+                GlStateManager.translate((float) this.x, (float) this.y, 0.0F);
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
                 if (this.enabled) {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -80,7 +88,7 @@ public class RCGuiButton extends GuiImgButton {
 
                 minecraft.renderEngine.bindTexture(texture);
                 this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
-                int uv_y = (int)Math.floor((double) iconIndex / 16);
+                int uv_y = (int) Math.floor((double) iconIndex / 16);
                 int uv_x = iconIndex - uv_y * 16;
                 this.drawTexturedModalRect(0, 0, 240, 240, 16, 16);
                 this.drawTexturedModalRect(0, 0, uv_x * 16, uv_y * 16, 16, 16);
@@ -95,7 +103,7 @@ public class RCGuiButton extends GuiImgButton {
 
                 minecraft.renderEngine.bindTexture(texture);
                 this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
-                int uv_y = (int)Math.floor((double) iconIndex / 16);
+                int uv_y = (int) Math.floor((double) iconIndex / 16);
                 int uv_x = iconIndex - uv_y * 16;
                 this.drawTexturedModalRect(this.x, this.y, 240, 240, 16, 16);
                 this.drawTexturedModalRect(this.x, this.y, uv_x * 16, uv_y * 16, 16, 16);
@@ -111,7 +119,7 @@ public class RCGuiButton extends GuiImgButton {
         a.displayName = val.getName();
         a.displayValue = val.getTooltip();
         a.index = iconIndex;
-        appearances.put(new RCEnumPair(setting,(Enum<?>) val), a);
+        appearances.put(new RCEnumPair(setting, (Enum<?>) val), a);
     }
 
     public String getMessage() {
@@ -151,7 +159,7 @@ public class RCGuiButton extends GuiImgButton {
                 i = 0;
             }
 
-            while(i + 30 < sb.length() && (i = sb.lastIndexOf(" ", i + 30)) != -1) {
+            while (i + 30 < sb.length() && (i = sb.lastIndexOf(" ", i + 30)) != -1) {
                 sb.replace(i, i + 1, "\n");
             }
 
@@ -159,7 +167,7 @@ public class RCGuiButton extends GuiImgButton {
         }
     }
 
-    public void setEXMessage(String exMessage){
+    public void setEXMessage(String exMessage) {
         this.exMessage = exMessage;
     }
 
@@ -176,18 +184,18 @@ public class RCGuiButton extends GuiImgButton {
     public record RCEnumPair(Enum<?> setting, Enum<?> value) {
 
         public int hashCode() {
-                return this.setting.hashCode() ^ this.value.hashCode();
-            }
+            return this.setting.hashCode() ^ this.value.hashCode();
+        }
 
-            public boolean equals(Object obj) {
-                if (obj == null) {
-                    return false;
-                } else if (this.getClass() != obj.getClass()) {
-                    return false;
-                } else {
-                    RCEnumPair other = (RCEnumPair) obj;
-                    return other.setting == this.setting && other.value == this.value;
-                }
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            } else if (this.getClass() != obj.getClass()) {
+                return false;
+            } else {
+                RCEnumPair other = (RCEnumPair) obj;
+                return other.setting == this.setting && other.value == this.value;
             }
         }
+    }
 }

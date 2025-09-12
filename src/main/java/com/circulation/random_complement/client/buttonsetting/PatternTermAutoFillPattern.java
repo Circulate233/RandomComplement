@@ -8,15 +8,16 @@ public enum PatternTermAutoFillPattern implements InterfaceButton {
     OPEN,
     CLOSE;
 
-    @Override
     @SideOnly(Side.CLIENT)
+    private final String key = "gui.pattern_term.auto_fill_pattern." + this.name() + ".text";
+
+    @Override
     public String getName(){
         return I18n.format("gui.pattern_term.auto_fill_pattern.name");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public String getTooltip(){
-        return I18n.format("gui.pattern_term.auto_fill_pattern." + this.name() + ".text");
+        return I18n.format(key);
     }
 }

@@ -8,7 +8,7 @@
     "MixinAppEngClientPacketHandler",
     "MixinAppEngServerPacketHandler",
     "MixinCraftingGridCache",
-    "MixinCraftingJob",
+    "MixinDualityInterface",
     "MixinGuiBridge",
     "MixinPacketCraftRequest",
     "MixinPacketTypes",
@@ -23,13 +23,16 @@
     "container.MixinContainerCraftConfirm",
     "container.MixinContainerCraftingCPU",
     "container.MixinContainerInscriber",
+    "container.MixinContainerInterface",
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
     "container.MixinContainerWirelessPatternTerminal",
     "me.storage.MixinCreativeCellInventory",
     "part.MixinAbstractPartEncoder",
+    "part.MixinPartInterface",
     "tile.MixinTileInscriber",
+    "tile.MixinTileInterface",
     "tile.MixinTileQuantumBridge"
   ],
   "server": [],
@@ -40,6 +43,7 @@
     "gui.MixinGuiCraftingCPU",
     "gui.MixinGuiCraftingStatus",
     "gui.MixinGuiInscriber",
+    "gui.MixinGuiInterface",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo"
   ]
