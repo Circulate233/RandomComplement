@@ -45,10 +45,10 @@ public class RCGuiButton extends GuiImgButton {
             this.registerApp(6, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.BIG);
             this.registerApp(7, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.OPEN);
             this.registerApp(8, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
-            this.registerApp(9, RCSettings.ACTIONS, Action.DIVIDE_2);
-            this.registerApp(10, RCSettings.ACTIONS, Action.DIVIDE_3);
-            this.registerApp(11, RCSettings.ACTIONS, Action.MULTIPLY_2);
-            this.registerApp(12, RCSettings.ACTIONS, Action.MULTIPLY_3);
+            this.registerApp(9, RCSettings.ACTIONS, Action.MULTIPLY_2);
+            this.registerApp(10, RCSettings.ACTIONS, Action.MULTIPLY_3);
+            this.registerApp(11, RCSettings.ACTIONS, Action.DIVIDE_2);
+            this.registerApp(12, RCSettings.ACTIONS, Action.DIVIDE_3);
             this.registerApp(13, RCSettings.IntelligentBlocking, IntelligentBlocking.OPEN);
             this.registerApp(14, RCSettings.IntelligentBlocking, IntelligentBlocking.CLOSE);
         }
