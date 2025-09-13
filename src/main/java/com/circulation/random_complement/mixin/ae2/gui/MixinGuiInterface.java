@@ -38,13 +38,13 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
         int i = 0;
         final int left = this.guiLeft - 18;
         final int top = r$getTop();
-        this.r$MULTIPLY_2 = new RCGuiButton(left, top + i++ * 18, RCSettings.ACTIONS, Action.MULTIPLY_2);
+        this.r$MULTIPLY_2 = new RCGuiButton(left, top + ++i * 18, RCSettings.ACTIONS, Action.MULTIPLY_2);
         this.buttonList.add(this.r$MULTIPLY_2);
-        this.r$DIVIDE_2 = new RCGuiButton(left, top + i++ * 18, RCSettings.ACTIONS, Action.DIVIDE_2);
+        this.r$DIVIDE_2 = new RCGuiButton(left, top + ++i * 18, RCSettings.ACTIONS, Action.DIVIDE_2);
         this.buttonList.add(this.r$DIVIDE_2);
-        this.r$MULTIPLY_3 = new RCGuiButton(left, top + i++ * 18, RCSettings.ACTIONS, Action.MULTIPLY_3);
+        this.r$MULTIPLY_3 = new RCGuiButton(left, top + ++i * 18, RCSettings.ACTIONS, Action.MULTIPLY_3);
         this.buttonList.add(this.r$MULTIPLY_3);
-        this.r$DIVIDE_3 = new RCGuiButton(left, top + i++ * 18, RCSettings.ACTIONS, Action.DIVIDE_3);
+        this.r$DIVIDE_3 = new RCGuiButton(left, top + ++i * 18, RCSettings.ACTIONS, Action.DIVIDE_3);
         this.buttonList.add(this.r$DIVIDE_3);
     }
 
