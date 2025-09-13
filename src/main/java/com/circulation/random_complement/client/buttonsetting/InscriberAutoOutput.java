@@ -8,15 +8,16 @@ public enum InscriberAutoOutput implements InterfaceButton {
     OPEN,
     CLOSE;
 
-    @SideOnly(Side.CLIENT)
-    private final String key = "gui.inscriber.auto_output." + this.name() + ".text";
+    private final String key = isClient() ? "gui.inscriber.auto_output." + this.name() + ".text" : null;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getName(){
         return I18n.format("gui.inscriber.auto_output.name");
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getTooltip(){
         return I18n.format(key);
     }

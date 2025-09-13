@@ -8,15 +8,16 @@ public enum IntelligentBlocking implements InterfaceButton {
     OPEN,
     CLOSE;
 
-    @SideOnly(Side.CLIENT)
-    private final String key = "gui.intelligent_blocking." + this.name() + ".text";
+    private final String key = isClient() ? "gui.intelligent_blocking." + this.name() + ".text" : null;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getName(){
         return I18n.format("gui.intelligent_blocking.name");
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getTooltip(){
         return I18n.format(key);
     }

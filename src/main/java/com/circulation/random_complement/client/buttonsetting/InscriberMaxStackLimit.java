@@ -9,15 +9,16 @@ public enum InscriberMaxStackLimit implements InterfaceButton {
     MEDIUM,
     BIG;
 
-    @SideOnly(Side.CLIENT)
-    private final String key = "gui.inscriber.max_stack_limit." + this.name() + ".text";
+    private final String key = isClient() ? "gui.inscriber.max_stack_limit." + this.name() + ".text" : null;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getName(){
         return I18n.format("gui.inscriber.max_stack_limit.name");
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getTooltip(){
         return I18n.format(key);
     }
