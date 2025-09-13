@@ -48,7 +48,7 @@ public class RCConfig {
     public static class ae2{
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
-        public boolean SecurityCache = false;
+        public boolean SecurityCache = true;
 
         @Config.Comment({"Sets the texture index used for the crafting item slot"})
         @Config.Name("CraftingSlotTextureIndex")
