@@ -2,7 +2,6 @@ package com.circulation.random_complement.mixin;
 
 import com.circulation.random_complement.RCConfig;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.common.util.VersionParser;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraftforge.common.config.Config;
@@ -28,25 +27,16 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     static {
         ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
 
-        if (modLoaded("modularmachinery")) {
-            addMixinCFG("mixins.random_complement.mmce.old.json",
-                    () -> VersionParser.rangeVersion(
-                            "modularmachinery",
-                            "2.1.0",
-                            "2.1.6"
-                    )
-            );
-            addMixinCFG("mixins.random_complement.mmce.nae2.old.json",
-                    () -> modLoaded("nae2")
-                            && VersionParser.rangeVersion(
-                            "modularmachinery",
-                            "2.1.0",
-                            "2.1.6"
-                    )
-            );
-            addMixinCFG("mixins.random_complement.mmce.json",
-                    () -> VersionParser.minVersion("modularmachinery", "2.1.0"));
-        }
+        addMixinCFG("mixins.random_complement.mmce.json",
+                () -> {
+                    try {
+                        Class.forName("github.kasuminova.mmce.common.tile.MEPatternProvider", false, rcLateMixinLoader.class.getClassLoader());
+                        return true;
+                    } catch (ClassNotFoundException e) {
+                        return false;
+                    }
+                }
+        );
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");

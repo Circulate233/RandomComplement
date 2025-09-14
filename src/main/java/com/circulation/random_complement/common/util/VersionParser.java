@@ -1,5 +1,6 @@
 package com.circulation.random_complement.common.util;
 
+import lombok.val;
 import net.minecraftforge.fml.common.Loader;
 
 public class VersionParser {
@@ -58,7 +59,16 @@ public class VersionParser {
     }
 
     public static String getModVersion(String modid) {
-        return Loader.instance().getIndexedModList().get(modid).getMetadata().version;
+        val version = Loader.instance().getIndexedModList().get(modid).getMetadata().version;
+        String[] parts = version.split("\\.");
+
+        try {
+            Integer.parseInt(parts[0]);
+        } catch (NumberFormatException e) {
+            return "0";
+        }
+
+        return version;
     }
 
 }
