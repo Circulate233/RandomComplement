@@ -28,14 +28,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
 
         addMixinCFG("mixins.random_complement.mmce.json",
-                () -> {
-                    try {
-                        Class.forName("github.kasuminova.mmce.common.tile.MEPatternProvider", false, rcLateMixinLoader.class.getClassLoader());
-                        return true;
-                    } catch (ClassNotFoundException e) {
-                        return false;
-                    }
-                }
+                () -> isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")
         );
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
@@ -98,5 +91,11 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
     private static void addMixinCFG(final String mixinConfig, final BooleanSupplier conditions) {
         MIXIN_CONFIGS.put(mixinConfig, conditions);
+    }
+
+    private static boolean isClassPresent(String className) {
+        String classFilePath = className.replace('.', '/') + ".class";
+        ClassLoader classLoader = rcLateMixinLoader.class.getClassLoader();
+        return classLoader.getResource(classFilePath) != null;
     }
 }

@@ -26,7 +26,7 @@ public class MixinBlockController extends AEBaseTileBlock {
     @Unique
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (Platform.isServer()) {
+        if (Platform.isServer() && !player.isSneaking()) {
             if (!(Block.getBlockFromItem(player.getHeldItem(hand).getItem()) instanceof BlockController)){
                 Platform.openGUI(player, this.getTileEntity(world, pos), AEPartLocation.fromFacing(facing), GuiBridge.GUI_NETWORK_STATUS);
                 return true;
