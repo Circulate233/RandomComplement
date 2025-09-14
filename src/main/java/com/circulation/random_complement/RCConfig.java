@@ -1,10 +1,7 @@
 package com.circulation.random_complement;
 
 import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = RandomComplement.MOD_ID)
 @Mod.EventBusSubscriber(modid = RandomComplement.MOD_ID)
@@ -45,7 +42,7 @@ public class RCConfig {
 
     }
 
-    public static class ae2{
+    public static class ae2 {
         @Config.Comment({"Disable the Build permission check for AE2's security station"})
         @Config.Name("SecurityCache")
         public boolean SecurityCache = true;
@@ -56,7 +53,7 @@ public class RCConfig {
         public int craftingSlotTextureIndex = 1;
     }
 
-    public static class IC2{
+    public static class IC2 {
         @Config.Comment({"The increased energy consumption caused by each Overclocker Upgrade"})
         @Config.Name("overclockerEnergy")
         @Config.RequiresMcRestart
@@ -73,14 +70,14 @@ public class RCConfig {
         public int energyStorageEnergy = 10000;
     }
 
-    public static class LazyAE{
+    public static class LazyAE {
         @Config.Comment({"Fixes related to the lazy ae feature may occasionally introduce errors; disabling it can prevent such issues."})
         @Config.Name("EnableRepair")
         @Config.RequiresMcRestart
         public boolean EnableRepair = true;
     }
 
-    public static class TE5{
+    public static class TE5 {
         @Config.Comment({"Prevent the Thermal Expansion Cyclic Assembler from operating when the output slot contains items to avoid potential bugs"})
         @Config.Name("SequentialFabricatorMixin")
         @Config.RequiresMcRestart
@@ -107,21 +104,21 @@ public class RCConfig {
         public boolean FuelCatalyzerQuantityChanges = true;
     }
 
-    public static class FTBU{
+    public static class FTBU {
         @Config.Comment({"Change the name of the nbtedit command of FTB"})
         @Config.Name("ModifyCmdEditNBT")
         @Config.RequiresMcRestart
         public boolean ModifyCmdEditNBT = false;
     }
 
-    public static class TF5{
+    public static class TF5 {
         @Config.Comment({"When the offhand has a red map and the player is crouching, cancel the clear setting"})
         @Config.Name("RedDiagramOfTheDeputy")
         @Config.RequiresMcRestart
         public boolean RedDiagramOfTheDeputy = true;
     }
 
-    public static class Botania{
+    public static class Botania {
         @Config.Comment({"Fix some bugs. If there is a problem as a result, it should be closed"})
         @Config.Name("BugFix")
         @Config.RequiresMcRestart
@@ -156,10 +153,4 @@ public class RCConfig {
         public int SocketLimitModified = 1;
     }
 
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(RandomComplement.MOD_ID)) {
-            ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
-        }
-    }
 }

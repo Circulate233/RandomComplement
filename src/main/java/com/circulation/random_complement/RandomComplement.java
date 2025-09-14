@@ -1,11 +1,14 @@
 package com.circulation.random_complement;
 
 import com.circulation.random_complement.common.CommonProxy;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +30,7 @@ public class RandomComplement {
     public static final SimpleNetworkWrapper NET_CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
+    public static MinecraftServer server;
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
     public static CommonProxy proxy;
@@ -49,4 +53,13 @@ public class RandomComplement {
         proxy.postInit();
     }
 
+    @Mod.EventHandler
+    public void onServerStart(FMLServerStartingEvent event) {
+        server = event.getServer();
+    }
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        server = null;
+    }
 }
