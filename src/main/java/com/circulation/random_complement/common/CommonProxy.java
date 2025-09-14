@@ -35,10 +35,10 @@ public class CommonProxy {
     }
 
     public void init() {
-        if (Loader.isModLoaded("appliedenergistics2")) CraftingUnitHandler.register();
     }
 
     public void postInit() {
+        if (Loader.isModLoaded("appliedenergistics2")) CraftingUnitHandler.register();
     }
 
 }
