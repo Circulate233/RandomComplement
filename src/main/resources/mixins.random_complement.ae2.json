@@ -5,10 +5,13 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorAENetworkProxy",
+    "AccessorGrid",
     "MixinAppEngClientPacketHandler",
     "MixinAppEngServerPacketHandler",
     "MixinCraftingGridCache",
     "MixinDualityInterface",
+    "MixinEnergyGridCache",
     "MixinGuiBridge",
     "MixinPacketCraftRequest",
     "MixinPacketTypes",

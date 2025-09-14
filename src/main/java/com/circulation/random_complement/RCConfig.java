@@ -1,7 +1,16 @@
 package com.circulation.random_complement;
 
+import com.circulation.random_complement.common.network.SyncConfig;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+
+import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
 
 @Config(modid = RandomComplement.MOD_ID)
 @Mod.EventBusSubscriber(modid = RandomComplement.MOD_ID)
@@ -51,6 +60,10 @@ public class RCConfig {
         @Config.Name("CraftingSlotTextureIndex")
         @Config.RangeInt(min = 0, max = 6)
         public int craftingSlotTextureIndex = 1;
+
+        @Config.Comment({"Make the grid always think it's full of energy"})
+        @Config.Name("debugEnergy")
+        public boolean debugEnergy = false;
     }
 
     public static class IC2 {
@@ -151,6 +164,25 @@ public class RCConfig {
         @Config.RequiresMcRestart
         @Config.RangeInt(min = 1, max = 64)
         public int SocketLimitModified = 1;
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player instanceof EntityPlayerMP mp) {
+            NET_CHANNEL.sendTo(new SyncConfig(), mp);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(RandomComplement.MOD_ID)) {
+            ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
+            if (RandomComplement.server != null && FMLCommonHandler.instance().getSide().isServer()) {
+                for (EntityPlayerMP player : RandomComplement.server.getPlayerList().getPlayers()) {
+                    RandomComplement.NET_CHANNEL.sendTo(new SyncConfig(), player);
+                }
+            }
+        }
     }
 
 }
