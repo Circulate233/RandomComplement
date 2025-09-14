@@ -50,7 +50,7 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
                     } else if (CraftingUnitHandler.isReplaceable(null, this)) {
                         val block = CraftingUnitHandler.getCraftingUnitBase(this);
                         if (block == (Object) this) return;
-                        w.setBlockState(pos, block.getBlockState().getBaseState());
+                        w.setBlockState(pos, block.getBlockState().getBaseState(),1);
                         p.inventory.placeItemBackInInventory(w, CraftingUnitHandler.getMatchItem(this));
                         cir.setReturnValue(true);
                     }
@@ -67,7 +67,7 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
                     var node = proxy.getNode();
                     Object cache;
                     if (RCConfig.AE2.SecurityCache || ((cache = node.getGrid().getCache(ISecurityGrid.class)) instanceof ISecurityGrid isg && isg.hasPermission(p, SecurityPermissions.BUILD))) {
-                        w.setBlockState(pos, block.getBlockState().getBaseState(), 2);
+                        w.setBlockState(pos, block.getBlockState().getBaseState(),1);
                         tile = this.getTileEntity(w, pos);
                         proxy = ((IGridProxyable) tile).getProxy();
                         node = proxy.getNode();
