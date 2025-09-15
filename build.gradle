@@ -226,7 +226,7 @@ dependencies {
     compileOnly rfg.deobf("curse.maven:industrialcraft-2-242638:3078604")
     implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5775101"))
     implementation(rfg.deobf("curse.maven:mekanism-ce-399904:5351260"))
-    implementation(rfg.deobf("curse.maven:had-enough-items-557549:6930666"))
+    implementation(rfg.deobf("curse.maven:had-enough-items-557549:6963093"))
     compileOnly rfg.deobf("curse.maven:thaumic-energistics-extended-life-849094:6321322")
     compileOnly rfg.deobf("curse.maven:thaumic-223628:2629023")
     implementation(rfg.deobf("curse.maven:nae2-884359:5380800"))

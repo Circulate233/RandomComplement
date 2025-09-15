@@ -23,6 +23,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -87,10 +88,9 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         } else {
             return randomComplement$getItemDisplayName(n);
         }
-
     }
 
-    @Override
+    @Intrinsic
     protected void mouseClicked(final int xCord, final int yCord, final int btn) throws IOException {
         if (randomComplement$hoveredAEStack != null && btn == 2) {
             ((AEBaseContainer) inventorySlots).setTargetStack(randomComplement$hoveredAEStack);

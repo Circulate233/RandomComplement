@@ -13,6 +13,7 @@ import com.circulation.random_complement.common.network.RCActionButton;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,7 +41,8 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
 
     @Inject(method = "initGui",at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
-        int i = 0;
+        int i = -1;
+        if (Loader.isModLoaded("ae2fc"))++i;
         final int left = this.guiLeft - 18;
         final int top = r$getTop();
         this.r$IntelligentBlocking = new RCGuiButton(left, top + ++i * 18, RCSettings.IntelligentBlocking, IntelligentBlocking.CLOSE);

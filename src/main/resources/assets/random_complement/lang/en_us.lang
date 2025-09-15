@@ -30,13 +30,13 @@ gui.intelligent_blocking.name=Intelligent Blocking Mode
 gui.intelligent_blocking.OPEN.text=Allow insert same recipe.
 gui.intelligent_blocking.CLOSE.text=Regular blocking mode behavior.
 gui.action.MULTIPLY_2.name=Double the pattern set
-gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text=Will try to double the items set in the pattern
+gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text=Will try to double the items set in the pattern\nIt may be necessary to reopen the GUI to refresh the data.
 gui.action.MULTIPLY_3.name=Triple the pattern set
-gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text=Will try to triple the items set in the pattern
+gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text=Will try to triple the items set in the pattern\nIt may be necessary to reopen the GUI to refresh the data.
 gui.action.DIVIDE_2.name=Divide items set by two
-gui.pattern_term.auto_fill_pattern.DIVIDE_2.text=Will try to divide by 2 the items set in the crafting slots
+gui.pattern_term.auto_fill_pattern.DIVIDE_2.text=Will try to divide by 2 the items set in the crafting slots\nIt may be necessary to reopen the GUI to refresh the data.
 gui.action.DIVIDE_3.name=Divide items set by three
-gui.pattern_term.auto_fill_pattern.DIVIDE_3.text=Will try to divide by 3 the items set in the crafting slots
+gui.pattern_term.auto_fill_pattern.DIVIDE_3.text=Will try to divide by 3 the items set in the crafting slots\nIt may be necessary to reopen the GUI to refresh the data.
 
 commands.ftbnbtedit.usage=/ftbnbtedit
 commands.ftbnbtedit.too_large=NBT size too large!

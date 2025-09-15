@@ -58,9 +58,19 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements Speci
     @Inject(method = "initGui", at = @At("TAIL"))
     public void initGuiMixin(CallbackInfo ci) {
         if (this.monitorableContainer instanceof ContainerPatternEncoder) {
-            int offset = this.guiTop + 8 + this.jeiOffset + 100;
-            this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18, offset, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));
+            this.buttonList.add(this.randomComplement$AutoFillPattern = new RCGuiButton(this.guiLeft - 18, r$getTop() + 20, RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE));
         }
+    }
+
+    @Unique
+    public int r$getTop() {
+        int top = guiTop + 8;
+        final int left = guiLeft - 18;
+        for (GuiButton guiButton : buttonList) {
+            if (guiButton.x != left) continue;
+            if (top < guiButton.y) top = guiButton.y;
+        }
+        return top;
     }
 
     @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;isButtonDown(I)Z", remap = false), cancellable = true)

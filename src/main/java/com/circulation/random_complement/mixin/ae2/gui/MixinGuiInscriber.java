@@ -16,6 +16,7 @@ import net.minecraft.inventory.Container;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,12 +46,12 @@ public abstract class MixinGuiInscriber extends AEBaseGui {
 
     @Inject(method = "initGui",at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
-        int i = 0;
-        this.randomComplement$BlockMode = new RCGuiButton(this.guiLeft - 18, this.guiTop + i++ * 20 + 8, RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
+        int i = -1;
+        this.randomComplement$BlockMode = new RCGuiButton(this.guiLeft - 18, this.guiTop + ++i * 20 + 8, RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
         this.buttonList.add(this.randomComplement$BlockMode);
-        this.randomComplement$AutoOutput = new RCGuiButton(this.guiLeft - 18, this.guiTop + i++ * 20 + 8, RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
+        this.randomComplement$AutoOutput = new RCGuiButton(this.guiLeft - 18, this.guiTop + ++i * 20 + 8, RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
         this.buttonList.add(this.randomComplement$AutoOutput);
-        this.randomComplement$MaxStackLimit = new RCGuiButton(this.guiLeft - 18, this.guiTop + i++ * 20 + 8, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
+        this.randomComplement$MaxStackLimit = new RCGuiButton(this.guiLeft - 18, this.guiTop + ++i * 20 + 8, RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
         this.buttonList.add(this.randomComplement$MaxStackLimit);
     }
 
@@ -61,8 +62,7 @@ public abstract class MixinGuiInscriber extends AEBaseGui {
         this.randomComplement$MaxStackLimit.set(((InscriberConfigs)this.cvc).r$getMaxStackLimit());
     }
 
-    @Override
-    @Unique
+    @Intrinsic
     protected void actionPerformed(@NotNull GuiButton btn) throws IOException {
         super.actionPerformed(btn);
         boolean backwards = Mouse.isButtonDown(1);
