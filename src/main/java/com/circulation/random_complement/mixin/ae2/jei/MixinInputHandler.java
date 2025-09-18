@@ -1,6 +1,8 @@
 package com.circulation.random_complement.mixin.ae2.jei;
 
 import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.container.implementations.ContainerCraftAmount;
+import appeng.container.implementations.ContainerCraftConfirm;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.client.handler.RCInputHandler;
@@ -101,6 +103,9 @@ public class MixinInputHandler {
                     RandomComplement.NET_CHANNEL.sendToServer(new KeyBindingHandler(kb.name(), item, Minecraft.getMinecraft().currentScreen instanceof GuiMEMonitorable));
 
                     if (kb == KeyBindings.StartCraft) {
+                        var player = Minecraft.getMinecraft().player;
+                        if (player.openContainer instanceof ContainerCraftAmount
+                                || player.openContainer instanceof ContainerCraftConfirm) return false;
                         RCInputHandler.setOldGui(oldGui);
                     }
                     return true;

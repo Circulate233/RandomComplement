@@ -112,7 +112,11 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
         try {
             var piu = new RCPacketMEInventoryUpdate((short) 3);
 
-            RCCraftingGridCache cgc = w.getActionableNode().getGrid().getCache(ICraftingGrid.class);
+            var node = w.getActionableNode();
+            if (node == null)return;
+            var grid = node.getGrid();
+            if (grid == null)return;
+            RCCraftingGridCache cgc = grid.getCache(ICraftingGrid.class);
             boolean isCraftable = false;
             IAEItemStack aeItem = null;
             Set<IAEItemStack> set = cgc.rc$getCraftableItems().keySet();

@@ -6,7 +6,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.me.cache.CraftingGridCache;
 import com.circulation.random_complement.common.interfaces.RCCraftingGridCache;
 import com.circulation.random_complement.common.util.CraftableItemMap;
-import com.circulation.random_complement.common.util.SimpleItem;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import org.spongepowered.asm.mixin.Final;
@@ -40,7 +39,7 @@ public class MixinCraftingGridCache implements RCCraftingGridCache {
 
     @Unique
     @Override
-    public Collection<SimpleItem> rc$getCanCraftableItems() {
+    public Collection<IAEItemStack> rc$getCanCraftableItems() {
         if (craftableItems instanceof CraftableItemMap map) {
             return map.getCanCraftableItems();
         }

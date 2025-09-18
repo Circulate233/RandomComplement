@@ -9,25 +9,20 @@ import com.google.common.collect.Multiset;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CraftableItemMap extends Object2ObjectOpenHashMap<IAEItemStack, ImmutableList<ICraftingPatternDetails>> {
 
-    private final Multiset<SimpleItem> outputs = HashMultiset.create();
+    private final Multiset<IAEItemStack> outputs = HashMultiset.create();
 
     @Override
     public ImmutableList<ICraftingPatternDetails> put(IAEItemStack key, ImmutableList<ICraftingPatternDetails> value) {
-        outputs.add(SimpleItem.getInstance(key));
+        outputs.add(key);
         return super.put(key, value);
     }
 
     @Override
     public void putAll(Map<? extends IAEItemStack, ? extends ImmutableList<ICraftingPatternDetails>> map) {
-        outputs.addAll(
-            map.keySet()
-                .stream()
-                .map(SimpleItem::getInstance)
-                .collect(Collectors.toList()));
+        outputs.addAll(map.keySet());
         super.putAll(map);
     }
 
@@ -44,7 +39,7 @@ public class CraftableItemMap extends Object2ObjectOpenHashMap<IAEItemStack, Imm
         super.clear();
     }
 
-    public Multiset<SimpleItem> getCanCraftableItems() {
+    public Multiset<IAEItemStack> getCanCraftableItems() {
         return ImmutableMultiset.copyOf(outputs);
     }
 }

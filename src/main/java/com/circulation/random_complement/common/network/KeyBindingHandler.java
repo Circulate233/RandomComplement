@@ -12,6 +12,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.implementations.ContainerCraftAmount;
+import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.core.localization.PlayerMessages;
 import appeng.core.sync.GuiBridge;
@@ -24,7 +25,6 @@ import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.Packet;
 import com.circulation.random_complement.common.interfaces.RCAEBaseContainer;
 import com.circulation.random_complement.common.interfaces.RCCraftingGridCache;
-import com.circulation.random_complement.common.util.SimpleItem;
 import com.glodblock.github.common.item.ItemWirelessFluidPatternTerminal;
 import com.glodblock.github.common.part.PartExtendedFluidPatternTerminal;
 import com.glodblock.github.common.part.PartFluidPatternTerminal;
@@ -167,6 +167,8 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     private void startCraft(EntityPlayerMP player, Container container, ItemStack item, boolean isAE){
         item.setCount(1);
         if (!isAE) {
+            if (player.openContainer instanceof ContainerCraftAmount
+                    || player.openContainer instanceof ContainerCraftConfirm)return;
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
                 WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0);
@@ -200,27 +202,9 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
 
                 RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
-                boolean isCraftable = false;
-                IAEItemStack aeItem = null;
-                Collection<SimpleItem> set = cgc.rc$getCanCraftableItems();
-
-                if (set.isEmpty()) {
-                    for (IAEItemStack iaeItemStack : cgc.rc$getCraftableItems().keySet()) {
-                        aeItem = iaeItemStack;
-                        if (aeItem.isCraftable()) {
-                            if (aeItem.equals(item)) {
-                                aeItem = aeItem.copy().setStackSize(1);
-                                isCraftable = true;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    isCraftable = set.contains(SimpleItem.getInstance(item));
-                    if (isCraftable) {
-                        aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
-                    }
-                }
+                Collection<IAEItemStack> set = cgc.rc$getCanCraftableItems();
+                IAEItemStack aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
+                boolean isCraftable = set.contains(aeItem) || cgc.rc$getCraftableItems().containsKey(aeItem);
 
                 if (!isCraftable){
                     player.sendMessage(new TextComponentTranslation("text.rc.craft"));
@@ -249,27 +233,9 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
             RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
-            boolean isCraftable = false;
-            IAEItemStack aeItem = null;
-            Collection<SimpleItem> set = cgc.rc$getCanCraftableItems();
-
-            if (set.isEmpty()) {
-                for (IAEItemStack iaeItemStack : cgc.rc$getCraftableItems().keySet()) {
-                    aeItem = iaeItemStack;
-                    if (aeItem.isCraftable()) {
-                        if (aeItem.equals(exItem)) {
-                            aeItem = aeItem.copy().setStackSize(1);
-                            isCraftable = true;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                isCraftable = set.contains(SimpleItem.getInstance(exItem));
-                if (isCraftable) {
-                    aeItem = AEItemStack.fromItemStack(exItem).setStackSize(1);
-                }
-            }
+            Collection<IAEItemStack> set = cgc.rc$getCanCraftableItems();
+            IAEItemStack aeItem = AEItemStack.fromItemStack(exItem).setStackSize(1);
+            boolean isCraftable = set.contains(aeItem) || cgc.rc$getCraftableItems().containsKey(aeItem);
 
             if (!isCraftable){
                 player.sendMessage(new TextComponentTranslation("text.rc.craft"));
