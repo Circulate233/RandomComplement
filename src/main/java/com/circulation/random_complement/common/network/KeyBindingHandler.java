@@ -44,7 +44,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.Collection;
 import java.util.Optional;
 
 public class KeyBindingHandler implements Packet<KeyBindingHandler> {
@@ -202,9 +201,8 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
 
                 RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
-                Collection<IAEItemStack> set = cgc.rc$getCanCraftableItems();
                 IAEItemStack aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
-                boolean isCraftable = set.contains(aeItem) || cgc.rc$getCraftableItems().containsKey(aeItem);
+                boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
 
                 if (!isCraftable){
                     player.sendMessage(new TextComponentTranslation("text.rc.craft"));
@@ -233,9 +231,8 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 
             RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
-            Collection<IAEItemStack> set = cgc.rc$getCanCraftableItems();
             IAEItemStack aeItem = AEItemStack.fromItemStack(exItem).setStackSize(1);
-            boolean isCraftable = set.contains(aeItem) || cgc.rc$getCraftableItems().containsKey(aeItem);
+            boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
 
             if (!isCraftable){
                 player.sendMessage(new TextComponentTranslation("text.rc.craft"));

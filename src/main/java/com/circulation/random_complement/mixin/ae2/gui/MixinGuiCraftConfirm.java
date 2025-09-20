@@ -48,6 +48,11 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     @Shadow(remap = false)
     private GuiButton cancel;
 
+    @Unique
+    protected GuiButton r$getCancel(){
+        return this.cancel;
+    }
+
     @Shadow(remap = false)
     private GuiButton start;
 
@@ -55,18 +60,23 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     @Final
     private IItemList<IAEItemStack> missing;
 
+    @Shadow(remap = false)
+    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+
+    }
+
     @Inject(method = "drawFG", at = @At("TAIL"), remap = false)
     private void onDrawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
-        if (this.cancel.isMouseOver() && Loader.isModLoaded("jei")) {
+        if (r$getCancel().isMouseOver() && Loader.isModLoaded("jei")) {
             this.drawHoveringText(I18n.format("text.rc.confirm_cancel"), mouseX - offsetX, mouseY - offsetY);
         }
     }
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
-        if (Loader.isModLoaded("jei") && btn == this.cancel && isShiftKeyDown()) rc$addMissBookmark();
+        if (Loader.isModLoaded("jei") && btn == r$getCancel() && isShiftKeyDown()) rc$addMissBookmark();
         if (RCInputHandler.getOldGui() == null) return;
-        if (btn == this.start || btn == this.cancel) {
+        if (btn == this.start || btn == r$getCancel()) {
             if (btn == this.start) {
                 try {
                     NetworkHandler.instance().sendToServer(new PacketValueConfig("Terminal.Start", "Start"));

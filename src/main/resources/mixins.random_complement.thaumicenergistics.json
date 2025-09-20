@@ -13,6 +13,7 @@
   "server": [],
   "client": [
     "MixinGuiArcaneTerminal",
-    "MixinGuiArcaneTerminal$AccessorMERepo"
-	]
+    "MixinGuiArcaneTerminal$AccessorMERepo",
+    "MixinGuiCraftConfirmBridge"
+  ]
 }
