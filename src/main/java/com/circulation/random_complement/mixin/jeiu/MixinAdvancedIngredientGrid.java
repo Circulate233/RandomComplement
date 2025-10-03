@@ -24,9 +24,10 @@ public class MixinAdvancedIngredientGrid extends IngredientGrid implements IGhos
 
     @Override
     public IIngredientListElement<?> getElementUnderMouse(){
+        IIngredientListElement<?> e = super.getElementUnderMouse();
+        if (e != null)return e;
         var r = this.guiHistoryIngredientSlots.getHovered(MouseHelper.getX(), MouseHelper.getY());
-        if (r == null)return null;
-        return r.getElement();
+        return r != null ? r.getElement() : null;
     }
 
 }
