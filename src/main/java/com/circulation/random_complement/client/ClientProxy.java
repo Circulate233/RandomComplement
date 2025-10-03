@@ -3,12 +3,13 @@ package com.circulation.random_complement.client;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Function;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@SuppressWarnings("MethodMayBeStatic")
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     public static final String categoryJEI = "RandomComplement(JEI)";
@@ -37,6 +38,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         super.postInit();
+    }
+
+    @SubscribeEvent
+    public void onRegisterModels(ModelRegistryEvent event) {
+
     }
 
 }

@@ -13,8 +13,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = BlockController.class,remap = false)
 public class MixinBlockController extends AEBaseTileBlock {
@@ -23,8 +23,7 @@ public class MixinBlockController extends AEBaseTileBlock {
         super(mat);
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (Platform.isServer() && !player.isSneaking()) {
             if (!(Block.getBlockFromItem(player.getHeldItem(hand).getItem()) instanceof BlockController)){

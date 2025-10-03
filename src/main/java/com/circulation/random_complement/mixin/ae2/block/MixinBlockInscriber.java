@@ -7,8 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockInscriber.class)
 public abstract class MixinBlockInscriber extends AEBaseTileBlock {
@@ -17,8 +17,7 @@ public abstract class MixinBlockInscriber extends AEBaseTileBlock {
         super(mat);
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public void onNeighborChange(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull BlockPos neighbor) {
         RCTileInscriber ti = this.getTileEntity(world, pos);
         if (ti != null) {

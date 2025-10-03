@@ -14,17 +14,17 @@ import java.awt.Color;
 
 public class AEBookmarkGroup extends BookmarkGroup {
 
-    public AEBookmarkGroup(int id,IItemList<IAEItemStack> missing) {
+    public AEBookmarkGroup(int id, IItemList<IAEItemStack> missing) {
         super(id);
         for (IAEItemStack iaeItemStack : missing) {
             var item = iaeItemStack.createItemStack();
             Object mark = null;
 
-            if (Loader.isModLoaded("ae2fc")){
+            if (Loader.isModLoaded("ae2fc")) {
                 mark = getFluid(item);
             }
 
-            if (mark == null){
+            if (mark == null) {
                 mark = item;
             }
 
@@ -35,7 +35,7 @@ public class AEBookmarkGroup extends BookmarkGroup {
     }
 
     @Optional.Method(modid = "ae2fc")
-    public Object getFluid(ItemStack stack){
+    public Object getFluid(ItemStack stack) {
         return FakeItemRegister.getStack(stack);
     }
 

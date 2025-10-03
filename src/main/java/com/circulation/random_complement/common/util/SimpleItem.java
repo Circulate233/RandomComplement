@@ -43,13 +43,14 @@ public record SimpleItem(@NotNull String str) {
     }
 
     public boolean isEmpty() {
-        return this == empty;
+        return empty.equals(this);
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == this)return true;
         if (obj instanceof SimpleItem si) {
-            return this.toString().equals(si.toString());
+            return this.str.equals(si.str);
         }
         return false;
     }

@@ -43,6 +43,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -223,8 +224,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
 
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public void onReady() {
         super.onReady();
         this.randomComplement$updateNeighbors();

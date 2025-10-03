@@ -5,10 +5,12 @@ import appeng.block.crafting.BlockCraftingUnit;
 import co.neeve.nae2.NAE2;
 import com.circulation.random_complement.common.util.SimpleItem;
 import dev.rlnt.extracpus.setup.ModBlocks;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,13 +20,13 @@ import net.minecraftforge.fml.common.Optional;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class CraftingUnitHandler {
 
-    private static final Object2ObjectMap<SimpleItem, BlockCraftingUnit> CraftingUnitItemMap = new Object2ObjectOpenHashMap<>();
+    private static final Object2ReferenceMap<SimpleItem, BlockCraftingUnit> CraftingUnitItemMap = new Object2ReferenceOpenHashMap<>();
 
-    private static final Object2ObjectMap<Block, ItemStack> CraftingUnitBlockMap = new Object2ObjectOpenHashMap<>();
+    private static final Reference2ReferenceMap<Block, ItemStack> CraftingUnitBlockMap = new Reference2ReferenceOpenHashMap<>();
 
-    private static final Object2ObjectMap<Block, BlockCraftingUnit> CraftingUnitBaseMap = new Object2ObjectOpenHashMap<>();
+    private static final Reference2ReferenceMap<Block, BlockCraftingUnit> CraftingUnitBaseMap = new Reference2ReferenceOpenHashMap<>();
 
-    private static final ObjectSet<Block> CraftingUnitBaseSet = new ObjectOpenHashSet<>();
+    private static final ReferenceSet<Block> CraftingUnitBaseSet = new ReferenceOpenHashSet<>();
 
     static {
         AEApi.instance().definitions().blocks().craftingUnit().maybeBlock().ifPresent(b -> {
