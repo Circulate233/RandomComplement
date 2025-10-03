@@ -238,6 +238,7 @@ dependencies {
     compileOnly rfg.deobf("curse.maven:Flux-Networks-248020:3178199")
     compileOnly(rfg.deobf("curse.maven:ae-additions-extra-cells-2-fork-493962:3814371"))
     compileOnly(rfg.deobf("curse.maven:extracpus-408089:3479639"))
+    implementation(rfg.deobf("curse.maven:jei-utilities-616190:6937116"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
