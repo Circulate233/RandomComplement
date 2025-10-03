@@ -1,7 +1,9 @@
 package com.circulation.random_complement.client.handler;
 
+import appeng.client.gui.AEBaseGui;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
+import com.circulation.random_complement.common.util.XYPair;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 @SideOnly(Side.CLIENT)
 public class RCInputHandler {
@@ -37,6 +41,42 @@ public class RCInputHandler {
     @Setter
     @Getter
     private static Runnable delayMethod = null;
+
+    @Setter
+    @Getter
+    private static boolean click;
+    @Setter
+    private static Runnable clickCache;
+    @Getter
+    private static XYPair xy;
+
+    public static void runClickCache(){
+        if (clickCache != null) {
+            clickCache.run();
+        }
+        clearCache();
+    }
+
+    public static void clearCache(){
+        click = false;
+        clickCache = null;
+        xy = null;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onClickEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (Minecraft.getMinecraft().currentScreen instanceof AEBaseGui){
+            int eventButton = Mouse.getEventButton();
+            if (eventButton > -1) {
+                if (Mouse.isButtonDown(eventButton)){
+                    click = true;
+                    xy = XYPair.of(Mouse.getX(),Mouse.getY());
+                } else if (clickCache != null){
+                    runClickCache();
+                }
+            }
+        }
+    }
 
     private RCInputHandler() {
 

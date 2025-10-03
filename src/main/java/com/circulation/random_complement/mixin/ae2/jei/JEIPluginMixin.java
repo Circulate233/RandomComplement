@@ -1,8 +1,13 @@
 package com.circulation.random_complement.mixin.ae2.jei;
 
 import appeng.client.gui.AEBaseGui;
+import com.circulation.random_complement.client.handler.RCInputHandler;
+import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AEBaseGui.class,remap = false)
 public class JEIPluginMixin {
@@ -14,5 +19,18 @@ public class JEIPluginMixin {
     @Overwrite
     void bookmarkedJEIghostItem(int mouseX, int mouseY) {
 
+    }
+
+    @Inject(method = "drawScreen", at = @At("HEAD"), remap = true)
+    public void onDraw(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        if (RCInputHandler.getXy() != null && RCInputHandler.isClick() && !RCInputHandler.getXy().equals(Mouse.getX(), Mouse.getY())) {
+            RCInputHandler.setClick(false);
+            RCInputHandler.runClickCache();
+        }
+    }
+
+    @Inject(method = "onGuiClosed", at = @At("HEAD"))
+    public void onGuiClosed(CallbackInfo ci) {
+        RCInputHandler.clearCache();
     }
 }
