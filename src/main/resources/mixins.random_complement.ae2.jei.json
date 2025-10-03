@@ -5,6 +5,7 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinAEGuiHandler",
     "MixinIngredientListBatchRenderer"
   ],
   "server": [],

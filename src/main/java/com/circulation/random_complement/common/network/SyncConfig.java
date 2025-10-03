@@ -5,7 +5,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import static com.circulation.random_complement.RCConfig.*;
+import static com.circulation.random_complement.RCConfig.Botania;
+import static com.circulation.random_complement.RCConfig.IC2;
+import static com.circulation.random_complement.RCConfig.NEE;
+import static com.circulation.random_complement.RCConfig.TE5;
 
 public class SyncConfig implements Packet<SyncConfig> {
 

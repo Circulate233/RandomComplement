@@ -35,14 +35,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = InputHandler.class,remap = false)
-public class MixinInputHandler {
+public abstract class MixinInputHandler {
 
     @Shadow
     @Final
     private LeftAreaDispatcher leftAreaDispatcher;
 
     @Unique
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void r$onGuiKeyboardEventPre(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         if (r$work(false)) {
             event.setCanceled(true);
@@ -50,7 +50,7 @@ public class MixinInputHandler {
     }
 
     @Unique
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void r$onGuiMouseEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
         if (r$work(true)) {
             event.setCanceled(true);
