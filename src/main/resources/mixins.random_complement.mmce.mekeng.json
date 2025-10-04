@@ -1,0 +1,11 @@
+{
+  "package": "com.circulation.random_complement.mixin.mmce.mekeng",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinGuiMEGasInputBus"
+  ]
+}

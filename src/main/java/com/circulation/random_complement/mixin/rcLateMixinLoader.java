@@ -27,9 +27,6 @@ public class rcLateMixinLoader implements ILateMixinLoader {
     static {
         ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
 
-        addMixinCFG("mixins.random_complement.mmce.json",
-                () -> isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")
-        );
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
@@ -38,6 +35,11 @@ public class rcLateMixinLoader implements ILateMixinLoader {
                 addMixinCFG("mixins.random_complement.nee.json");
                 addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
                 addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
+            }
+
+            if (isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")){
+                addMixinCFG("mixins.random_complement.mmce.json");
+                addModdedMixinCFG("mixins.random_complement.mmce.mekeng.json","mekeng");
             }
         }
         if (modLoaded("botania")) {

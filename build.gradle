@@ -224,7 +224,7 @@ dependencies {
     implementation(rfg.deobf("curse.maven:thermal-foundation-222880:2926428"))
     implementation(rfg.deobf("curse.maven:thermal-expansion-69163:2926431"))
     compileOnly rfg.deobf("curse.maven:industrialcraft-2-242638:3078604")
-    implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5775101"))
+    implementation(rfg.deobf("curse.maven:mekeng-1027681:5775101"))
     implementation(rfg.deobf("curse.maven:mekanism-ce-399904:5351260"))
     implementation(rfg.deobf("curse.maven:had-enough-items-557549:7057606"))
     compileOnly rfg.deobf("curse.maven:thaumic-energistics-extended-life-849094:6321322")
