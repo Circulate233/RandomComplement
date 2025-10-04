@@ -47,8 +47,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
                     () -> {
                         try {
                             String v = Loader.instance().getIndexedModList().get("botania").getMetadata().version;
-                            var l = v.substring(v.length() - 5, v.length() - 2);
-                            return Integer.parseInt(l) <= 364;
+                            return v.equals("r1.10-364.4");
                         } catch (Exception e) {
                             return false;
                         }
