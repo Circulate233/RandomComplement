@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
                 "after:appliedenergistics2@[v0.56.7,);" +
                 "after:jei@[4.29.8,);" +
                 "after:thaumicenergistics@[2.3.5,);" +
+                "after:botania;" +
                 "before:shulkertooltip@[1.9.2,);"
 )
 public class RandomComplement {

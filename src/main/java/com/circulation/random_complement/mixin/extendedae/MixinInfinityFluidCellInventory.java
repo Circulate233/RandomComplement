@@ -18,7 +18,7 @@ public class MixinInfinityFluidCellInventory {
      */
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEFluidStack;setStackSize(J)Lappeng/api/storage/data/IAEStack;"), remap = false)
     public IAEStack<IAEFluidStack> setStackSize(IAEFluidStack instance, long l) {
-        return instance.setStackSize(1L << 53 - 1);
+        return instance.setStackSize(1L << 52);
     }
 
 }

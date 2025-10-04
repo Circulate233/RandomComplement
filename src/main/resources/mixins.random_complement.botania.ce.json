@@ -1,11 +1,11 @@
 {
-  "package": "com.circulation.random_complement.mixin.botania",
+  "package": "com.circulation.random_complement.mixin.botania.ce",
   "required": true,
   "refmap": "mixins.random_complement.refmap.json",
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinTileSpreader"
+    "MixinModelBrewery"
   ]
 }

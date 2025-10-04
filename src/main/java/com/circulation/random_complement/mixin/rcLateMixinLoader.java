@@ -43,6 +43,16 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         if (modLoaded("botania")) {
             addMixinCFG("mixins.random_complement.botania.json",
                     () -> RCConfig.Botania.BugFix);
+            addMixinCFG("mixins.random_complement.botania.ce.json",
+                    () -> {
+                        try {
+                            String v = Loader.instance().getIndexedModList().get("botania").getMetadata().version;
+                            var l = v.substring(v.length() - 5, v.length() - 2);
+                            return Integer.parseInt(l) <= 364;
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    });
             addMixinCFG("mixins.random_complement.botania.flower.json",
                     () -> RCConfig.Botania.FlowerLinkPool);
             addMixinCFG("mixins.random_complement.botania.spark.json",
@@ -60,7 +70,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.shulkertooltip.json", "shulkertooltip");
         addModdedMixinCFG("mixins.random_complement.extendedae.json", "extendedae");
         addModdedMixinCFG("mixins.random_complement.fluxnetworks.json", "fluxnetworks");
-        addModdedMixinCFG("mixins.random_complement.jeiu.json","jeiutilities");
+        addModdedMixinCFG("mixins.random_complement.jeiu.json", "jeiutilities");
+        addModdedMixinCFG("mixins.random_complement.de.json", "draconicevolution");
     }
 
     @Override

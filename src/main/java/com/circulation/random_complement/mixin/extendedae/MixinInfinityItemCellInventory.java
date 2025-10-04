@@ -18,7 +18,7 @@ public class MixinInfinityItemCellInventory {
      */
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEItemStack;setStackSize(J)Lappeng/api/storage/data/IAEStack;"), remap = false)
     public IAEStack<IAEItemStack> setStackSize(IAEItemStack instance, long l) {
-        return instance.setStackSize(1L << 53 - 1);
+        return instance.setStackSize(1L << 52);
     }
 
 }

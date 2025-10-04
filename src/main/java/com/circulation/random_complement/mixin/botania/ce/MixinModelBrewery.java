@@ -1,4 +1,4 @@
-package com.circulation.random_complement.mixin.botania;
+package com.circulation.random_complement.mixin.botania.ce;
 
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
