@@ -7,12 +7,12 @@ import com.mekeng.github.MekEng;
 import com.mekeng.github.client.slots.SlotGas;
 import com.mekeng.github.common.me.data.impl.AEGasStack;
 import com.mekeng.github.network.packet.CGasSlotSync;
+import com.mekeng.github.util.Utils;
 import github.kasuminova.mmce.client.gui.GuiMEGasInputBus;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasItem;
 import mezz.jei.api.gui.IGhostIngredientHandler;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,8 +37,8 @@ public class MixinGuiMEGasInputBus extends GuiUpgradeable {
         List<IGhostIngredientHandler.Target<?>> targets = new ObjectArrayList<>();
         final GasStack gasStack;
 
-        if (ingredient instanceof ItemStack stack && stack.getItem() instanceof IGasItem gasItem) {
-            gasStack = gasItem.getGas(stack);
+        if (ingredient instanceof ItemStack stack) {
+            gasStack = Utils.getGasFromItem(stack);
         } else if (ingredient instanceof GasStack g) {
             gasStack = g;
         } else {
@@ -50,8 +50,8 @@ public class MixinGuiMEGasInputBus extends GuiUpgradeable {
         List<SlotGas> slots = new ObjectArrayList<>();
         if (!this.getGuiSlots().isEmpty()) {
             for (GuiCustomSlot slot : this.getGuiSlots()) {
-                if (slot instanceof SlotGas && gasStack != null) {
-                    slots.add((SlotGas) slot);
+                if (slot instanceof SlotGas s) {
+                    slots.add(s);
                 }
             }
         }
@@ -66,7 +66,7 @@ public class MixinGuiMEGasInputBus extends GuiUpgradeable {
     }
 
     @Unique
-    private IGhostIngredientHandler.Target<Object> r$getTarget(SlotGas slot, GasStack gasStack) {
+    private IGhostIngredientHandler.Target<?> r$getTarget(SlotGas slot, GasStack gasStack) {
         final GuiUpgradeable gui = this;
         return new IGhostIngredientHandler.Target<>() {
 

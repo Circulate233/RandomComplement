@@ -31,6 +31,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             addMixinCFG("mixins.random_complement.ae2.json");
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
+            addModdedMixinCFG("mixins.random_complement.nae2.json", "nae2");
             if (modLoaded("neenergistics")) {
                 addMixinCFG("mixins.random_complement.nee.json");
                 addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
