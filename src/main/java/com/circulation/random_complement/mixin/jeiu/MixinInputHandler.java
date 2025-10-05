@@ -28,6 +28,6 @@ public class MixinInputHandler {
 
     @Inject(method = "<init>",at = @At("TAIL"))
     public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci){
-        JeiUtilitiesPlugin.getGrid().ifPresent(showsRecipeFocuses::add);
+        showsRecipeFocuses.add(JeiUtilitiesPlugin.ingredientListOverlay);
     }
 }

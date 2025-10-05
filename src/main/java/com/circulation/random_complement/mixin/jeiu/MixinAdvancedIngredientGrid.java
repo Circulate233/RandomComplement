@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.jeiu;
 
 import com.github.vfyjxf.jeiutilities.gui.history.AdvancedIngredientGrid;
-import mezz.jei.gui.ghost.IGhostIngredientDragSource;
 import mezz.jei.gui.ingredients.IIngredientListElement;
 import mezz.jei.gui.overlay.GridAlignment;
 import mezz.jei.gui.overlay.IngredientGrid;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = AdvancedIngredientGrid.class,remap = false)
-public class MixinAdvancedIngredientGrid extends IngredientGrid implements IGhostIngredientDragSource {
+public class MixinAdvancedIngredientGrid extends IngredientGrid {
 
     @Shadow
     @Final
