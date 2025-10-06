@@ -10,8 +10,11 @@ import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -19,9 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import thaumicenergistics.client.gui.helpers.MERepo;
-import thaumicenergistics.client.gui.part.GuiAbstractTerminal;
 import thaumicenergistics.client.gui.part.GuiArcaneTerminal;
-import thaumicenergistics.container.ContainerBaseTerminal;
 import thaumicenergistics.container.slot.SlotGhost;
 import thaumicenergistics.container.slot.SlotME;
 
@@ -34,11 +35,7 @@ import java.util.stream.StreamSupport;
 import static com.circulation.random_complement.RCConfig.AE2;
 
 @Mixin(GuiArcaneTerminal.class)
-public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements SpecialLogic {
-
-    public MixinGuiArcaneTerminal(ContainerBaseTerminal container) {
-        super(container);
-    }
+public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements SpecialLogic {
 
     @Unique
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
@@ -51,6 +48,10 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     private Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
+
+    public MixinGuiArcaneTerminal(Container inventorySlotsIn) {
+        super(inventorySlotsIn);
+    }
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
@@ -106,21 +107,20 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
         }
     }
 
-    @Unique
-    @Override
-    public void drawSlot(Slot slot) {
+    @Intrinsic
+    public void drawSlot(@NotNull Slot slot) {
         super.drawSlot(slot);
         if (slot instanceof SlotME<?> slotME) {
             var aeStack = slotME.getAEStack();
             if (aeStack != null && aeStack.isCraftable()) {
-                MEHandler.drawPlus(slot.xPos, slot.yPos);
+                r$getPlusSlot().add(slot);
             }
         }
         if (slot instanceof SlotGhost slotG) {
             var aeStack = slotG.getStack();
             if (!aeStack.isEmpty()) {
                 if (randomComplement$getCraftables().contains(SimpleItem.getInstance(aeStack))) {
-                    MEHandler.drawPlus(slotG);
+                    r$getPlusSlot().add(slotG);
                 }
             }
         }

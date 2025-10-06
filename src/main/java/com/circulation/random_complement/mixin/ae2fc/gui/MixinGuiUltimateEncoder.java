@@ -1,17 +1,16 @@
 package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.client.gui.AEBaseGui;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCGuiButton;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
-import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.util.SimpleItem;
+import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -40,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Set;
 
 @Mixin(value = GuiUltimateEncoder.class,remap = false)
-public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements SpecialLogic {
+public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements SpecialLogic {
 
     @Unique
     public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
@@ -85,11 +84,11 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
             var item = slotFake.getDisplayStack();
             if (!item.isEmpty()) {
                 if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item))) {
-                    MEHandler.drawPlus(slotFake);
+                    r$getPlusSlot().add(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket) {
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
                     if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
-                        MEHandler.drawPlus(slotFake);
+                        r$getPlusSlot().add(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")) {
                     randomComplement$mekengDrawSlot(item, slot);
@@ -104,7 +103,7 @@ public abstract class MixinGuiUltimateEncoder extends AEBaseGui implements Speci
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
             if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
-                MEHandler.drawPlus(slot);
+                r$getPlusSlot().add(slot);
             }
         }
     }

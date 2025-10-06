@@ -10,9 +10,11 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.util.SimpleItem;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.opengl.GL11;
@@ -34,6 +36,14 @@ import static com.circulation.random_complement.RCConfig.AE2;
 
 @Mixin(value = AEBaseGui.class)
 public abstract class MixinAEBaseGui extends GuiContainer {
+
+    @Unique
+    private final List<Slot> r$plusSlot = new ObjectArrayList<>();
+
+    @Unique
+    protected List<Slot> r$getPlusSlot() {
+        return r$plusSlot;
+    }
 
     @Shadow(remap = false)
     protected abstract List<Slot> getInventorySlots();
@@ -70,7 +80,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         if (slot instanceof SlotME slotME) {
             var aeStack = slotME.getAEStack();
             if (aeStack != null && aeStack.isCraftable()) {
-                MEHandler.drawPlus(slot.xPos, slot.yPos);
+                r$plusSlot.add(slotME);
             }
         }
     }
@@ -78,24 +88,31 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (Minecraft.getMinecraft().currentScreen instanceof SpecialLogic patternTerm) {
-            if (patternTerm.r$notMonitorable())return;
+            if (patternTerm.r$notMonitorable()) return;
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
                     if (randomComplement$getCraftables(patternTerm).contains(SimpleItem.getInstance(slotFake.getDisplayStack()))) {
-                        MEHandler.drawPlus(slotFake);
+                        r$plusSlot.add(slotFake);
                     }
                 }
             }
         }
     }
 
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;popMatrix()V", shift = At.Shift.AFTER))
+    public void drawPlusSlot(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        GlStateManager.translate(this.guiLeft, this.guiTop, 0);
+        MEHandler.drawSlotPluses(r$getPlusSlot());
+        GlStateManager.translate(-this.guiLeft, -this.guiTop, 0);
+    }
+
     @Unique
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
-    @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V",remap = false, shift = At.Shift.AFTER))
-    private void drawPin(float f, int x, int y, CallbackInfo ci){
-        if ((Object)this instanceof SpecialLogic monitorable){
-            if (monitorable.r$notMonitorable())return;
+    @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", remap = false, shift = At.Shift.AFTER))
+    private void drawPin(float f, int x, int y, CallbackInfo ci) {
+        if ((Object) this instanceof SpecialLogic monitorable) {
+            if (monitorable.r$notMonitorable()) return;
             var items = monitorable.r$getList();
             if (!items.isEmpty()) {
                 List<SlotME> slots = new ArrayList<>();
@@ -111,9 +128,9 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
                 final int cycle = (slots.size() + 8) / 9;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                MEHandler.bindTexture(this.mc,randomComplement$textureIndex);
+                MEHandler.bindTexture(this.mc, randomComplement$textureIndex);
                 for (int i = 0; i < cycle; i++) {
-                    int amount = Math.min(slots.size() - i * 9,9);
+                    int amount = Math.min(slots.size() - i * 9, 9);
                     int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
                             ? RCInputHandler.getCounter() * 18
                             : (randomComplement$textureIndex - 3) * 18;

@@ -22,6 +22,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,43 +44,36 @@ public class MEHandler {
 
     public static final Set<SimpleItem> craftableCacheS = new ObjectOpenHashSet<>();
 
-    public static void drawPlus(int x, int y) {
+    @SideOnly(Side.CLIENT)
+    public static void drawSlotPluses(List<Slot> slots) {
+        RenderHelper.disableStandardItemLighting();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-
-        float startX = x + 0.5f;
-        float startY = y + 0.25f;
-        float endX = startX + 3f;
-        float endY = startY + 3f;
-
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.translate(0, 0, 250);
+        for (var slot : slots) {
+            int x = slot.xPos;
+            int y = slot.yPos;
+            float startX = x + 0.5f;
+            float startY = y + 0.25f;
+            float endX = startX + 3f;
+            float endY = startY + 3f;
 
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        buffer.pos(startX, startY + 1.5f, 0).endVertex();
-        buffer.pos(endX, startY + 1.5f, 0).endVertex();
-        tessellator.draw();
-
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        buffer.pos(startX + 1.5f, startY, 0).endVertex();
-        buffer.pos(startX + 1.5f, endY, 0).endVertex();
-        tessellator.draw();
-
-        GlStateManager.translate(0, 0, -250);
+            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+            buffer.pos(startX, startY + 1.5f, 0).endVertex();
+            buffer.pos(endX, startY + 1.5f, 0).endVertex();
+            buffer.pos(startX + 1.5f, startY, 0).endVertex();
+            buffer.pos(startX + 1.5f, endY, 0).endVertex();
+            tessellator.draw();
+        }
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
-    }
-
-    public static void drawPlus(Slot slot) {
-        int x = slot.xPos;
-        int y = slot.yPos;
-
-        drawPlus(x,y);
+        RenderHelper.enableGUIStandardItemLighting();
+        slots.clear();
     }
 
     /*
@@ -87,7 +82,7 @@ public class MEHandler {
      */
     public static void refillBlankPatterns(ContainerMEMonitorable container, SlotRestrictedInput slot) {
         if (container instanceof PatternTermConfigs) {
-            if (((PatternTermConfigs)container).r$getAutoFillPattern() == PatternTermAutoFillPattern.CLOSE)return;
+            if (((PatternTermConfigs) container).r$getAutoFillPattern() == PatternTermAutoFillPattern.CLOSE) return;
             if (Platform.isServer()) {
                 ItemStack blanks = slot.getStack();
                 int blanksToRefill = 64;
@@ -118,7 +113,7 @@ public class MEHandler {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player,i,0);
+                return getTerminalGuiObject(item, player, i, 0);
             }
         }
 
@@ -133,7 +128,7 @@ public class MEHandler {
         for (int i = 0; i < player.getSizeInventory(); i++) {
             ItemStack item = player.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player.player,i,0);
+                return getTerminalGuiObject(item, player.player, i, 0);
             }
         }
 
@@ -148,15 +143,15 @@ public class MEHandler {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler t && t.canHandle(item)) {
-                return getTerminalGuiObject(item,player,i,1);
+                return getTerminalGuiObject(item, player, i, 1);
             }
         }
         return null;
     }
 
     @Optional.Method(modid = "appliedenergistics2")
-    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, int slot,int isBauble) {
-        if (Platform.isClient())return null;
+    public static WirelessTerminalGuiObject getTerminalGuiObject(ItemStack item, EntityPlayer player, int slot, int isBauble) {
+        if (Platform.isClient()) return null;
         if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
             IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
             if (!registry.isWirelessTerminal(item)) {
@@ -176,7 +171,7 @@ public class MEHandler {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                     return null;
                 }
-                return new WirelessTerminalGuiObject(wt, item, player, player.world, slot,isBauble,Integer.MIN_VALUE);
+                return new WirelessTerminalGuiObject(wt, item, player, player.world, slot, isBauble, Integer.MIN_VALUE);
             }
         }
         return null;
@@ -185,14 +180,14 @@ public class MEHandler {
     private static final Map<Integer, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
 
     static {
-        textures.put(0,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
-        textures.put(1,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
-        textures.put(2,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
+        textures.put(0, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
+        textures.put(1, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
+        textures.put(2, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
         final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
-        textures.put(3,rl);
-        textures.put(4,rl);
-        textures.put(5,rl);
-        textures.put(6,new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
+        textures.put(3, rl);
+        textures.put(4, rl);
+        textures.put(5, rl);
+        textures.put(6, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
     }
 
     @SideOnly(Side.CLIENT)

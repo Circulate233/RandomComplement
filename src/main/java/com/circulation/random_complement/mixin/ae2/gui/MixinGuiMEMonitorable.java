@@ -1,6 +1,5 @@
 package com.circulation.random_complement.mixin.ae2.gui;
 
-import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.me.ItemRepo;
 import appeng.container.implementations.ContainerMEMonitorable;
@@ -29,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Set;
 
 @Mixin(value = GuiMEMonitorable.class)
-public abstract class MixinGuiMEMonitorable extends AEBaseMEGui implements SpecialLogic {
+public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements SpecialLogic {
 
     @Final
     @Shadow(remap = false)
