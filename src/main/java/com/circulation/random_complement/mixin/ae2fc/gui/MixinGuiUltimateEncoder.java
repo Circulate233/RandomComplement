@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.container.slot.SlotFake;
+import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCGuiButton;
 import com.circulation.random_complement.client.RCSettings;
@@ -9,7 +10,7 @@ import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFil
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.network.RCConfigButton;
-import com.circulation.random_complement.common.util.SimpleItem;
+import appeng.api.storage.data.IAEItemStack;
 import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
@@ -36,13 +37,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiUltimateEncoder.class,remap = false)
 public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements SpecialLogic {
 
     @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    public Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;
@@ -83,11 +85,11 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
         if (!this.randomComplement$craftableCache.isEmpty() && slot instanceof SlotFake slotFake) {
             var item = slotFake.getDisplayStack();
             if (!item.isEmpty()) {
-                if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item))) {
+                if (this.randomComplement$craftableCache.contains(AEItemStack.fromItemStack(item))) {
                     r$getPlusSlot().add(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket) {
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
-                    if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
+                    if (this.randomComplement$craftableCache.contains(AEItemStack.fromItemStack(item1))) {
                         r$getPlusSlot().add(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")) {
@@ -102,7 +104,7 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
     private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot) {
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
-            if (this.randomComplement$craftableCache.contains(SimpleItem.getInstance(item1))) {
+            if (this.randomComplement$craftableCache.contains(AEItemStack.fromItemStack(item1))) {
                 r$getPlusSlot().add(slot);
             }
         }
@@ -110,24 +112,20 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
 
     @Unique
     @Override
-    public Set<SimpleItem> r$getList() {
+    public Set<IAEItemStack> r$getList() {
         return randomComplement$craftableCache;
     }
 
     @Unique
     @Override
-    public void r$setList(Set<SimpleItem> list) {
+    public void r$setList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.clear();
         randomComplement$craftableCache.addAll(list);
     }
 
+    @Unique
     @Override
-    public void r$addList(SimpleItem item) {
-        randomComplement$craftableCache.add(item);
-    }
-
-    @Override
-    public void r$addAllList(Set<SimpleItem> list) {
+    public void r$addAllList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.addAll(list);
     }
 }

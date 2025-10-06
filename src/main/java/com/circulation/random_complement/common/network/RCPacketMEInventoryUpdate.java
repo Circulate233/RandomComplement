@@ -7,7 +7,6 @@ import appeng.core.sync.network.INetworkInfo;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
-import com.circulation.random_complement.common.util.SimpleItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -26,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.BufferOverflowException;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -149,14 +147,10 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
                 case 1 -> {
                     GuiScreen screen = Minecraft.getMinecraft().currentScreen;
                     if (screen instanceof SpecialLogic gui) {
-                        gui.r$setList(this.list.stream()
-                                .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                                .collect(Collectors.toSet()));
+                        gui.r$setList(this.list);
                     }
                 }
-                case 2 -> MEHandler.craftableCacheS.addAll(this.list.stream()
-                        .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                        .collect(Collectors.toSet()));
+                case 2 -> MEHandler.getCraftableCacheS().addAll(this.list);
                 case 3 -> ae2fcClientPacketData();
                 case 4, 5 -> tcClientPacketData();
             }
@@ -169,9 +163,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
             case 3 -> {
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
                 if (screen instanceof SpecialLogic gui) {
-                    gui.r$addAllList(this.list.stream()
-                            .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                            .collect(Collectors.toSet()));
+                    gui.r$addAllList(this.list);
                 }
             }
         }
@@ -183,14 +175,10 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
             case 4 -> {
                 GuiScreen guiS = Minecraft.getMinecraft().currentScreen;
                 if (guiS instanceof SpecialLogic gui) {
-                    gui.r$addAllList(this.list.stream()
-                            .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                            .collect(Collectors.toSet()));
+                    gui.r$addAllList(this.list);
                 }
             }
-            case 5 -> MEHandler.craftableCacheS.addAll(this.list.stream()
-                        .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                        .collect(Collectors.toSet()));
+            case 5 -> MEHandler.getCraftableCacheS().addAll(this.list);
         }
     }
 

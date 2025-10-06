@@ -26,6 +26,7 @@ import thaumicenergistics.client.gui.part.GuiArcaneTerminal;
 import thaumicenergistics.container.slot.SlotGhost;
 import thaumicenergistics.container.slot.SlotME;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -41,13 +42,13 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    public Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
     public Set<SimpleItem> randomComplement$cpuCache = new ObjectOpenHashSet<>();
 
     @Unique
-    private Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
+    private Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     public MixinGuiArcaneTerminal(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -79,7 +80,7 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
             List<SlotME<?>> slots = new ObjectArrayList<>();
             for (Slot slot : this.inventorySlots.inventorySlots) {
                 if (slot instanceof SlotME<?> slotME) {
-                    if (items.contains(SimpleItem.getInstance(slotME.getStack()))) {
+                    if (slotME.getAEStack() instanceof IAEItemStack stack && items.contains(stack)) {
                         slots.add(slotME);
                     } else {
                         break;
@@ -128,31 +129,25 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
 
     @Unique
     @Override
-    public Set<SimpleItem> r$getList() {
+    public Set<IAEItemStack> r$getList() {
         if (randomComplement$mergedCache.isEmpty()) {
-            randomComplement$mergedCache.addAll(MEHandler.craftableCacheS);
+            randomComplement$mergedCache.addAll(MEHandler.getCraftableCacheS());
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
-            MEHandler.craftableCacheS.clear();
+            MEHandler.getCraftableCacheS().clear();
         }
         return randomComplement$mergedCache;
     }
 
     @Unique
     @Override
-    public void r$setList(Set<SimpleItem> list) {
+    public void r$setList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.clear();
         randomComplement$craftableCache.addAll(list);
     }
 
     @Unique
     @Override
-    public void r$addList(SimpleItem item) {
-        randomComplement$craftableCache.add(item);
-    }
-
-    @Unique
-    @Override
-    public void r$addAllList(Set<SimpleItem> list) {
+    public void r$addAllList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.addAll(list);
     }
 

@@ -16,9 +16,9 @@ import baubles.api.BaublesApi;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
-import com.circulation.random_complement.common.util.SimpleItem;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,7 +42,8 @@ import java.util.Set;
 
 public class MEHandler {
 
-    public static final Set<SimpleItem> craftableCacheS = new ObjectOpenHashSet<>();
+    @Getter
+    private static final Set<IAEItemStack> craftableCacheS = new ObjectOpenHashSet<>();
 
     @SideOnly(Side.CLIENT)
     public static void drawSlotPluses(List<Slot> slots) {

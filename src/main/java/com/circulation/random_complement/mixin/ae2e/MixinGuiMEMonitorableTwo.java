@@ -5,7 +5,7 @@ import appeng.client.me.ItemRepo;
 import com._0xc4de.ae2exttable.client.gui.GuiMEMonitorableTwo;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
-import com.circulation.random_complement.common.util.SimpleItem;
+import appeng.api.storage.data.IAEItemStack;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.inventory.Container;
 import org.spongepowered.asm.mixin.Final;
@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiMEMonitorableTwo.class)
@@ -23,10 +24,10 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements Sp
     protected ItemRepo repo;
 
     @Unique
-    public final Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    public final Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     @Unique
-    private final Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
+    private final Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     public MixinGuiMEMonitorableTwo(Container container) {
         super(container);
@@ -34,31 +35,25 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements Sp
 
     @Unique
     @Override
-    public Set<SimpleItem> r$getList() {
+    public Set<IAEItemStack> r$getList() {
         if (randomComplement$mergedCache.isEmpty()){
-            randomComplement$mergedCache.addAll(MEHandler.craftableCacheS);
+            randomComplement$mergedCache.addAll(MEHandler.getCraftableCacheS());
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
-            MEHandler.craftableCacheS.clear();
+            MEHandler.getCraftableCacheS().clear();
         }
         return randomComplement$mergedCache;
     }
 
     @Unique
     @Override
-    public void r$setList(Set<SimpleItem> list) {
+    public void r$setList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.clear();
         randomComplement$craftableCache.addAll(list);
     }
 
     @Unique
     @Override
-    public void r$addList(SimpleItem item) {
-        randomComplement$craftableCache.add(item);
-    }
-
-    @Unique
-    @Override
-    public void r$addAllList(Set<SimpleItem> list) {
+    public void r$addAllList(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.addAll(list);
     }
 
