@@ -4,7 +4,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.ItemRepo;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
-import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,9 +36,8 @@ public abstract class MixinItemRepo {
     @Unique
     private boolean randomComplement$isPriorityItem(IAEItemStack stack) {
         if (Platform.isClient() && Minecraft.getMinecraft().currentScreen instanceof SpecialLogic g) {
-            SimpleItem item = SimpleItem.getInstance(stack.getDefinition());
             var list = g.r$getList();
-            return list.contains(item);
+            return list.contains(stack);
         }
         return false;
     }

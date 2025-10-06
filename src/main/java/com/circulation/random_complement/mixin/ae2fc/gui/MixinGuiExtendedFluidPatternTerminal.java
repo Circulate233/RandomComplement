@@ -5,7 +5,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.common.util.SimpleItem;
+import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.mixin.ae2.gui.MixinGuiMEMonitorable;
 import com.glodblock.github.client.GuiExtendedFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
 public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMonitorable {
 
     @Unique
-    private Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    private Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     public MixinGuiExtendedFluidPatternTerminal(Container container) {
         super(container);
@@ -44,17 +44,16 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
         IItemList<IAEItemStack> all = this.repo.getList();
-        return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
+        return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toCollection(ObjectOpenHashSet::new));
     }
 
     @Unique
-    private Set<SimpleItem> randomComplement$getCraftables() {
+    private Set<IAEItemStack> randomComplement$getCraftables() {
         if (randomComplement$craftableCache.isEmpty()) {
             randomComplement$craftableCache = this.randomComplement$getStorage()
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toCollection(ObjectOpenHashSet::new));
         }
 
         return randomComplement$craftableCache;
@@ -65,11 +64,11 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
         if (slot instanceof SlotFake slotFake) {
             var item = slotFake.getDisplayStack();
             if (!item.isEmpty()) {
-                if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item))) {
+                if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item))) {
                     r$getPlusSlot().add(slotFake);
                 } else if (item.getItem() instanceof ItemFluidPacket){
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
-                    if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item1))) {
+                    if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {
                         r$getPlusSlot().add(slotFake);
                     }
                 } else if (Loader.isModLoaded("mekeng")){
@@ -84,7 +83,7 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
     private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot){
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
-            if (randomComplement$getCraftables().contains(SimpleItem.getInstance(item1))) {
+            if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {
                 r$getPlusSlot().add(slot);
             }
         }

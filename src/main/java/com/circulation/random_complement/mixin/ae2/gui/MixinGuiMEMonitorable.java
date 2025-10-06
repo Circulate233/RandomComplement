@@ -36,9 +36,6 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements Sp
     private ContainerMEMonitorable monitorableContainer;
 
     @Shadow(remap = false)
-    protected int jeiOffset;
-
-    @Shadow(remap = false)
     @Final
     protected ItemRepo repo;
 

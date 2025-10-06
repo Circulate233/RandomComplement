@@ -9,9 +9,7 @@ import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
-import com.circulation.random_complement.common.util.SimpleItem;
 import com.google.common.collect.ImmutableSet;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +28,6 @@ import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Mixin(ContainerArcaneTerminal.class)
 public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal implements IMEMonitorHandlerReceiver<IAEItemStack>, ICraftingContainer {
@@ -44,15 +41,6 @@ public abstract class MixinContainerArcaneTerminal extends ContainerBaseTerminal
     public MixinContainerArcaneTerminal(EntityPlayer player, PartBase part) {
         super(player, part);
     }
-
-    @Unique
-    private static final Set<SimpleItem> randomComplement$craftableCacheS = new ObjectOpenHashSet<>();
-
-    @Unique
-    public Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
-
-    @Unique
-    private Set<SimpleItem> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     @Unique
     private int randomComplement$a = 0;

@@ -5,7 +5,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.util.Platform;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
-import com.circulation.random_complement.common.util.SimpleItem;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,9 +48,8 @@ public class MixinMERepo<T extends IAEStack<T>> {
     @Unique
     private boolean randomComplement$isPriorityItem(IAEStack<?> stack) {
         if (Platform.isClient() && stack instanceof IAEItemStack s && Minecraft.getMinecraft().currentScreen instanceof SpecialLogic g) {
-            SimpleItem item = SimpleItem.getInstance(s.getDefinition());
             var list = g.r$getList();
-            return list.contains(item);
+            return list.contains(s);
         }
         return false;
     }

@@ -131,7 +131,7 @@ public class InscriberItemHandler implements IAEItemFilter {
         private final Set<SimpleItem> button;
         private final boolean isTwo;
 
-        public SimpleRecipe(IInscriberRecipe recipe){
+        private SimpleRecipe(IInscriberRecipe recipe){
             Set<SimpleItem> input = new ObjectOpenHashSet<>();
             recipe.getInputs().forEach(item -> input.add(SimpleItem.getInstance(item)));
             this.input = input;

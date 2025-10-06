@@ -1,6 +1,7 @@
 package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.container.slot.SlotFake;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
@@ -10,7 +11,6 @@ import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFil
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.network.RCConfigButton;
-import appeng.api.storage.data.IAEItemStack;
 import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;

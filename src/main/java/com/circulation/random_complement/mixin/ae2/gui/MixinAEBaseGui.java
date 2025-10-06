@@ -6,12 +6,13 @@ import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
+import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.handler.MEHandler;
 import com.circulation.random_complement.common.interfaces.SpecialLogic;
-import com.circulation.random_complement.common.util.SimpleItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,8 +26,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     protected abstract List<Slot> getInventorySlots();
 
     @Unique
-    private Set<SimpleItem> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    private Set<IAEItemStack> randomComplement$craftableCache;
 
     public MixinAEBaseGui(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -59,17 +58,16 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     private Set<IAEItemStack> randomComplement$getStorage(SpecialLogic gui) {
         var repo = gui.r$getRepo();
         IItemList<IAEItemStack> all = repo != null ? repo.getList() : null;
-        return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toSet());
+        return all == null ? ObjectSets.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toCollection(ObjectOpenHashSet::new));
     }
 
     @Unique
-    private Set<SimpleItem> randomComplement$getCraftables(SpecialLogic gui) {
-        if (randomComplement$craftableCache.isEmpty()) {
+    private Set<IAEItemStack> randomComplement$getCraftables(SpecialLogic gui) {
+        if (randomComplement$craftableCache == null) {
             randomComplement$craftableCache = this.randomComplement$getStorage(gui)
                     .stream()
                     .filter(IAEStack::isCraftable)
-                    .map(itemStack -> SimpleItem.getInstance(itemStack.getDefinition()))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toCollection(ObjectOpenHashSet::new));
         }
 
         return randomComplement$craftableCache;
@@ -91,7 +89,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
             if (patternTerm.r$notMonitorable()) return;
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.getDisplayStack().isEmpty()) {
-                    if (randomComplement$getCraftables(patternTerm).contains(SimpleItem.getInstance(slotFake.getDisplayStack()))) {
+                    if (randomComplement$getCraftables(patternTerm).contains(AEItemStack.fromItemStack(slotFake.getDisplayStack()))) {
                         r$plusSlot.add(slotFake);
                     }
                 }
@@ -115,10 +113,10 @@ public abstract class MixinAEBaseGui extends GuiContainer {
             if (monitorable.r$notMonitorable()) return;
             var items = monitorable.r$getList();
             if (!items.isEmpty()) {
-                List<SlotME> slots = new ArrayList<>();
+                List<SlotME> slots = new ObjectArrayList<>();
                 for (Slot slot : this.getInventorySlots()) {
                     if (slot instanceof SlotME slotME) {
-                        if (items.contains(SimpleItem.getInstance(slotME.getStack()))) {
+                        if (items.contains(slotME.getAEStack())) {
                             slots.add(slotME);
                         } else {
                             break;
