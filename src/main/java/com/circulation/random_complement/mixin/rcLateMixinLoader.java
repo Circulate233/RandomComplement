@@ -38,9 +38,9 @@ public class rcLateMixinLoader implements ILateMixinLoader {
                 addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
             }
 
-            if (isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")){
+            if (isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")) {
                 addMixinCFG("mixins.random_complement.mmce.json");
-                addModdedMixinCFG("mixins.random_complement.mmce.mekeng.json","mekeng");
+                addModdedMixinCFG("mixins.random_complement.mmce.mekeng.json", "mekeng");
             }
         }
         if (modLoaded("botania")) {
@@ -74,6 +74,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.fluxnetworks.json", "fluxnetworks");
         addModdedMixinCFG("mixins.random_complement.jeiu.json", "jeiutilities");
         addModdedMixinCFG("mixins.random_complement.de.json", "draconicevolution");
+        addModdedMixinCFG("mixins.random_complement.jei.json", "jei");
+        addModdedMixinCFG("mixins.random_complement.packagedauto.jei.json", "packagedauto", "jei");
     }
 
     @Override

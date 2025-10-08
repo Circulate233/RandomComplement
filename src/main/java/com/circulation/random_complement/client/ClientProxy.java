@@ -1,6 +1,7 @@
 package com.circulation.random_complement.client;
 
 import com.circulation.random_complement.client.handler.RCInputHandler;
+import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Function;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -24,6 +25,23 @@ public class ClientProxy extends CommonProxy {
         super.preInit();
         if (Loader.isModLoaded("appliedenergistics2")) {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
+        }
+        if (Loader.isModLoaded("jei")) {
+            MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
+            if (Loader.isModLoaded("appliedenergistics2")) {
+                try {
+                    RCJEIInputHandler.addJeiGui(Class.forName("appeng.client.gui.AEBaseGui"));
+                } catch (ClassNotFoundException ignored) {
+
+                }
+            }
+            if (Loader.isModLoaded("packagedauto")) {
+                try {
+                    RCJEIInputHandler.addJeiGui(Class.forName("thelm.packagedauto.client.gui.GuiEncoder"));
+                } catch (ClassNotFoundException ignored) {
+
+                }
+            }
         }
     }
 
