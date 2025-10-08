@@ -21,13 +21,17 @@ public class RCJEIInputHandler {
 
     private static final ReferenceSet<Class<?>> jeiGui = new ReferenceOpenHashSet<>();
 
-    public static void addJeiGui(Class<?> c){
+    public static int getJeiGuiSize() {
+        return jeiGui.size();
+    }
+
+    public static void addJeiGui(Class<?> c) {
         jeiGui.add(c);
     }
 
-    public static boolean isJeiGui(GuiScreen gui){
+    public static boolean isJeiGui(GuiScreen gui) {
         for (var aClass : jeiGui) {
-            if (aClass.isInstance(gui)){
+            if (aClass.isInstance(gui)) {
                 return true;
             }
         }
@@ -42,14 +46,14 @@ public class RCJEIInputHandler {
     @Getter
     private static XYPair xy;
 
-    public static void runClickCache(){
+    public static void runClickCache() {
         if (clickCache != null) {
             clickCache.run();
         }
         clearCache();
     }
 
-    public static void clearCache(){
+    public static void clearCache() {
         click = false;
         clickCache = null;
         xy = null;
@@ -57,13 +61,13 @@ public class RCJEIInputHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClickEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
-        if (isJeiGui(Minecraft.getMinecraft().currentScreen)){
+        if (isJeiGui(Minecraft.getMinecraft().currentScreen)) {
             int eventButton = Mouse.getEventButton();
             if (eventButton > -1) {
-                if (Mouse.isButtonDown(eventButton)){
+                if (Mouse.isButtonDown(eventButton)) {
                     click = true;
-                    xy = XYPair.of(Mouse.getX(),Mouse.getY());
-                } else if (clickCache != null){
+                    xy = XYPair.of(Mouse.getX(), Mouse.getY());
+                } else if (clickCache != null) {
                     runClickCache();
                 }
             }

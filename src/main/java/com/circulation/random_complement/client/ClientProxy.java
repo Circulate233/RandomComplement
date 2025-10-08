@@ -27,7 +27,6 @@ public class ClientProxy extends CommonProxy {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
         }
         if (Loader.isModLoaded("jei")) {
-            MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
             if (Loader.isModLoaded("appliedenergistics2")) {
                 try {
                     RCJEIInputHandler.addJeiGui(Class.forName("appeng.client.gui.AEBaseGui"));
@@ -42,13 +41,16 @@ public class ClientProxy extends CommonProxy {
 
                 }
             }
+            if (RCJEIInputHandler.getJeiGuiSize() > 0) {
+                MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
+            }
         }
     }
 
     @Override
     public void init() {
         super.init();
-        if (Function.modLoaded("appliedenergistics2")){
+        if (Function.modLoaded("appliedenergistics2")) {
             KeyBindings.init();
         }
     }
