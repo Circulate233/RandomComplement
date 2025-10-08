@@ -129,6 +129,8 @@ public abstract class MixinInputHandler {
                         if (book.ingredient instanceof ItemStack i) {
                             item = i;
                         }
+                    } else if (ing.getValue() instanceof ItemStack i) {
+                        item = i;
                     } else if (Function.modLoaded("ae2fc")) {
                         item = r$ae2fcWork(ing);
                     }
@@ -160,6 +162,11 @@ public abstract class MixinInputHandler {
                     return ii;
                 }
             }
+        } else if (ing.getValue() instanceof FluidStack i) {
+            var ii = FakeFluids.packFluid2Drops(i);
+            if (ii != null) {
+                return ii;
+            }
         } else if (Function.modLoaded("mekeng")) {
             return r$mekengWork(ing);
         }
@@ -175,6 +182,11 @@ public abstract class MixinInputHandler {
                 if (ii != null) {
                     return ii;
                 }
+            }
+        } else if (ing.getValue() instanceof GasStack i) {
+            var ii = FakeGases.packGas2Drops(i);
+            if (ii != null) {
+                return ii;
             }
         }
         return ItemStack.EMPTY;

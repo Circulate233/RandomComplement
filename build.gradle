@@ -241,6 +241,7 @@ dependencies {
     implementation(rfg.deobf("curse.maven:jei-utilities-616190:6937116"))
     implementation(rfg.deobf("curse.maven:brandons-core-231382:3408276"))
     implementation(rfg.deobf("curse.maven:draconic-evolution-223565:3431261"))
+    implementation(rfg.deobf("curse.maven:packagedauto-308380:6932932"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

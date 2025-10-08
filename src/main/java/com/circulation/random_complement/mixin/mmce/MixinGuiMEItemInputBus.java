@@ -90,7 +90,7 @@ public abstract class MixinGuiMEItemInputBus extends GuiMEItemBus implements IJE
         };
     }
 
-    @Override
+    @Intrinsic
     public Map<IGhostIngredientHandler.Target<?>, Object> getFakeSlotTargetMap() {
         return this.r$mapTargetSlot;
     }
