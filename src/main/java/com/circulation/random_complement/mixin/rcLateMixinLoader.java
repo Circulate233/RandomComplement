@@ -76,6 +76,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.de.json", "draconicevolution");
         addModdedMixinCFG("mixins.random_complement.jei.json", "jei");
         addModdedMixinCFG("mixins.random_complement.packagedauto.jei.json", "packagedauto", "jei");
+        addModdedMixinCFG("mixins.random_complement.ftblib.json", "ftblib");
+        addModdedMixinCFG("mixins.random_complement.enderutilities.ftblib.json", "enderutilities", "ftblib");
     }
 
     @Override
