@@ -4,6 +4,8 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Function;
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+import it.unimi.dsi.fastutil.objects.ReferenceList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
@@ -27,21 +29,23 @@ public class ClientProxy extends CommonProxy {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
         }
         if (Loader.isModLoaded("jei")) {
+            ReferenceList<Class<?>> classes = new ReferenceArrayList<>();
             if (Loader.isModLoaded("appliedenergistics2")) {
                 try {
-                    RCJEIInputHandler.addJeiGui(Class.forName("appeng.client.gui.AEBaseGui"));
+                    classes.add(Class.forName("appeng.client.gui.AEBaseGui"));
                 } catch (ClassNotFoundException ignored) {
 
                 }
             }
             if (Loader.isModLoaded("packagedauto")) {
                 try {
-                    RCJEIInputHandler.addJeiGui(Class.forName("thelm.packagedauto.client.gui.GuiEncoder"));
+                    classes.add(Class.forName("thelm.packagedauto.client.gui.GuiEncoder"));
                 } catch (ClassNotFoundException ignored) {
 
                 }
             }
-            if (RCJEIInputHandler.getJeiGuiSize() > 0) {
+            if (!classes.isEmpty()) {
+                RCJEIInputHandler.setJeiGui(classes.toArray(new Class[0]));
                 MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
             }
         }

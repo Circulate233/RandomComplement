@@ -1,8 +1,6 @@
 package com.circulation.random_complement.client.handler;
 
 import com.circulation.random_complement.common.util.XYPair;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -19,15 +17,8 @@ public class RCJEIInputHandler {
 
     public static RCJEIInputHandler INSTANCE = new RCJEIInputHandler();
 
-    private static final ReferenceSet<Class<?>> jeiGui = new ReferenceOpenHashSet<>();
-
-    public static int getJeiGuiSize() {
-        return jeiGui.size();
-    }
-
-    public static void addJeiGui(Class<?> c) {
-        jeiGui.add(c);
-    }
+    @Setter
+    private static Class<?>[] jeiGui;
 
     public static boolean isJeiGui(GuiScreen gui) {
         for (var aClass : jeiGui) {
