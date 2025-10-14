@@ -34,12 +34,18 @@ public class RCJEIInputHandler {
     private static boolean click;
     @Setter
     private static Runnable clickCache;
+    @Setter
+    private static Runnable shiftClickCache;
     @Getter
     private static XYPair xy;
 
     public static void runClickCache() {
         if (clickCache != null) {
-            clickCache.run();
+            if (shiftClickCache == null || !GuiScreen.isShiftKeyDown()) {
+                clickCache.run();
+            } else {
+                shiftClickCache.run();
+            }
         }
         clearCache();
     }
@@ -47,6 +53,7 @@ public class RCJEIInputHandler {
     public static void clearCache() {
         click = false;
         clickCache = null;
+        shiftClickCache = null;
         xy = null;
     }
 

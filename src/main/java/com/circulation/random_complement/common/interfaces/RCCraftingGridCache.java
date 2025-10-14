@@ -9,5 +9,4 @@ import java.util.Map;
 public interface RCCraftingGridCache {
 
     Map<IAEItemStack, ImmutableList<ICraftingPatternDetails>> rc$getCraftableItems();
-    void rc$updatePatterns();
 }

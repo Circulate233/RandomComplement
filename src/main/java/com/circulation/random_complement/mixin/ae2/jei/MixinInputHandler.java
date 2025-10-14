@@ -1,11 +1,14 @@
 package com.circulation.random_complement.mixin.ae2.jei;
 
+import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
+import appeng.integration.modules.jei.JEIPlugin;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.client.handler.RCInputHandler;
+import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.util.Function;
 import com.glodblock.github.common.item.fake.FakeFluids;
@@ -35,8 +38,32 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import javax.annotation.Nullable;
+
 @Mixin(value = InputHandler.class,remap = false)
 public abstract class MixinInputHandler {
+
+    @Unique
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void r$onClickEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (Minecraft.getMinecraft().currentScreen instanceof AEBaseGui gui) {
+            int eventButton = Mouse.getEventButton();
+            if (eventButton > -1) {
+                if (Mouse.isButtonDown(eventButton)) {
+                    var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
+                    if (ing == null) return;
+                    final Object obj;
+                    if (ing.getValue() instanceof BookmarkItem<?> book) {
+                        obj = book.ingredient;
+                    } else {
+                        obj = ing.getValue();
+                    }
+                    RCJEIInputHandler.setShiftClickCache(() ->
+                            JEIPlugin.aeGuiHandler.getTargets(gui, obj, true));
+                }
+            }
+        }
+    }
 
     @Shadow
     @Final
@@ -45,6 +72,11 @@ public abstract class MixinInputHandler {
     @Shadow
     @Final
     private GhostIngredientDragManager ghostIngredientDragManager;
+
+    @Shadow
+    @Nullable
+    protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
+
     @Unique
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void r$onGuiKeyboardEventPre(GuiScreenEvent.KeyboardInputEvent.Pre event) {

@@ -1,6 +1,7 @@
 package com.circulation.random_complement.common.network;
 
 import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.items.misc.ItemEncodedPattern;
 import appeng.tile.inventory.AppEngInternalInventory;
 import com.circulation.random_complement.client.buttonsetting.Action;
@@ -95,7 +96,7 @@ public class RCActionButton implements Packet<RCActionButton> {
                                 patterns.extractItem(i, Integer.MAX_VALUE, false);
                                 patterns.insertItem(i, pattern, false);
                                 patterns.getTileEntity().saveChanges();
-                                cgc.rc$updatePatterns();
+                                gridNode.getGrid().postEvent(new MENetworkCraftingPatternChange(tile, gridNode));
                             }
                         }
                     }

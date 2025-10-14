@@ -21,16 +21,8 @@ public class MixinCraftingGridCache implements RCCraftingGridCache {
     @Final
     private Object2ObjectMap<IAEItemStack, ImmutableList<ICraftingPatternDetails>> craftableItems;
 
-    @Shadow
-    private boolean updatePatterns;
-
     @Override
     public Map<IAEItemStack, ImmutableList<ICraftingPatternDetails>> rc$getCraftableItems() {
         return craftableItems;
-    }
-
-    @Override
-    public void rc$updatePatterns() {
-        this.updatePatterns = true;
     }
 }

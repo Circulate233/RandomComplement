@@ -26,13 +26,13 @@ public abstract class MixinInputHandler {
     @Final
     private GhostIngredientDragManager ghostIngredientDragManager;
 
-    @Inject(method = "handleMouseClick",at = @At(value = "INVOKE", target = "Lmezz/jei/gui/ghost/GhostIngredientDragManager;handleMouseClicked(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/GuiScreen;Lmezz/jei/input/IClickedIngredient;Lmezz/jei/gui/ingredients/IIngredientListElement;II)Z",shift = At.Shift.BEFORE), cancellable = true)
-    private void handleMouseClick(GuiScreen guiScreen, int mouseButton, int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir, @Local IIngredientListElement<?> listElement,@Local IClickedIngredient<?> clicked) {
+    @Inject(method = "handleMouseClick", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/ghost/GhostIngredientDragManager;handleMouseClicked(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/GuiScreen;Lmezz/jei/input/IClickedIngredient;Lmezz/jei/gui/ingredients/IIngredientListElement;II)Z", shift = At.Shift.BEFORE), cancellable = true)
+    private void handleMouseClick(GuiScreen guiScreen, int mouseButton, int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir, @Local IIngredientListElement<?> listElement, @Local IClickedIngredient<?> clicked) {
         if (listElement == null) return;
         if (RCJEIInputHandler.isJeiGui(Minecraft.getMinecraft().currentScreen)) {
 
             RCJEIInputHandler.setClickCache(() -> {
-                if (RCJEIInputHandler.isClick()) {
+                if (RCJEIInputHandler.isClick() && !GuiScreen.isShiftKeyDown()) {
                     if (clicked != null && Config.mouseClickToSeeRecipe()) {
                         this.handleMouseClickedFocus(mouseButton, clicked);
                     }

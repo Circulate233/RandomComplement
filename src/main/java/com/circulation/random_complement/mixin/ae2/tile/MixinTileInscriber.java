@@ -197,7 +197,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     }
 
     @Unique
-    public void randomComplement$updateNeighbors() {
+    public void r$updateNeighbors() {
         for(EnumFacing f : EnumFacing.VALUES) {
             TileEntity te = this.world.getTileEntity(this.pos.offset(f));
             Object capability = null;
@@ -227,7 +227,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     @Intrinsic
     public void onReady() {
         super.onReady();
-        this.randomComplement$updateNeighbors();
+        this.r$updateNeighbors();
     }
 
     @Unique

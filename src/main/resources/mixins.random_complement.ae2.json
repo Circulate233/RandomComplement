@@ -12,6 +12,7 @@
     "MixinCraftingGridCache",
     "MixinDualityInterface",
     "MixinEnergyGridCache",
+    "MixinGridPowerStorage",
     "MixinGuiBridge",
     "MixinPacketCraftRequest",
     "MixinPacketTypes",
