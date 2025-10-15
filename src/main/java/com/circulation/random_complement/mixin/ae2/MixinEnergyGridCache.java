@@ -65,7 +65,7 @@ public abstract class MixinEnergyGridCache {
 
     @Inject(method = "extractAEPower",at = @At("HEAD"), cancellable = true)
     public void extractAEPower(double amt, Actionable mode, PowerMultiplier pm, CallbackInfoReturnable<Double> cir) {
-        if (r$hasCreativeEnergyCell()){
+        if (RCConfig.AE2.debugEnergy || r$hasCreativeEnergyCell()){
             cir.setReturnValue(amt);
         }
     }

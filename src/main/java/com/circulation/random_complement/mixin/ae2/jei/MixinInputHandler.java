@@ -52,14 +52,8 @@ public abstract class MixinInputHandler {
                 if (Mouse.isButtonDown(eventButton)) {
                     var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
                     if (ing == null) return;
-                    final Object obj;
-                    if (ing.getValue() instanceof BookmarkItem<?> book) {
-                        obj = book.ingredient;
-                    } else {
-                        obj = ing.getValue();
-                    }
                     RCJEIInputHandler.setShiftClickCache(() ->
-                            JEIPlugin.aeGuiHandler.getTargets(gui, obj, true));
+                            JEIPlugin.aeGuiHandler.getTargets(gui, ing.getValue(), true));
                 }
             }
         }
