@@ -1,9 +1,10 @@
 package com.circulation.random_complement.client;
 
+import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
-import com.circulation.random_complement.common.util.Function;
+import com.circulation.random_complement.common.util.Functions;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -25,6 +26,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit() {
         super.preInit();
+        MinecraftForge.EVENT_BUS.register(new ItemTooltipHandler());
         if (Loader.isModLoaded("appliedenergistics2")) {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
         }
@@ -54,7 +56,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
-        if (Function.modLoaded("appliedenergistics2")) {
+        if (Functions.modLoaded("appliedenergistics2")) {
             KeyBindings.init();
         }
     }
@@ -62,6 +64,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         super.postInit();
+        RegItemTooltip.regAll();
     }
 
     @SubscribeEvent

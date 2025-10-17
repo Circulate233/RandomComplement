@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
-import static com.circulation.random_complement.common.util.Function.modLoaded;
+import static com.circulation.random_complement.common.util.Functions.modLoaded;
 
 public class rcLateMixinLoader implements ILateMixinLoader {
 

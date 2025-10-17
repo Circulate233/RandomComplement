@@ -47,8 +47,10 @@ commands.ftbnbtedit.item.usage=/ftbnbtedit 物品
 
 key.retrieve_item.desc=自AE取出物品
 key.start_craft.desc=向AE请求合成
+
 key.retrieve_item.desc.tooltip=按下 §6%s§r 通过无线终端向自AE取出物品
 key.start_craft.desc.tooltip=按下 §6%s§r 通过无线终端向AE请求该物品合成
+key.ae2fc.pattern.tooltip.0=按下 §6%s§r 修改物品数量
 
 text.rc.craft=此物品无对应合成
 text.rc.warn=你不应该如此快速的尝试

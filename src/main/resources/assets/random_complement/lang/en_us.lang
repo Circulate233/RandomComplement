@@ -47,8 +47,10 @@ commands.ftbnbtedit.item.usage=/ftbnbtedit item
 
 key.retrieve_item.desc=Retrieve item from AE
 key.start_craft.desc=Request craft from AE
+
 key.retrieve_item.desc.tooltip=Press §6%s§r through wireless terminals retrieve item from AE
 key.start_craft.desc.tooltip=Press §6%s§r through wireless terminals request craft from AE
+key.ae2fc.pattern.tooltip.0=Press §6%s§r to modify the quantity of items
 
 text.rc.craft=This item has no corresponding crafting
 text.rc.warn=You shouldn't have tried so quickly

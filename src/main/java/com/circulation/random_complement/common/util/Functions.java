@@ -46,7 +46,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.common.Loader;
 
-public class Function {
+public class Functions {
 
     public static IBlockState getBlockFromName(String name){
         if (name != null) {
