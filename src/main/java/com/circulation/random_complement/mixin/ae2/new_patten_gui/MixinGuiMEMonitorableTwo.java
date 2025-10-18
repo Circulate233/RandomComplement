@@ -46,7 +46,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISor
     }
 
     @Unique
-    protected void r$addScrollBars(){
+    protected void r$addScrollBars() {
 
     }
 
