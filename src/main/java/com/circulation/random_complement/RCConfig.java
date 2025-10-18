@@ -83,6 +83,10 @@ public class RCConfig {
         @Config.Comment({"Make the grid always think it's full of energy"})
         @Config.Name("debugEnergy")
         public boolean debugEnergy = false;
+
+        @Config.Comment({"Use the new Patten Terminal Gui"})
+        @Config.Name("newPattenGui")
+        public boolean newPattenGui = true;
     }
 
     public static class IC2 {

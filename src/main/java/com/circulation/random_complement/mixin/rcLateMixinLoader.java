@@ -29,7 +29,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
-            addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json");
+            addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json", () -> RCConfig.AE2.newPattenGui);
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
             addModdedMixinCFG("mixins.random_complement.nae2.json", "nae2");
