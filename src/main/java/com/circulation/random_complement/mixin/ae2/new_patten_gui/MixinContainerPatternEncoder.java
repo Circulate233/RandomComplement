@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(value = ContainerPatternEncoder.class, remap = false)
+@Mixin(ContainerPatternEncoder.class)
 public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorable implements RCPatternEncoder, IOptionalSlotHost {
 
-    @Shadow
+    @Shadow(remap = false)
     protected SlotFakeCraftingMatrix[] craftingSlots;
 
-    @Shadow
+    @Shadow(remap = false)
     protected OptionalSlotFake[] outputSlots;
 
-    @Shadow
+    @Shadow(remap = false)
     protected IItemHandler crafting;
 
     @Unique
@@ -59,7 +59,7 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         }
     }
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract AbstractPartEncoder getPart();
 
     @Intrinsic

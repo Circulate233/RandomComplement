@@ -40,7 +40,7 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
     }
 
     @Override
-    protected void r$addScrollBars(){
+    protected void r$addScrollBars() {
         r$getScrollBars().add(r$scrollbar = new RCGuiScrollbar());
     }
 

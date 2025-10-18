@@ -36,7 +36,7 @@ public abstract class MixinContainerWirelessPatternTerminal extends MixinContain
         return original.call(inventory, 27);
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerWirelessPatternTerminal;addSlotToContainer(Lnet/minecraft/inventory/Slot;)Lnet/minecraft/inventory/Slot;"))
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerWirelessPatternTerminal;addSlotToContainer(Lnet/minecraft/inventory/Slot;)Lnet/minecraft/inventory/Slot;", remap = true))
     public Slot redirectAddSlot(ContainerWirelessPatternTerminal instance, Slot slot, Operation<Slot> original) {
         if (slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) {
             return null;

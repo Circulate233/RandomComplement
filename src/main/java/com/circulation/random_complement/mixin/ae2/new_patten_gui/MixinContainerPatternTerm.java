@@ -13,14 +13,14 @@ import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = ContainerPatternTerm.class, remap = false)
+@Mixin(ContainerPatternTerm.class)
 public abstract class MixinContainerPatternTerm extends MixinContainerPatternEncoder {
 
     public MixinContainerPatternTerm(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/slot/SlotRestrictedInput;setStackLimit(I)Lnet/minecraft/inventory/Slot;"))
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/slot/SlotRestrictedInput;setStackLimit(I)Lnet/minecraft/inventory/Slot;", remap = false))
     public Slot onInit(SlotRestrictedInput instance, int size, Operation<Slot> original) {
         this.craftingSlots = new SlotFakeCraftingMatrix[81];
         this.outputSlots = new OptionalSlotFake[27];

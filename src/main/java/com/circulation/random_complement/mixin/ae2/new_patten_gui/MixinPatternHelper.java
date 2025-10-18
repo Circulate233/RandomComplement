@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = PatternHelper.class, remap = false)
 public class MixinPatternHelper {
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/inventory/Container;II)Lnet/minecraft/inventory/InventoryCrafting;"))
+    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/inventory/Container;II)Lnet/minecraft/inventory/InventoryCrafting;", remap = true))
     public InventoryCrafting onInit(Container eventHandlerIn, int width, int height, Operation<InventoryCrafting> original) {
         return original.call(eventHandlerIn, 10, 10);
     }

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = CraftingCPUCluster.class, remap = false)
 public class MixinCraftingCPUCluster {
 
-    @WrapOperation(method = "executeCrafting", at = @At(value = "NEW", target = "(Lnet/minecraft/inventory/Container;II)Lnet/minecraft/inventory/InventoryCrafting;", ordinal = 1))
+    @WrapOperation(method = "executeCrafting", at = @At(value = "NEW", target = "(Lnet/minecraft/inventory/Container;II)Lnet/minecraft/inventory/InventoryCrafting;", ordinal = 1, remap = true))
     private InventoryCrafting newRCInventory(Container eventHandlerIn, int width, int height, Operation<InventoryCrafting> original) {
         return original.call(eventHandlerIn, 10, 10);
     }

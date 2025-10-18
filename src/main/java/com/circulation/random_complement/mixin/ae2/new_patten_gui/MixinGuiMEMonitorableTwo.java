@@ -22,13 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.IOException;
 import java.util.List;
 
-@Mixin(value = GuiMEMonitorable.class, remap = false)
+@Mixin(GuiMEMonitorable.class)
 public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISortSource {
 
     @Unique
     private final List<RCGuiScrollbar> r$guiScrollbars = new ObjectArrayList<>();
     @Mutable
-    @Shadow
+    @Shadow(remap = false)
     @Final
     protected ItemRepo repo;
 
@@ -36,7 +36,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISor
         super(container);
     }
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract String getBackground();
 
     @Unique
@@ -68,14 +68,14 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISor
 
     }
 
-    @Inject(method = "setScrollBar", at = @At("TAIL"))
+    @Inject(method = "setScrollBar", at = @At("TAIL"), remap = false)
     private void setScrollBar(CallbackInfo ci) {
         if (!r$getScrollBars().isEmpty()) {
             r$setScrollBar();
         }
     }
 
-    @Inject(method = "drawFG", at = @At("HEAD"))
+    @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
         for (var guiScrollbar : r$guiScrollbars) {
             guiScrollbar.draw(this);
@@ -110,7 +110,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISor
         super.handleMouseInput();
     }
 
-    @Inject(method = "drawBG", at = @At("TAIL"))
+    @Inject(method = "drawBG", at = @At("TAIL"), remap = false)
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
         if (r$getScrollBars().isEmpty()) return;
         this.bindTexture(this.getBackground());
