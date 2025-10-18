@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-@Mixin(value = CPacketLoadPattern.class,remap = false)
+@Mixin(value = CPacketLoadPattern.class, remap = false)
 public abstract class MixinCPacketLoadPattern implements IMessage {
 
     /**
@@ -24,7 +24,7 @@ public abstract class MixinCPacketLoadPattern implements IMessage {
             for (ItemStack item : itemList) {
                 if (item != null) {
                     dict.setTag(cnt + "#", ItemStackHelper.stackToNBT(item));
-                    cnt ++;
+                    cnt++;
                 }
             }
             dict.setShort("l", (short) cnt);
@@ -44,7 +44,7 @@ public abstract class MixinCPacketLoadPattern implements IMessage {
             return new ItemStack[0];
         } else {
             ItemStack[] itemList = new ItemStack[len];
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 itemList[i] = ItemStackHelper.stackFromNBT(dict.getCompoundTag(i + "#"));
             }
             return itemList;

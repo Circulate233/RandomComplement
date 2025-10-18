@@ -35,16 +35,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WirelessPickBlock implements Packet<WirelessPickBlock> {
 
+    private static final Map<UUID, Long> map = new ConcurrentHashMap<>();
     private int slot;
     private ItemStack stack = ItemStack.EMPTY;
 
-    private static final Map<UUID,Long> map = new ConcurrentHashMap<>();
-
-    public WirelessPickBlock(){
+    public WirelessPickBlock() {
 
     }
 
-    public WirelessPickBlock(ItemStack stack,int slot) {
+    public WirelessPickBlock(ItemStack stack, int slot) {
         this.stack = stack;
         this.slot = slot;
     }
@@ -66,15 +65,15 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         EntityPlayerMP player = ctx.getServerHandler().player;
         UUID playUUID = player.getUniqueID();
         Long worldTime = Instant.now().getEpochSecond();
-        if (map.containsKey(playUUID)){
-            if (map.get(playUUID) < worldTime){
-                map.put(playUUID,worldTime);
+        if (map.containsKey(playUUID)) {
+            if (map.get(playUUID) < worldTime) {
+                map.put(playUUID, worldTime);
             } else {
                 player.sendMessage(new TextComponentTranslation("text.rc.warn"));
                 return null;
             }
         } else {
-            map.put(playUUID,worldTime);
+            map.put(playUUID, worldTime);
         }
         ItemStack handItem = player.inventory.getStackInSlot(message.slot);
         ItemStack needItem = message.stack.copy();
@@ -83,20 +82,20 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
         }
 
-        player.getServer().addScheduledTask(() -> readPlayer(player,needItem,message));
+        player.getServer().addScheduledTask(() -> readPlayer(player, needItem, message));
 
         if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
-            player.getServer().addScheduledTask(() -> readBaubles(player,needItem, message.slot));
+            player.getServer().addScheduledTask(() -> readBaubles(player, needItem, message.slot));
         }
 
         return null;
     }
 
-    public void readPlayer(EntityPlayerMP player, ItemStack needItem, WirelessPickBlock message){
+    public void readPlayer(EntityPlayerMP player, ItemStack needItem, WirelessPickBlock message) {
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack item = player.inventory.getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
-                if (work(item, player,needItem,message.slot,i,0)) {
+                if (work(item, player, needItem, message.slot, i, 0)) {
                     needItem.setCount(0);
                     return;
                 }
@@ -105,7 +104,7 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
     }
 
     @Optional.Method(modid = "baubles")
-    public void readBaubles(EntityPlayerMP player,ItemStack exitem,int slot) {
+    public void readBaubles(EntityPlayerMP player, ItemStack exitem, int slot) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
             if (item.getItem() instanceof IWirelessTermHandler wt && wt.canHandle(item)) {
@@ -119,15 +118,16 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
     private boolean work(ItemStack item, EntityPlayerMP player, ItemStack exItem, int slot, int x, int y) {
         if (Platform.isClient()) return true;
         int handItemConnt = 0;
-        if (!player.inventory.getStackInSlot(slot).isEmpty()){
+        if (!player.inventory.getStackInSlot(slot).isEmpty()) {
             ItemStack vitem = player.inventory.getStackInSlot(slot);
-            if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())return true;
+            if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())
+                return true;
             handItemConnt = player.inventory.getStackInSlot(slot).getCount();
         }
 
-        WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,x,y);
+        WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item, player, x, y);
 
-        if (obj == null){
+        if (obj == null) {
             return false;
         }
 

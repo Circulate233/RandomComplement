@@ -33,7 +33,7 @@ public class MixinGuiMEPatternProvider extends AEBaseGuiContainerDynamic {
         super(container);
     }
 
-    @Inject(method = "initGui",at = @At("TAIL"))
+    @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         int i = 0;
         final int left = this.guiLeft - 18;
@@ -49,12 +49,12 @@ public class MixinGuiMEPatternProvider extends AEBaseGuiContainerDynamic {
     }
 
     @Unique
-    public int r$getTop(){
+    public int r$getTop() {
         int top = this.guiTop + 8;
         final int left = this.guiLeft - 18;
         for (GuiButton guiButton : this.buttonList) {
-            if (guiButton.x != left)continue;
-            if (top < guiButton.y)top = guiButton.y;
+            if (guiButton.x != left) continue;
+            if (top < guiButton.y) top = guiButton.y;
         }
         return top;
     }

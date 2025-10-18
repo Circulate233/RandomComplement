@@ -39,26 +39,61 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(value = GuiCraftConfirm.class,priority = 999)
+@Mixin(value = GuiCraftConfirm.class, priority = 999)
 public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCraftConfirm {
+    @Shadow(remap = false)
+    private GuiButton cancel;
+    @Shadow(remap = false)
+    private GuiButton start;
+    @Shadow(remap = false)
+    @Final
+    private IItemList<IAEItemStack> missing;
+
     public MixinGuiCraftConfirm(Container container) {
         super(container);
     }
 
-    @Shadow(remap = false)
-    private GuiButton cancel;
-
     @Unique
-    protected GuiButton r$getCancel(){
-        return this.cancel;
+    private static String randomComplement$getItemInformation(final Object o) {
+        String dspToolTip = "";
+        List<String> lineList = new ArrayList<>();
+        if (o == null) {
+            return "** Null";
+        }
+        ITooltipFlag.TooltipFlags tooltipFlag = ITooltipFlag.TooltipFlags.NORMAL;
+
+        try {
+            tooltipFlag = Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
+        } catch (final Exception ignored) {
+        }
+
+        ItemStack itemStack = ItemStack.EMPTY;
+        if (o instanceof AEItemStack aeItemStack) {
+            try {
+                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            } catch (Exception ignored) {
+            }
+        } else if (o instanceof ItemStack stack) {
+            itemStack = stack;
+        } else {
+            return "";
+        }
+
+        try {
+            itemStack.getItem().addInformation(itemStack, null, lineList, tooltipFlag);
+        } catch (Exception ignored) {
+        }
+
+        if (!lineList.isEmpty()) {
+            dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
+        }
+        return dspToolTip;
     }
 
-    @Shadow(remap = false)
-    private GuiButton start;
-
-    @Shadow(remap = false)
-    @Final
-    private IItemList<IAEItemStack> missing;
+    @Unique
+    protected GuiButton r$getCancel() {
+        return this.cancel;
+    }
 
     @Shadow(remap = false)
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
@@ -99,7 +134,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     @Optional.Method(modid = "jei")
     public void rc$addMissBookmark() {
         BookmarkList bookmarkList = Internal.getBookmarkList();
-        BookmarkGroup group = new AEBookmarkGroup(bookmarkList.nextId(),this.missing);
+        BookmarkGroup group = new AEBookmarkGroup(bookmarkList.nextId(), this.missing);
         bookmarkList.add(group);
     }
 
@@ -112,44 +147,6 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
             return randomComplement$getItemDisplayName(n);
         }
     }
-
-    @Unique
-    private static String randomComplement$getItemInformation(final Object o) {
-        String dspToolTip = "";
-        List<String> lineList = new ArrayList<>();
-        if (o == null) {
-            return "** Null";
-        }
-        ITooltipFlag.TooltipFlags tooltipFlag = ITooltipFlag.TooltipFlags.NORMAL;
-
-        try {
-            tooltipFlag = Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
-        } catch (final Exception ignored) {
-        }
-
-        ItemStack itemStack = ItemStack.EMPTY;
-        if (o instanceof AEItemStack aeItemStack) {
-            try {
-                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
-            } catch (Exception ignored) {
-            }
-        } else if (o instanceof ItemStack stack) {
-            itemStack = stack;
-        } else {
-            return "";
-        }
-
-        try {
-            itemStack.getItem().addInformation(itemStack, null, lineList, tooltipFlag);
-        } catch (Exception ignored) {
-        }
-
-        if (!lineList.isEmpty()) {
-            dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
-        }
-        return dspToolTip;
-    }
-
 
     @Unique
     private String randomComplement$getItemDisplayName(Object n) {

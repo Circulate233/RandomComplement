@@ -14,10 +14,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ContainerRollBACK implements Packet<ContainerRollBACK> {
 
     @Override
-    public void fromBytes(ByteBuf buf) {}
+    public void fromBytes(ByteBuf buf) {
+    }
 
     @Override
-    public void toBytes(ByteBuf buf) {}
+    public void toBytes(ByteBuf buf) {
+    }
 
     @Override
     public IMessage onMessage(ContainerRollBACK message, MessageContext ctx) {

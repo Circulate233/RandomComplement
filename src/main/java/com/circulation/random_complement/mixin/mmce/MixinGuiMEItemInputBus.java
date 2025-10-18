@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(value = GuiMEItemInputBus.class,remap = false)
+@Mixin(value = GuiMEItemInputBus.class, remap = false)
 public abstract class MixinGuiMEItemInputBus extends GuiMEItemBus implements IJEIGhostIngredients {
 
     @Unique

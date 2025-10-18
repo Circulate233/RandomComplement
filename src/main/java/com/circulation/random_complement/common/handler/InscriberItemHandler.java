@@ -21,12 +21,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InscriberItemHandler implements IAEItemFilter {
-    private final TileInscriber te;
-    private List<IItemHandler> itemHandlers;
     private final static IInscriberRegistry reg = AEApi.instance().registries().inscriber();
-    private final static Map<SimpleItem,Set<SimpleRecipe>> recipes = new ConcurrentHashMap<>();
-    private final static Map<SimpleItem,Set<SimpleRecipe>> recipesi = new ConcurrentHashMap<>();
-
+    private final static Map<SimpleItem, Set<SimpleRecipe>> recipes = new ConcurrentHashMap<>();
+    private final static Map<SimpleItem, Set<SimpleRecipe>> recipesi = new ConcurrentHashMap<>();
     private final static IItemDefinition namePress = AEApi.instance().definitions().materials().namePress();
 
     static {
@@ -36,7 +33,7 @@ public class InscriberItemHandler implements IAEItemFilter {
                 if (recipes.get(top) == null) {
                     Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
-                    recipes.put(top,list);
+                    recipes.put(top, list);
                 } else {
                     recipes.get(top).add(sr);
                 }
@@ -45,7 +42,7 @@ public class InscriberItemHandler implements IAEItemFilter {
                 if (recipes.get(button) == null) {
                     Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
-                    recipes.put(button,list);
+                    recipes.put(button, list);
                 } else {
                     recipes.get(button).add(sr);
                 }
@@ -54,13 +51,16 @@ public class InscriberItemHandler implements IAEItemFilter {
                 if (recipesi.get(input) == null) {
                     Set<SimpleRecipe> list = new ObjectOpenHashSet<>();
                     list.add(sr);
-                    recipesi.put(input,list);
+                    recipesi.put(input, list);
                 } else {
                     recipesi.get(input).add(sr);
                 }
             });
         });
     }
+
+    private final TileInscriber te;
+    private List<IItemHandler> itemHandlers;
 
     public InscriberItemHandler(TileInscriber te) {
         this.te = te;
@@ -71,8 +71,8 @@ public class InscriberItemHandler implements IAEItemFilter {
     }
 
     public boolean allowInsert(IItemHandler inv, int slot, ItemStack stack) {
-        if (itemHandlers == null){
-            this.itemHandlers = ((ItemHandlerTool)te).r$getItemHandlers();
+        if (itemHandlers == null) {
+            this.itemHandlers = ((ItemHandlerTool) te).r$getItemHandlers();
         }
         if (slot == 1) {
             return false;
@@ -109,13 +109,13 @@ public class InscriberItemHandler implements IAEItemFilter {
         return namePress.isSameAs(slot0) || namePress.isSameAs(slot1);
     }
 
-    public List<SimpleItem> allSlotSimpleItem(List<IItemHandler> itemHandlers){
+    public List<SimpleItem> allSlotSimpleItem(List<IItemHandler> itemHandlers) {
         List<SimpleItem> list = new ObjectArrayList<>();
         itemHandlers.forEach(itemHandler -> list.add(SimpleItem.getInstance(itemHandler.getStackInSlot(0))));
         return list;
     }
 
-    public List<ItemStack> allSlotItem(List<IItemHandler> itemHandlers){
+    public List<ItemStack> allSlotItem(List<IItemHandler> itemHandlers) {
         List<ItemStack> list = new ObjectArrayList<>();
         itemHandlers.forEach(itemHandler -> list.add(itemHandler.getStackInSlot(0)));
         return list;
@@ -125,47 +125,16 @@ public class InscriberItemHandler implements IAEItemFilter {
         return handlers.stream().allMatch(h -> h.getStackInSlot(0).isEmpty());
     }
 
-    private static class SimpleRecipe{
-        private final Set<SimpleItem> input;
-        private final Set<SimpleItem> top;
-        private final Set<SimpleItem> button;
-        private final boolean isTwo;
-
-        private SimpleRecipe(IInscriberRecipe recipe){
-            Set<SimpleItem> input = new ObjectOpenHashSet<>();
-            recipe.getInputs().forEach(item -> input.add(SimpleItem.getInstance(item)));
-            this.input = input;
-            Set<SimpleItem> top = new ObjectOpenHashSet<>();
-            recipe.getTopInputs().forEach(item -> top.add(SimpleItem.getInstance(item)));
-            this.top = top;
-            Set<SimpleItem> button = new ObjectOpenHashSet<>();
-            recipe.getBottomInputs().forEach(item -> button.add(SimpleItem.getInstance(item)));
-            this.button = button;
-
-            this.isTwo = input.isEmpty() || button.isEmpty();
-        }
-
-        public Set<SimpleItem> getCounter(SimpleItem item){
-            if (top.contains(item)){
-                return button;
-            } else if (button.contains(item)) {
-                return top;
-            } else {
-                return Collections.emptySet();
-            }
-        }
-    }
-
-    public Set<SimpleItem> getUsableItems(List<SimpleItem> slots, IItemHandler inv){
+    public Set<SimpleItem> getUsableItems(List<SimpleItem> slots, IItemHandler inv) {
         final Set<SimpleItem> out = new ObjectOpenHashSet<>();
         final var item = slots.get(0).isEmpty() ? slots.get(1) : slots.get(0);
         final var slot2 = slots.get(2);
-        if (slot2.isEmpty()){
+        if (slot2.isEmpty()) {
             if (inv == itemHandlers.get(2)) {
-                if (recipes.get(item) == null){
+                if (recipes.get(item) == null) {
                     return Collections.emptySet();
                 }
-                if (slots.get(0).isEmpty() || slots.get(1).isEmpty()){
+                if (slots.get(0).isEmpty() || slots.get(1).isEmpty()) {
                     recipes.get(item).forEach(recipe -> {
                         if (recipe.top.contains(item) || recipe.button.contains(item)) {
                             out.addAll(recipe.input);
@@ -173,7 +142,7 @@ public class InscriberItemHandler implements IAEItemFilter {
                     });
                 } else {
                     recipes.get(item).forEach(recipe -> {
-                        if (recipe.top.contains(item) || recipe.button.contains(item)){
+                        if (recipe.top.contains(item) || recipe.button.contains(item)) {
                             if (recipe.getCounter(item).contains(slots.get(1))) {
                                 out.addAll(recipe.input);
                             }
@@ -181,7 +150,7 @@ public class InscriberItemHandler implements IAEItemFilter {
                     });
                 }
             } else {
-                if (recipes.get(item) == null){
+                if (recipes.get(item) == null) {
                     return Collections.emptySet();
                 }
                 recipes.get(item).forEach(recipe -> {
@@ -194,7 +163,7 @@ public class InscriberItemHandler implements IAEItemFilter {
             }
         } else {
             if (item.isEmpty()) {
-                if (recipesi.get(slot2) == null){
+                if (recipesi.get(slot2) == null) {
                     return Collections.emptySet();
                 }
                 recipesi.get(slot2).forEach(recipe -> {
@@ -203,7 +172,7 @@ public class InscriberItemHandler implements IAEItemFilter {
                     }
                 });
             } else {
-                if (recipes.get(item) == null){
+                if (recipes.get(item) == null) {
                     return Collections.emptySet();
                 }
                 recipes.get(item).forEach(recipe -> {
@@ -218,5 +187,36 @@ public class InscriberItemHandler implements IAEItemFilter {
             }
         }
         return out;
+    }
+
+    private static class SimpleRecipe {
+        private final Set<SimpleItem> input;
+        private final Set<SimpleItem> top;
+        private final Set<SimpleItem> button;
+        private final boolean isTwo;
+
+        private SimpleRecipe(IInscriberRecipe recipe) {
+            Set<SimpleItem> input = new ObjectOpenHashSet<>();
+            recipe.getInputs().forEach(item -> input.add(SimpleItem.getInstance(item)));
+            this.input = input;
+            Set<SimpleItem> top = new ObjectOpenHashSet<>();
+            recipe.getTopInputs().forEach(item -> top.add(SimpleItem.getInstance(item)));
+            this.top = top;
+            Set<SimpleItem> button = new ObjectOpenHashSet<>();
+            recipe.getBottomInputs().forEach(item -> button.add(SimpleItem.getInstance(item)));
+            this.button = button;
+
+            this.isTwo = input.isEmpty() || button.isEmpty();
+        }
+
+        public Set<SimpleItem> getCounter(SimpleItem item) {
+            if (top.contains(item)) {
+                return button;
+            } else if (button.contains(item)) {
+                return top;
+            } else {
+                return Collections.emptySet();
+            }
+        }
     }
 }

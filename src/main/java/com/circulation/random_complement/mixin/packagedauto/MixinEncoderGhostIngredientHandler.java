@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import thelm.packagedauto.integration.jei.EncoderGhostIngredientHandler;
 
-@Mixin(value = EncoderGhostIngredientHandler.class,remap = false)
+@Mixin(value = EncoderGhostIngredientHandler.class, remap = false)
 public abstract class MixinEncoderGhostIngredientHandler {
 
     @Shadow
@@ -17,9 +17,9 @@ public abstract class MixinEncoderGhostIngredientHandler {
         return null;
     }
 
-    @Inject(method = "wrapStack",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "wrapStack", at = @At("HEAD"), cancellable = true)
     private static void wrapStackMixin(Object ingredient, CallbackInfoReturnable<ItemStack> cir) {
-        if (ingredient instanceof BookmarkItem<?> b){
+        if (ingredient instanceof BookmarkItem<?> b) {
             cir.setReturnValue(wrapStack(b.ingredient));
         }
     }

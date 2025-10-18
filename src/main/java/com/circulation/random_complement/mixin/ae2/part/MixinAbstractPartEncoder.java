@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = AbstractPartEncoder.class,remap = false)
+@Mixin(value = AbstractPartEncoder.class, remap = false)
 public class MixinAbstractPartEncoder extends AbstractPartTerminal implements RCIConfigurableObject, RCIConfigManagerHost {
 
     @Unique
@@ -26,8 +26,8 @@ public class MixinAbstractPartEncoder extends AbstractPartTerminal implements RC
         super(is);
     }
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(CallbackInfo ci){
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(CallbackInfo ci) {
         this.randomComplement$rcSettings = new RCConfigManager(this);
         this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
     }
@@ -44,12 +44,12 @@ public class MixinAbstractPartEncoder extends AbstractPartTerminal implements RC
         return this.randomComplement$rcSettings;
     }
 
-    @Inject(method = "writeToNBT",at = @At("TAIL"))
+    @Inject(method = "writeToNBT", at = @At("TAIL"))
     public void writeToNBTMixin(NBTTagCompound data, CallbackInfo ci) {
         this.randomComplement$rcSettings.writeToNBT(data);
     }
 
-    @Inject(method = "readFromNBT",at = @At("TAIL"))
+    @Inject(method = "readFromNBT", at = @At("TAIL"))
     public void readFromNBTMixin(NBTTagCompound data, CallbackInfo ci) {
         this.randomComplement$rcSettings.readFromNBT(data);
     }

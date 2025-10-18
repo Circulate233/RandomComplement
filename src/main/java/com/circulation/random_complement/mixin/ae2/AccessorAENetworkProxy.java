@@ -4,7 +4,7 @@ import appeng.me.helpers.AENetworkProxy;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(value = AENetworkProxy.class,remap = false)
+@Mixin(value = AENetworkProxy.class, remap = false)
 public interface AccessorAENetworkProxy {
 
     @Accessor("idleDraw")

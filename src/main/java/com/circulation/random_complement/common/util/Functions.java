@@ -48,12 +48,12 @@ import net.minecraftforge.fml.common.Loader;
 
 public class Functions {
 
-    public static IBlockState getBlockFromName(String name){
+    public static IBlockState getBlockFromName(String name) {
         if (name != null) {
             String[] parts = name.split(":");
             if (parts.length >= 2) {
                 Block block = Block.getBlockFromName(parts[0] + ":" + parts[1]);
-                if (block == null){
+                if (block == null) {
                     return null;
                 }
                 int meta = (parts.length > 2) ? Integer.parseInt(parts[2]) : 0;
@@ -68,60 +68,60 @@ public class Functions {
     }
 
     @SafeVarargs
-    public static <T> ObjectList<T> asList(T... s){
+    public static <T> ObjectList<T> asList(T... s) {
         return ObjectLists.unmodifiable(ObjectArrayList.wrap(s));
     }
 
-    public static IntList asList(int... s){
+    public static IntList asList(int... s) {
         return IntLists.unmodifiable(IntArrayList.wrap(s));
     }
 
-    public static LongList asList(long... s){
+    public static LongList asList(long... s) {
         return LongLists.unmodifiable(LongArrayList.wrap(s));
     }
 
-    public static ShortList asList(short... s){
+    public static ShortList asList(short... s) {
         return ShortLists.unmodifiable(ShortArrayList.wrap(s));
     }
 
-    public static FloatList asList(float... s){
+    public static FloatList asList(float... s) {
         return FloatLists.unmodifiable(FloatArrayList.wrap(s));
     }
 
-    public static DoubleList asList(double... s){
+    public static DoubleList asList(double... s) {
         return DoubleLists.unmodifiable(DoubleArrayList.wrap(s));
     }
 
-    public static CharList asList(char... s){
+    public static CharList asList(char... s) {
         return CharLists.unmodifiable(CharArrayList.wrap(s));
     }
 
     @SafeVarargs
-    public static <T> ObjectSet<T> asSet(T... s){
+    public static <T> ObjectSet<T> asSet(T... s) {
         return ObjectSets.unmodifiable(new ObjectOpenHashSet<>(s));
     }
 
-    public static IntSet asSet(int... s){
+    public static IntSet asSet(int... s) {
         return IntSets.unmodifiable(new IntOpenHashSet(s));
     }
 
-    public static LongSet asSet(long... s){
+    public static LongSet asSet(long... s) {
         return LongSets.unmodifiable(new LongOpenHashSet(s));
     }
 
-    public static ShortSet asSet(short... s){
+    public static ShortSet asSet(short... s) {
         return ShortSets.unmodifiable(new ShortOpenHashSet(s));
     }
 
-    public static FloatSet asSet(float... s){
+    public static FloatSet asSet(float... s) {
         return FloatSets.unmodifiable(new FloatOpenHashSet(s));
     }
 
-    public static DoubleSet asSet(double... s){
+    public static DoubleSet asSet(double... s) {
         return DoubleSets.unmodifiable(new DoubleOpenHashSet(s));
     }
 
-    public static CharSet asSet(char... s){
+    public static CharSet asSet(char... s) {
         return CharSets.unmodifiable(new CharOpenHashSet(s));
     }
 }

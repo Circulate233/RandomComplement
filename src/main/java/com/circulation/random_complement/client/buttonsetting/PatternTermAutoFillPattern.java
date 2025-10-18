@@ -12,13 +12,13 @@ public enum PatternTermAutoFillPattern implements InterfaceButton {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getName(){
+    public String getName() {
         return I18n.format("gui.pattern_term.auto_fill_pattern.name");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getTooltip(){
+    public String getTooltip() {
         return I18n.format(key);
     }
 }

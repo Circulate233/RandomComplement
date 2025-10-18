@@ -59,20 +59,20 @@ public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable
         return randomComplement$craftableCache;
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Slot;getStack()Lnet/minecraft/item/ItemStack;",ordinal = 0))
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Slot;getStack()Lnet/minecraft/item/ItemStack;", ordinal = 0))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();
                 if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item))) {
                     r$getPlusSlot().add(slot);
-                } else if (item.getItem() instanceof ItemFluidPacket){
-                    var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack)FakeItemRegister.getAEStack(item)).getFluidStack());
+                } else if (item.getItem() instanceof ItemFluidPacket) {
+                    var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
                     if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {
                         r$getPlusSlot().add(slot);
                     }
-                } else if (Loader.isModLoaded("mekeng")){
-                    randomComplement$mekengDrawSlot(item,slot);
+                } else if (Loader.isModLoaded("mekeng")) {
+                    randomComplement$mekengDrawSlot(item, slot);
                 }
 
             }
@@ -81,7 +81,7 @@ public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    private void randomComplement$mekengDrawSlot(ItemStack item,Slot slot){
+    private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot) {
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
             if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {

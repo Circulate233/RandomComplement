@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = CmdEditNBT.class,remap = false)
+@Mixin(value = CmdEditNBT.class, remap = false)
 public class MixinCmdEditNBT {
 
     @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "nbtedit"))

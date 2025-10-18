@@ -19,15 +19,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = InputHandler.class,remap = false)
+@Mixin(value = InputHandler.class, remap = false)
 public class MixinInputHandler {
 
     @Shadow
     @Final
     private List<IShowsRecipeFocuses> showsRecipeFocuses;
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci){
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci) {
         showsRecipeFocuses.add(JeiUtilitiesPlugin.ingredientListOverlay);
     }
 }

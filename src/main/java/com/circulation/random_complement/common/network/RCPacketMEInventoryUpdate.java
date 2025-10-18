@@ -41,11 +41,10 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     private final ByteBuf data;
     @Nullable
     private final GZIPOutputStream compressFrame;
+    private final short id;
     private int writtenBytes;
     @Getter
     private boolean empty;
-
-    private final short id;
 
     public RCPacketMEInventoryUpdate(final ByteBuf stream) throws IOException {
         this.writtenBytes = 0;
@@ -65,14 +64,14 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
             ByteBuf uncompressed = Unpooled.buffer(stream.readableBytes());
             byte[] tmp = new byte[TEMP_BUFFER_SIZE];
 
-            while(gzReader.available() != 0) {
+            while (gzReader.available() != 0) {
                 int bytes = gzReader.read(tmp);
                 if (bytes > 0) {
                     uncompressed.writeBytes(tmp, 0, bytes);
                 }
             }
 
-            while(uncompressed.readableBytes() > 0) {
+            while (uncompressed.readableBytes() > 0) {
                 this.list.add(AEItemStack.fromPacket(uncompressed));
             }
         } catch (Throwable var7) {
@@ -90,10 +89,10 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     }
 
     public RCPacketMEInventoryUpdate(short id) throws IOException {
-        this((byte) 0,id);
+        this((byte) 0, id);
     }
 
-    public RCPacketMEInventoryUpdate(byte ref,short id) throws IOException {
+    public RCPacketMEInventoryUpdate(byte ref, short id) throws IOException {
         this.writtenBytes = 0;
         this.empty = true;
         this.ref = ref;
@@ -158,7 +157,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     }
 
     @Optional.Method(modid = "ae2fc")
-    public void ae2fcClientPacketData(){
+    public void ae2fcClientPacketData() {
         switch (id) {
             case 3 -> {
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
@@ -170,7 +169,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     }
 
     @Optional.Method(modid = "thermalfoundation")
-    public void tcClientPacketData(){
+    public void tcClientPacketData() {
         switch (id) {
             case 4 -> {
                 GuiScreen guiS = Minecraft.getMinecraft().currentScreen;

@@ -18,12 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Field;
 
-@Mixin(value = EnergyGridCache.class,remap = false)
+@Mixin(value = EnergyGridCache.class, remap = false)
 public abstract class MixinEnergyGridCache {
-
-    @Shadow
-    @Final
-    private IGrid myGrid;
 
     @Unique
     private static Field r$localStorage;
@@ -36,9 +32,13 @@ public abstract class MixinEnergyGridCache {
         }
     }
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(IGrid g, CallbackInfo ci){
-        if (r$localStorage != null){
+    @Shadow
+    @Final
+    private IGrid myGrid;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(IGrid g, CallbackInfo ci) {
+        if (r$localStorage != null) {
             try {
                 RCGridPowerStorage rg = (RCGridPowerStorage) r$localStorage.get(this);
                 rg.r$setGrid(g);
@@ -56,16 +56,16 @@ public abstract class MixinEnergyGridCache {
     }
 
     @Unique
-    private boolean r$hasCreativeEnergyCell(){
-        if (((AccessorGrid) this.myGrid).r$getMachines().containsKey(TileCreativeEnergyCell.class)){
+    private boolean r$hasCreativeEnergyCell() {
+        if (((AccessorGrid) this.myGrid).r$getMachines().containsKey(TileCreativeEnergyCell.class)) {
             return !this.myGrid.getMachines(TileCreativeEnergyCell.class).isEmpty();
         }
         return false;
     }
 
-    @Inject(method = "extractAEPower",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "extractAEPower", at = @At("HEAD"), cancellable = true)
     public void extractAEPower(double amt, Actionable mode, PowerMultiplier pm, CallbackInfoReturnable<Double> cir) {
-        if (RCConfig.AE2.debugEnergy || r$hasCreativeEnergyCell()){
+        if (RCConfig.AE2.debugEnergy || r$hasCreativeEnergyCell()) {
             cir.setReturnValue(amt);
         }
     }

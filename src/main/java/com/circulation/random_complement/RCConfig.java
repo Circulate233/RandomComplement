@@ -43,6 +43,25 @@ public class RCConfig {
     @Config.Name("NEE")
     public static final NEE NEE = new NEE();
 
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(RandomComplement.MOD_ID)) {
+            ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
+            if (RandomComplement.server != null && FMLCommonHandler.instance().getSide().isServer()) {
+                for (EntityPlayerMP player : RandomComplement.server.getPlayerList().getPlayers()) {
+                    RandomComplement.NET_CHANNEL.sendTo(new SyncConfig(), player);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player instanceof EntityPlayerMP mp) {
+            NET_CHANNEL.sendTo(new SyncConfig(), mp);
+        }
+    }
+
     public static class NEE {
 
         @Config.Comment({"Whether to enable NEE compatibility for ae2exttable."})
@@ -164,25 +183,6 @@ public class RCConfig {
         @Config.RequiresMcRestart
         @Config.RangeInt(min = 1, max = 64)
         public int SocketLimitModified = 1;
-    }
-
-    @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.player instanceof EntityPlayerMP mp) {
-            NET_CHANNEL.sendTo(new SyncConfig(), mp);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(RandomComplement.MOD_ID)) {
-            ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
-            if (RandomComplement.server != null && FMLCommonHandler.instance().getSide().isServer()) {
-                for (EntityPlayerMP player : RandomComplement.server.getPlayerList().getPlayers()) {
-                    RandomComplement.NET_CHANNEL.sendTo(new SyncConfig(), player);
-                }
-            }
-        }
     }
 
 }

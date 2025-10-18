@@ -52,6 +52,8 @@ key.retrieve_item.desc.tooltip=Press §6%s§r through wireless terminals retriev
 key.start_craft.desc.tooltip=Press §6%s§r through wireless terminals request craft from AE
 key.ae2fc.pattern.tooltip.0=Press §6%s§r to modify the quantity of items
 
+text.rc.tooltip.press_alt=Press §fALT§r to see Tooltips
+
 text.rc.craft=This item has no corresponding crafting
 text.rc.warn=You shouldn't have tried so quickly
 

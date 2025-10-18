@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = IngredientListBatchRenderer.class,remap = false)
+@Mixin(value = IngredientListBatchRenderer.class, remap = false)
 public abstract class MixinIngredientListBatchRenderer {
 
     @Shadow
@@ -36,8 +36,8 @@ public abstract class MixinIngredientListBatchRenderer {
     @Mutable
     protected List<IngredientRenderer<?>> renderOther;
 
-    @Inject(method = "<init>(Z)V",at = @At("TAIL"))
-    public void onInit(CallbackInfo ci){
+    @Inject(method = "<init>(Z)V", at = @At("TAIL"))
+    public void onInit(CallbackInfo ci) {
         slots = ObjectLists.synchronize(new ObjectArrayList<>());
         renderItems2d = ObjectLists.synchronize(new ObjectArrayList<>());
         renderItems3d = ObjectLists.synchronize(new ObjectArrayList<>());

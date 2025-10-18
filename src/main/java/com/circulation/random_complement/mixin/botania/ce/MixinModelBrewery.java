@@ -13,7 +13,7 @@ import vazkii.botania.client.model.ModelBrewery;
 import vazkii.botania.client.render.tile.RenderTileBrewery;
 import vazkii.botania.common.block.tile.TileBrewery;
 
-@Mixin(value = ModelBrewery.class,remap = false)
+@Mixin(value = ModelBrewery.class, remap = false)
 public class MixinModelBrewery {
     @Shadow
     @Final
@@ -28,14 +28,14 @@ public class MixinModelBrewery {
     @Final
     ModelRenderer plate;
 
-    @Inject(method = "render",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void render(RenderTileBrewery render, double time, CallbackInfo ci) {
-        rc$render(render,render.brewery,time);
+        rc$render(render, render.brewery, time);
         ci.cancel();
     }
 
     @Unique
-    public void rc$render(RenderTileBrewery render,TileBrewery brewery, double time) {
+    public void rc$render(RenderTileBrewery render, TileBrewery brewery, double time) {
         float f = 1F / 16F;
 
         float offset = (float) Math.sin(time / 40) * 0.1F + 0.05F;
@@ -58,7 +58,7 @@ public class MixinModelBrewery {
         this.top.render(f);
         this.bottom.render(f);
         GlStateManager.rotate(-polerot, 0.0F, 1.0F, 0.0F);
-        float degper = ((float)Math.PI * 2F) / (float)plates;
+        float degper = ((float) Math.PI * 2F) / (float) plates;
 
         for (int i = 0; i < plates; i++) {
             float offset1 = (float) Math.sin(time / 20 + i * 40F) * 0.2F - 0.2F;

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(value = ContainerMEPatternProvider.class,remap = false)
+@Mixin(value = ContainerMEPatternProvider.class, remap = false)
 public abstract class MixinContainerMEPatternProvider implements RCIInterfaceHostHelper {
 
     @Shadow

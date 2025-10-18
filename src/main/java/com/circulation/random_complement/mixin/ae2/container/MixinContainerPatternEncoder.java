@@ -24,9 +24,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ContainerPatternEncoder.class,remap = false)
+@Mixin(value = ContainerPatternEncoder.class, remap = false)
 public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorable implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket, PatternTermConfigs {
 
+    @Unique
+    @GuiSync(66)
+    public PatternTermAutoFillPattern randomComplement$AutoFillPattern;
     @Shadow
     protected SlotRestrictedInput patternSlotIN;
 
@@ -34,38 +37,34 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         super(ip, monitorable);
     }
 
-    @Unique
-    @GuiSync(66)
-    public PatternTermAutoFillPattern randomComplement$AutoFillPattern;
-
-    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/api/storage/ITerminalHost;Z)V",at = @At("TAIL"))
-    public void onInit(InventoryPlayer ip, ITerminalHost monitorable, boolean bindInventory, CallbackInfo ci){
-        RCIConfigurableObject obj = (RCIConfigurableObject)monitorable;
+    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/api/storage/ITerminalHost;Z)V", at = @At("TAIL"))
+    public void onInit(InventoryPlayer ip, ITerminalHost monitorable, boolean bindInventory, CallbackInfo ci) {
+        RCIConfigurableObject obj = (RCIConfigurableObject) monitorable;
         var cm = obj.r$getConfigManager();
-        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern)cm.getSetting(RCSettings.PatternTermAutoFillPattern);
+        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern) cm.getSetting(RCSettings.PatternTermAutoFillPattern);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/api/storage/ITerminalHost;Lappeng/api/implementations/guiobjects/IGuiItemObject;Z)V",at = @At("TAIL"))
-    public void onInit(InventoryPlayer ip, ITerminalHost monitorable, IGuiItemObject iGuiItemObject, boolean bindInventory, CallbackInfo ci){
-        RCIConfigurableObject obj = (RCIConfigurableObject)monitorable;
+    @Inject(method = "<init>(Lnet/minecraft/entity/player/InventoryPlayer;Lappeng/api/storage/ITerminalHost;Lappeng/api/implementations/guiobjects/IGuiItemObject;Z)V", at = @At("TAIL"))
+    public void onInit(InventoryPlayer ip, ITerminalHost monitorable, IGuiItemObject iGuiItemObject, boolean bindInventory, CallbackInfo ci) {
+        RCIConfigurableObject obj = (RCIConfigurableObject) monitorable;
         var cm = obj.r$getConfigManager();
-        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern)cm.getSetting(RCSettings.PatternTermAutoFillPattern);
+        this.randomComplement$AutoFillPattern = (PatternTermAutoFillPattern) cm.getSetting(RCSettings.PatternTermAutoFillPattern);
     }
 
-    @Inject(method = "encodeAndMoveToInventory",at = @At("TAIL"))
+    @Inject(method = "encodeAndMoveToInventory", at = @At("TAIL"))
     public void encodeAndMoveToInventory(CallbackInfo ci) {
-        MEHandler.refillBlankPatterns(this,patternSlotIN);
+        MEHandler.refillBlankPatterns(this, patternSlotIN);
     }
 
-    @Inject(method = "encode",at = @At(value = "HEAD"))
+    @Inject(method = "encode", at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
-        MEHandler.refillBlankPatterns(this,patternSlotIN);
+        MEHandler.refillBlankPatterns(this, patternSlotIN);
     }
 
-    @Inject(method = "detectAndSendChanges",at = @At("TAIL"),remap = true)
+    @Inject(method = "detectAndSendChanges", at = @At("TAIL"), remap = true)
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer()) {
-            var d = ((RCIConfigurableObject)this.getTarget());
+            var d = ((RCIConfigurableObject) this.getTarget());
             this.randomComplement$loadSettingsFromHost(d.r$getConfigManager());
         }
     }

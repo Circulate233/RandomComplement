@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(value = TileLevelMaintainer.InventoryRequest.class,remap = false)
+@Mixin(value = TileLevelMaintainer.InventoryRequest.class, remap = false)
 public interface AccessorInventoryRequest {
 
     @Accessor("requestStacks")

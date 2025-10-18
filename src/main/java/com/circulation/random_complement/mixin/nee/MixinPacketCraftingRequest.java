@@ -25,20 +25,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = PacketCraftingRequest.Handler.class,remap = false)
+@Mixin(value = PacketCraftingRequest.Handler.class, remap = false)
 public abstract class MixinPacketCraftingRequest implements IMessageHandler<PacketCraftingRequest, IMessage> {
 
-    @Inject(method="unofficialHelper", at = @At(value="HEAD"), cancellable=true)
+    @Inject(method = "unofficialHelper", at = @At(value = "HEAD"), cancellable = true)
     private static void unofficialHelper(IActionHost host, EntityPlayer player, CallbackInfo ci) {
         if (host instanceof IInventorySlotAware slotAware) {
             NEEGuiHandler.openWirelessGui(player, NEEGuiHandler.WIRELESS_CRAFTING_CONFIRM_UNOFFICIAL_ID, slotAware.getInventorySlot(), slotAware.isBaubleSlot());
-             ci.cancel();
+            ci.cancel();
         }
     }
 
     /**
      * @author Circulation_
-     * @reason 修改方法使得兼容ae2exttable,并且支持AE2UEL的无线合成终端
+     * @reason 修改方法使得兼容ae2exttable, 并且支持AE2UEL的无线合成终端
      */
     @Overwrite
     public IMessage onMessage(PacketCraftingRequest message, MessageContext ctx) {
@@ -69,9 +69,14 @@ public abstract class MixinPacketCraftingRequest implements IMessageHandler<Pack
     }
 
     @Shadow
-    private void handlerCraftingTermRequest(AEBaseContainer container, PacketCraftingRequest message, IGrid grid, IActionHost ah, EntityPlayerMP player) {}
+    private void handlerCraftingTermRequest(AEBaseContainer container, PacketCraftingRequest message, IGrid grid, IActionHost ah, EntityPlayerMP player) {
+    }
+
     @Shadow
-    private void handlerCraftingAmountRequest(ContainerCraftingAmount container, PacketCraftingRequest message, IGrid grid, EntityPlayerMP player) {}
+    private void handlerCraftingAmountRequest(ContainerCraftingAmount container, PacketCraftingRequest message, IGrid grid, EntityPlayerMP player) {
+    }
+
     @Shadow
-    private void handlerWirelessCraftingRequest(AEBaseContainer container, PacketCraftingRequest message, IGrid grid, EntityPlayerMP player) {}
+    private void handlerWirelessCraftingRequest(AEBaseContainer container, PacketCraftingRequest message, IGrid grid, EntityPlayerMP player) {
+    }
 }

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import java.awt.Rectangle;
 import java.util.List;
 
-@Mixin(value = GuiMEGasInputBus.class,remap = false)
+@Mixin(value = GuiMEGasInputBus.class, remap = false)
 public class MixinGuiMEGasInputBus extends GuiUpgradeable {
 
     public MixinGuiMEGasInputBus(InventoryPlayer inventoryPlayer, IUpgradeableHost te) {

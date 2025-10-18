@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import thaumicenergistics.client.gui.helpers.MERepo;
 import thaumicenergistics.client.gui.part.GuiAbstractTerminal;
 
-@Mixin(value = GuiAbstractTerminal.class,remap = false)
+@Mixin(value = GuiAbstractTerminal.class, remap = false)
 public abstract class MixinGuiAbstractTerminal<T extends IAEStack<T>, C extends IStorageChannel<T>> extends MixinGuiBase {
 
     public MixinGuiAbstractTerminal(Container inventorySlotsIn) {

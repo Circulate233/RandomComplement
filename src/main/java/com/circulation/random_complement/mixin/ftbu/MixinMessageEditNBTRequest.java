@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MessageEditNBTRequest.class, remap = false)
 public abstract class MixinMessageEditNBTRequest {
 
-    @Inject(method = "editNBT",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "editNBT", at = @At("HEAD"), cancellable = true)
     private static void ftbeditNBT(CallbackInfo ci) {
         if (!RCConfig.FTBU.ModifyCmdEditNBT) {
             return;

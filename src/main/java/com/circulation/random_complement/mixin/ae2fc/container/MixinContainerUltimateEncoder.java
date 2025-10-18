@@ -41,30 +41,26 @@ import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.Set;
 
-@Mixin(value = ContainerUltimateEncoder.class,remap = false)
+@Mixin(value = ContainerUltimateEncoder.class, remap = false)
 public abstract class MixinContainerUltimateEncoder extends AEBaseContainer implements IOptionalSlotHost, PatternConsumer, PatternTermConfigs {
-
-    public MixinContainerUltimateEncoder(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
-        super(ip, myTile, myPart);
-    }
 
     @Unique
     @GuiSync(66)
     public PatternTermAutoFillPattern randomComplement$AutoFillPattern;
-
     @Final
     @Shadow
     protected SlotRestrictedInput patternSlotIN;
-
     @Unique
     private ContainerWirelessTerm randomComplement$containerTerminal;
-
     @Unique
     private boolean randomComplement$incomplete = false;
-
     @Shadow(remap = false)
     @Final
     private TileUltimateEncoder encoder;
+
+    public MixinContainerUltimateEncoder(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
+        super(ip, myTile, myPart);
+    }
 
     @Unique
     @Override
@@ -87,10 +83,10 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
         }
     }
 
-    @Inject(method = "detectAndSendChanges",at = @At("TAIL"),remap = true)
+    @Inject(method = "detectAndSendChanges", at = @At("TAIL"), remap = true)
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer()) {
-            var d = (RCIConfigurableObject)this.encoder;
+            var d = (RCIConfigurableObject) this.encoder;
             this.randomComplement$loadSettingsFromHost(d.r$getConfigManager());
             if (randomComplement$incomplete) {
                 var gui = MEHandler.getTerminalGuiObject(randomComplement$containerTerminal.getInventoryPlayer());
@@ -108,14 +104,14 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
     }
 
     @Unique
-    private void randomComplement$queueInventory(WirelessTerminalGuiObject w,EntityPlayerMP playerMP) {
+    private void randomComplement$queueInventory(WirelessTerminalGuiObject w, EntityPlayerMP playerMP) {
         try {
             var piu = new RCPacketMEInventoryUpdate((short) 3);
 
             var node = w.getActionableNode();
-            if (node == null)return;
+            if (node == null) return;
             var grid = node.getGrid();
-            if (grid == null)return;
+            if (grid == null) return;
             RCCraftingGridCache cgc = grid.getCache(ICraftingGrid.class);
             boolean isCraftable = false;
             IAEItemStack aeItem = null;
@@ -130,7 +126,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
                     try {
                         piu.appendItem(send);
                     } catch (BufferOverflowException var7) {
-                        NetworkHandler.instance().sendTo(piu,playerMP);
+                        NetworkHandler.instance().sendTo(piu, playerMP);
                         piu = new RCPacketMEInventoryUpdate((short) 3);
                         piu.appendItem(send);
                     }
@@ -143,17 +139,17 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
         }
     }
 
-    @Inject(method = "encodeAndMoveToInventory",at = @At("TAIL"))
+    @Inject(method = "encodeAndMoveToInventory", at = @At("TAIL"))
     public void encodeAndMoveToInventory(CallbackInfo ci) {
         if (randomComplement$containerTerminal != null) {
-            randomComplement$refillBlankPatternsUltimateEncoder(randomComplement$containerTerminal,patternSlotIN);
+            randomComplement$refillBlankPatternsUltimateEncoder(randomComplement$containerTerminal, patternSlotIN);
         }
     }
 
-    @Inject(method = "encode",at = @At(value = "HEAD"))
+    @Inject(method = "encode", at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
         if (randomComplement$containerTerminal != null) {
-            randomComplement$refillBlankPatternsUltimateEncoder(randomComplement$containerTerminal,patternSlotIN);
+            randomComplement$refillBlankPatternsUltimateEncoder(randomComplement$containerTerminal, patternSlotIN);
         }
     }
 
@@ -164,7 +160,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
     @Unique
     private void randomComplement$refillBlankPatternsUltimateEncoder(ContainerWirelessTerm container, SlotRestrictedInput slot) {
         if (Platform.isServer()) {
-            if (this.randomComplement$AutoFillPattern == PatternTermAutoFillPattern.CLOSE)return;
+            if (this.randomComplement$AutoFillPattern == PatternTermAutoFillPattern.CLOSE) return;
             ItemStack blanks = slot.getStack();
             int blanksToRefill = 64;
             blanksToRefill -= blanks.getCount();
@@ -176,7 +172,7 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
                 final IAEItemStack extracted = Platform
                         .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
                 if (extracted != null) {
-                    if (blanks.isEmpty()){
+                    if (blanks.isEmpty()) {
                         blanks = request.getDefinition().copy();
                         blanks.setCount((int) (extracted.getStackSize()));
                     } else {

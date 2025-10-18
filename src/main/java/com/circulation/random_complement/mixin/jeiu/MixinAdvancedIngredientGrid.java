@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(value = AdvancedIngredientGrid.class,remap = false)
+@Mixin(value = AdvancedIngredientGrid.class, remap = false)
 public class MixinAdvancedIngredientGrid extends IngredientGrid {
 
     @Shadow
@@ -22,9 +22,9 @@ public class MixinAdvancedIngredientGrid extends IngredientGrid {
     }
 
     @Override
-    public IIngredientListElement<?> getElementUnderMouse(){
+    public IIngredientListElement<?> getElementUnderMouse() {
         IIngredientListElement<?> e = super.getElementUnderMouse();
-        if (e != null)return e;
+        if (e != null) return e;
         var r = this.guiHistoryIngredientSlots.getHovered(MouseHelper.getX(), MouseHelper.getY());
         return r != null ? r.getElement() : null;
     }

@@ -22,10 +22,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.github.vfyjxf.nee.network.NEEGuiHandler.CONFIRM_WRAPPER_ID;
 
-@Mixin(value = NEEGuiHandler.class,remap = false)
+@Mixin(value = NEEGuiHandler.class, remap = false)
 public abstract class MixinNEEGuiHandler implements IGuiHandler {
-    
-    @Inject(method="getServerGuiElement", at = @At(value="INVOKE", target="Lappeng/api/parts/IPartHost;getPart(Lappeng/api/util/AEPartLocation;)Lappeng/api/parts/IPart;", shift = At.Shift.AFTER), cancellable=true)
+
+    @Inject(method = "getServerGuiElement", at = @At(value = "INVOKE", target = "Lappeng/api/parts/IPartHost;getPart(Lappeng/api/util/AEPartLocation;)Lappeng/api/parts/IPart;", shift = At.Shift.AFTER), cancellable = true)
     public void getServerGuiElementMixin1(int ordinal, EntityPlayer player, World world, int x, int y, int z, CallbackInfoReturnable<Object> cir) {
         final int guiId = ordinal >> 8;
         final AEPartLocation side = AEPartLocation.fromOrdinal(ordinal & 7);
@@ -38,7 +38,7 @@ public abstract class MixinNEEGuiHandler implements IGuiHandler {
         }
     }
 
-    @Inject(method="getClientGuiElement", at = @At(value="INVOKE", target="Lappeng/api/parts/IPartHost;getPart(Lappeng/api/util/AEPartLocation;)Lappeng/api/parts/IPart;", shift = At.Shift.AFTER), cancellable=true)
+    @Inject(method = "getClientGuiElement", at = @At(value = "INVOKE", target = "Lappeng/api/parts/IPartHost;getPart(Lappeng/api/util/AEPartLocation;)Lappeng/api/parts/IPart;", shift = At.Shift.AFTER), cancellable = true)
     public void getClientGuiElementMixin1(int ordinal, EntityPlayer player, World world, int x, int y, int z, CallbackInfoReturnable<Object> cir) {
         final int guiId = ordinal >> 8;
         final AEPartLocation side = AEPartLocation.fromOrdinal(ordinal & 7);
@@ -52,8 +52,12 @@ public abstract class MixinNEEGuiHandler implements IGuiHandler {
     }
 
     @Shadow
-    private Object updateGui(Object newContainer, final World w, final int x, final int y, final int z, final AEPartLocation side, final Object myItem){return null;}
+    private Object updateGui(Object newContainer, final World w, final int x, final int y, final int z, final AEPartLocation side, final Object myItem) {
+        return null;
+    }
 
     @Shadow
-    private WirelessTerminalGuiObject getGuiObject(ItemStack it, EntityPlayer player, World w, int x, int y, int z) {return null;}
+    private WirelessTerminalGuiObject getGuiObject(ItemStack it, EntityPlayer player, World w, int x, int y, int z) {
+        return null;
+    }
 }

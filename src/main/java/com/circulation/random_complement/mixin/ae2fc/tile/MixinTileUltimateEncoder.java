@@ -22,8 +22,8 @@ public abstract class MixinTileUltimateEncoder extends AEBaseInvTile implements 
     @Unique
     private RCIConfigManager randomComplement$rcSettings;
 
-    @Inject(method = "<init>",at = @At("TAIL"),remap = false)
-    public void onInit(CallbackInfo ci){
+    @Inject(method = "<init>", at = @At("TAIL"), remap = false)
+    public void onInit(CallbackInfo ci) {
         this.randomComplement$rcSettings = new RCConfigManager(this);
         this.randomComplement$rcSettings.registerSetting(RCSettings.PatternTermAutoFillPattern, PatternTermAutoFillPattern.CLOSE);
     }
@@ -40,12 +40,12 @@ public abstract class MixinTileUltimateEncoder extends AEBaseInvTile implements 
         return this.randomComplement$rcSettings;
     }
 
-    @Inject(method = "writeToNBT",at = @At("TAIL"))
+    @Inject(method = "writeToNBT", at = @At("TAIL"))
     public void writeToNBTMixin(NBTTagCompound data, CallbackInfoReturnable<NBTTagCompound> cir) {
         this.randomComplement$rcSettings.writeToNBT(data);
     }
 
-    @Inject(method = "readFromNBT",at = @At("TAIL"))
+    @Inject(method = "readFromNBT", at = @At("TAIL"))
     public void readFromNBTMixin(NBTTagCompound data, CallbackInfo ci) {
         this.randomComplement$rcSettings.readFromNBT(data);
     }

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = GhostIngredientDrag.class,remap = false)
+@Mixin(value = GhostIngredientDrag.class, remap = false)
 public class MixinGhostIngredientDrag<T> {
 
     @Shadow

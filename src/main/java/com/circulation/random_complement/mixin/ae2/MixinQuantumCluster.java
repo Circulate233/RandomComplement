@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = QuantumCluster.class,remap = false)
+@Mixin(value = QuantumCluster.class, remap = false)
 public abstract class MixinQuantumCluster implements RCQuantumCluster {
 
     @Shadow
@@ -23,6 +23,8 @@ public abstract class MixinQuantumCluster implements RCQuantumCluster {
 
     @Shadow
     private TileQuantumBridge[] Ring;
+    @Shadow
+    private boolean isDestroyed;
 
     @Unique
     @Override
@@ -33,9 +35,6 @@ public abstract class MixinQuantumCluster implements RCQuantumCluster {
     @Shadow
     @Override
     public abstract TileQuantumBridge getCenter();
-
-    @Shadow
-    private boolean isDestroyed;
 
     @Inject(method = "destroy", at = @At("HEAD"))
     public void destroy(CallbackInfo ci) {

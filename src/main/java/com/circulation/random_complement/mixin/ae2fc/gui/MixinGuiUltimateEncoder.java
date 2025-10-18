@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 import java.util.Set;
 
-@Mixin(value = GuiUltimateEncoder.class,remap = false)
+@Mixin(value = GuiUltimateEncoder.class, remap = false)
 public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements SpecialLogic {
 
     @Unique

@@ -13,23 +13,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mixin(value = TunnelType.class,remap = false)
+@Mixin(value = TunnelType.class, remap = false)
 public class MixinTunnelType {
 
     @Shadow
     private Supplier<ItemStack> partItemStackSupplier;
-
-    @Shadow
-    private static Supplier<ItemStack> tryPartStack(Function<IParts, IItemDefinition> supplier){
-        return null;
-    }
-
     @Shadow
     private ItemStack partItemStack;
 
-    @Inject(method = "getPartItemStack",at = @At("HEAD"), cancellable = true)
+    @Shadow
+    private static Supplier<ItemStack> tryPartStack(Function<IParts, IItemDefinition> supplier) {
+        return null;
+    }
+
+    @Inject(method = "getPartItemStack", at = @At("HEAD"), cancellable = true)
     public void getPartItemStack(CallbackInfoReturnable<ItemStack> cir) {
-        if ((Object)this == TunnelType.FLUID) {
+        if ((Object) this == TunnelType.FLUID) {
             if (this.partItemStackSupplier != null) {
                 this.partItemStack = tryPartStack(IParts::p2PTunnelFluids).get();
                 this.partItemStackSupplier = null;

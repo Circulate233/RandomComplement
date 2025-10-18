@@ -48,7 +48,7 @@ public record SimpleItem(@NotNull String str) {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this)return true;
+        if (obj == this) return true;
         if (obj instanceof SimpleItem si) {
             return this.str.equals(si.str);
         }

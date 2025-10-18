@@ -19,6 +19,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = ContainerCraftingCPU.class, remap = false)
 public abstract class MixinContainerCraftingCPU extends AEBaseContainer implements IMEMonitorHandlerReceiver<IAEItemStack>, ICustomNameObject, getCraftingCPUCluster {
 
+    @GuiSync(1)
+    @Unique
+    public long randomComplement$eta2 = -1L;
+
     public MixinContainerCraftingCPU(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
     }
@@ -32,10 +36,6 @@ public abstract class MixinContainerCraftingCPU extends AEBaseContainer implemen
         randomComplement$eta2 = instance.getElapsedTime();
         return randomComplement$eta2;
     }
-
-    @GuiSync(1)
-    @Unique
-    public long randomComplement$eta2 = -1L;
 
     @Override
     public long randomComplement$elapsedTime() {

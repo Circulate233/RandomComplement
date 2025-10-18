@@ -19,15 +19,13 @@ import java.util.Set;
 @Mixin(value = GuiMEMonitorableTwo.class)
 public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements SpecialLogic {
 
+    @Unique
+    public final Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    @Unique
+    private final Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
     @Shadow(remap = false)
     @Final
     protected ItemRepo repo;
-
-    @Unique
-    public final Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
-
-    @Unique
-    private final Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     public MixinGuiMEMonitorableTwo(Container container) {
         super(container);
@@ -36,7 +34,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements Sp
     @Unique
     @Override
     public Set<IAEItemStack> r$getList() {
-        if (randomComplement$mergedCache.isEmpty()){
+        if (randomComplement$mergedCache.isEmpty()) {
             randomComplement$mergedCache.addAll(MEHandler.getCraftableCacheS());
             randomComplement$mergedCache.addAll(randomComplement$craftableCache);
             MEHandler.getCraftableCacheS().clear();
@@ -59,7 +57,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements Sp
 
     @Unique
     @Override
-    public ItemRepo r$getRepo(){
+    public ItemRepo r$getRepo() {
         return this.repo;
     }
 

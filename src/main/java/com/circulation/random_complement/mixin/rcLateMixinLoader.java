@@ -29,6 +29,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
+            addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json");
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
             addModdedMixinCFG("mixins.random_complement.nae2.json", "nae2");
@@ -80,21 +81,6 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         addModdedMixinCFG("mixins.random_complement.enderutilities.ftblib.json", "enderutilities", "ftblib");
     }
 
-    @Override
-    public List<String> getMixinConfigs() {
-        return new ObjectArrayList<>(MIXIN_CONFIGS.keySet());
-    }
-
-    @Override
-    public boolean shouldMixinConfigQueue(final String mixinConfig) {
-        BooleanSupplier supplier = MIXIN_CONFIGS.get(mixinConfig);
-        if (supplier == null) {
-            LOG.warn(LOG_PREFIX + "Mixin config {} is not found in config map! It will never be loaded.", mixinConfig);
-            return false;
-        }
-        return supplier.getAsBoolean();
-    }
-
     private static void addModdedMixinCFG(final String mixinConfig, final String modID) {
         MIXIN_CONFIGS.put(mixinConfig, () -> modLoaded(modID));
     }
@@ -115,5 +101,20 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         String classFilePath = className.replace('.', '/') + ".class";
         ClassLoader classLoader = rcLateMixinLoader.class.getClassLoader();
         return classLoader.getResource(classFilePath) != null;
+    }
+
+    @Override
+    public List<String> getMixinConfigs() {
+        return new ObjectArrayList<>(MIXIN_CONFIGS.keySet());
+    }
+
+    @Override
+    public boolean shouldMixinConfigQueue(final String mixinConfig) {
+        BooleanSupplier supplier = MIXIN_CONFIGS.get(mixinConfig);
+        if (supplier == null) {
+            LOG.warn(LOG_PREFIX + "Mixin config {} is not found in config map! It will never be loaded.", mixinConfig);
+            return false;
+        }
+        return supplier.getAsBoolean();
     }
 }

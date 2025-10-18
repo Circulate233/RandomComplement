@@ -52,15 +52,15 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     String key;
     boolean isAE = false;
 
-    public KeyBindingHandler(){
+    public KeyBindingHandler() {
 
     }
 
-    public KeyBindingHandler(String key){
+    public KeyBindingHandler(String key) {
         this.key = key;
     }
 
-    public KeyBindingHandler(String key, ItemStack item, boolean isAE){
+    public KeyBindingHandler(String key, ItemStack item, boolean isAE) {
         this.key = key;
         this.stack = item;
         this.isAE = isAE;
@@ -76,7 +76,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, this.stack);
-        ByteBufUtils.writeUTF8String(buf,this.key);
+        ByteBufUtils.writeUTF8String(buf, this.key);
         buf.writeBoolean(this.isAE);
     }
 
@@ -85,21 +85,22 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         EntityPlayerMP player = ctx.getServerHandler().player;
         var container = player.openContainer;
         var item = message.stack;
-        switch (message.key){
-            case "RetrieveItem" -> retrieveItem(player,container,item,message.isAE);
-            case "StartCraft" -> player.getServer().addScheduledTask(() -> startCraft(player,container,item,message.isAE));
+        switch (message.key) {
+            case "RetrieveItem" -> retrieveItem(player, container, item, message.isAE);
+            case "StartCraft" ->
+                    player.getServer().addScheduledTask(() -> startCraft(player, container, item, message.isAE));
         }
         return null;
     }
 
-    private void retrieveItem(EntityPlayerMP player, Container container, ItemStack item, boolean isAE){
+    private void retrieveItem(EntityPlayerMP player, Container container, ItemStack item, boolean isAE) {
         long targetCount = item.getMaxStackSize();
         if (!isAE) {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
-                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0);
+                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii, player, i, 0);
 
-                if (obj == null){
+                if (obj == null) {
                     continue;
                 }
 
@@ -112,13 +113,13 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                         continue;
                     }
                     targetCount = wirelessRetrieve(player, item, gridNode, targetCount, obj);
-                    if (targetCount <= 0){
+                    if (targetCount <= 0) {
                         return;
                     }
                 }
             }
             if (Loader.isModLoaded("baubles")) {
-                readBaublesR(player,item,targetCount);
+                readBaublesR(player, item, targetCount);
             }
         } else if (container instanceof ContainerMEMonitorable c) {
             IGridNode gridNode = c.getNetworkNode();
@@ -163,16 +164,16 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         return targetCount;
     }
 
-    private void startCraft(EntityPlayerMP player, Container container, ItemStack item, boolean isAE){
+    private void startCraft(EntityPlayerMP player, Container container, ItemStack item, boolean isAE) {
         item.setCount(1);
         if (!isAE) {
             if (player.openContainer instanceof ContainerCraftAmount
-                    || player.openContainer instanceof ContainerCraftConfirm)return;
+                    || player.openContainer instanceof ContainerCraftConfirm) return;
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
-                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii,player,i,0);
+                WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii, player, i, 0);
 
-                if (obj == null){
+                if (obj == null) {
                     continue;
                 }
 
@@ -184,12 +185,12 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                         player.sendMessage(PlayerMessages.DeviceNotLinked.get());
                         continue;
                     }
-                    openWirelessCraft(ii,player, item, gridNode, i,false);
+                    openWirelessCraft(ii, player, item, gridNode, i, false);
                     return;
                 }
             }
             if (Loader.isModLoaded("baubles")) {
-                readBaublesS(player,item);
+                readBaublesS(player, item);
             }
         } else if (container instanceof ContainerMEMonitorable c) {
             IGridNode gridNode = c.getNetworkNode();
@@ -204,17 +205,18 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                 IAEItemStack aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
                 boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
 
-                if (!isCraftable){
+                if (!isCraftable) {
                     player.sendMessage(new TextComponentTranslation("text.rc.craft"));
                     return;
                 }
 
                 var host = c.getTarget();
                 if (host instanceof IActionHost i) {
-                    if (Loader.isModLoaded("ae2fc")) ae2fcCraft(i,player,c);
-                    else Platform.openGUI(player,c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);
+                    if (Loader.isModLoaded("ae2fc")) ae2fcCraft(i, player, c);
+                    else
+                        Platform.openGUI(player, c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);
 
-                    if (player.openContainer instanceof ContainerCraftAmount cca){
+                    if (player.openContainer instanceof ContainerCraftAmount cca) {
                         cca.getCraftingItem().putStack(aeItem.asItemStackRepresentation());
                         cca.setItemToCraft(aeItem);
                         cca.detectAndSendChanges();
@@ -234,18 +236,18 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             IAEItemStack aeItem = AEItemStack.fromItemStack(exItem).setStackSize(1);
             boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
 
-            if (!isCraftable){
+            if (!isCraftable) {
                 player.sendMessage(new TextComponentTranslation("text.rc.craft"));
                 return;
             }
 
             final var oldContainer = player.openContainer;
 
-            Platform.openGUI(player, i,GuiBridge.GUI_CRAFTING_AMOUNT,isBauble);
+            Platform.openGUI(player, i, GuiBridge.GUI_CRAFTING_AMOUNT, isBauble);
 
             var newContainer = player.openContainer;
 
-            if (newContainer instanceof ContainerCraftAmount cca){
+            if (newContainer instanceof ContainerCraftAmount cca) {
                 if (newContainer instanceof RCAEBaseContainer rcc) {
                     rcc.rc$setOldContainer(oldContainer);
                 }
@@ -257,7 +259,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     }
 
     @Method(modid = "ae2fc")
-    private void ae2fcCraft(IActionHost host, EntityPlayerMP player, ContainerMEMonitorable c){
+    private void ae2fcCraft(IActionHost host, EntityPlayerMP player, ContainerMEMonitorable c) {
         if (host instanceof PartExtendedFluidPatternTerminal
                 || host instanceof PartFluidPatternTerminal
                 || (host instanceof WirelessTerminalGuiObject w &&
@@ -266,16 +268,16 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             player.getServerWorld().addScheduledTask(() -> InventoryHandler.openGui(player, Ae2Reflect.getContextWorld(context), new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)), context.getSide().getFacing(), GuiType.FLUID_CRAFT_AMOUNT));
             return;
         }
-        Platform.openGUI(player,c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);
+        Platform.openGUI(player, c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);
     }
 
     @Method(modid = "baubles")
-    private void readBaublesS(EntityPlayerMP player,ItemStack exitem) {
+    private void readBaublesS(EntityPlayerMP player, ItemStack exitem) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1);
+            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item, player, i, 1);
 
-            if (obj == null){
+            if (obj == null) {
                 continue;
             }
 
@@ -287,19 +289,19 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                     player.sendMessage(PlayerMessages.DeviceNotLinked.get());
                     continue;
                 }
-                openWirelessCraft(item,player,exitem,gridNode,i,true);
+                openWirelessCraft(item, player, exitem, gridNode, i, true);
                 return;
             }
         }
     }
 
     @Method(modid = "baubles")
-    private void readBaublesR(EntityPlayerMP player,ItemStack exitem,long targetCount) {
+    private void readBaublesR(EntityPlayerMP player, ItemStack exitem, long targetCount) {
         for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
             ItemStack item = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
-            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item,player,i,1);
+            WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(item, player, i, 1);
 
-            if (obj == null){
+            if (obj == null) {
                 continue;
             }
 
@@ -312,7 +314,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
                     continue;
                 }
                 targetCount = wirelessRetrieve(player, exitem, gridNode, targetCount, obj);
-                if (targetCount <= 0){
+                if (targetCount <= 0) {
                     return;
                 }
             }

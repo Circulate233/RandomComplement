@@ -16,15 +16,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = InputHandler.class,remap = false)
+@Mixin(value = InputHandler.class, remap = false)
 public abstract class MixinInputHandler {
-
-    @Shadow
-    protected abstract <V> boolean handleMouseClickedFocus(int mouseButton, IClickedIngredient<V> clicked);
 
     @Shadow
     @Final
     private GhostIngredientDragManager ghostIngredientDragManager;
+
+    @Shadow
+    protected abstract <V> boolean handleMouseClickedFocus(int mouseButton, IClickedIngredient<V> clicked);
 
     @Inject(method = "handleMouseClick", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/ghost/GhostIngredientDragManager;handleMouseClicked(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/GuiScreen;Lmezz/jei/input/IClickedIngredient;Lmezz/jei/gui/ingredients/IIngredientListElement;II)Z", shift = At.Shift.BEFORE), cancellable = true)
     private void handleMouseClick(GuiScreen guiScreen, int mouseButton, int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir, @Local IIngredientListElement<?> listElement, @Local IClickedIngredient<?> clicked) {

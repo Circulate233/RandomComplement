@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = BlockCraftingUnit.class,remap = false)
+@Mixin(value = BlockCraftingUnit.class, remap = false)
 public class MixinBlockCraftingUnit extends AEBaseTileBlock {
 
     public MixinBlockCraftingUnit(Material mat) {
@@ -38,7 +38,7 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
     @Inject(method = "onBlockActivated", at = @At("HEAD"), remap = true, cancellable = true)
     public void onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ, CallbackInfoReturnable<Boolean> cir) {
         if (Platform.isServer()) {
-            if (p instanceof FakePlayer)return;
+            if (p instanceof FakePlayer) return;
             TileCraftingTile tg = this.getTileEntity(w, pos);
             boolean isBusy = tg.getCluster() instanceof CraftingCPUCluster && ((CraftingCPUCluster) tg.getCluster()).isBusy();
             ItemStack item = p.getHeldItem(hand);
@@ -50,7 +50,7 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
                     } else if (CraftingUnitHandler.isReplaceable(null, this)) {
                         val block = CraftingUnitHandler.getCraftingUnitBase(this);
                         if (block == (Object) this) return;
-                        w.setBlockState(pos, block.getBlockState().getBaseState(),1);
+                        w.setBlockState(pos, block.getBlockState().getBaseState(), 1);
                         p.inventory.placeItemBackInInventory(w, CraftingUnitHandler.getMatchItem(this));
                         cir.setReturnValue(true);
                     }
@@ -67,7 +67,7 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
                     var node = proxy.getNode();
                     Object cache;
                     if (RCConfig.AE2.SecurityCache || ((cache = node.getGrid().getCache(ISecurityGrid.class)) instanceof ISecurityGrid isg && isg.hasPermission(p, SecurityPermissions.BUILD))) {
-                        w.setBlockState(pos, block.getBlockState().getBaseState(),1);
+                        w.setBlockState(pos, block.getBlockState().getBaseState(), 1);
                         tile = this.getTileEntity(w, pos);
                         proxy = ((IGridProxyable) tile).getProxy();
                         node = proxy.getNode();

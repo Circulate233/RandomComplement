@@ -20,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = JEIPlugin.class,remap = false)
+@Mixin(value = JEIPlugin.class, remap = false)
 public class MixinJEIPlugin implements IModPlugin {
 
     /**
      * @author Circulation
      * @reason 修改配方传输器为NEE注册的
      */
-    @Inject(method = "register",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "register", at = @At("HEAD"), cancellable = true)
     public void registerMixin(IModRegistry registry, CallbackInfo ci) {
         if (!RCConfig.NEE.ae2e) {
             return;

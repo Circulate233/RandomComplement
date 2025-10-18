@@ -31,20 +31,16 @@ import java.util.Set;
 @Mixin(value = GuiMEMonitorable.class)
 public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements SpecialLogic {
 
-    @Final
-    @Shadow(remap = false)
-    private ContainerMEMonitorable monitorableContainer;
-
+    @Unique
+    protected final Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
+    @Unique
+    protected final Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
     @Shadow(remap = false)
     @Final
     protected ItemRepo repo;
-
-    @Unique
-    protected final Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
-
-    @Unique
-    protected final Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
-
+    @Final
+    @Shadow(remap = false)
+    private ContainerMEMonitorable monitorableContainer;
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;
 

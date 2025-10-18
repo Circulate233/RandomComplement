@@ -21,6 +21,14 @@ public class JEIRecipeCatalyst implements IModPlugin {
 
     public static IModRegistry registration;
 
+    public static ItemStack getOtherModsItemStack(String modId, String itemName) {
+        Item item = GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation(modId, itemName));
+        if (item != null) {
+            return new ItemStack(item, 1);
+        }
+        return ItemStack.EMPTY;
+    }
+
     /*
      * 唉，硬编码
      */
@@ -52,28 +60,20 @@ public class JEIRecipeCatalyst implements IModPlugin {
         }
     }
 
-    public void addExtended(){
+    public void addExtended() {
         registration.addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
         registration.addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(),VanillaRecipeCategoryUid.CRAFTING);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(),BasicTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
+        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ADVANCED_TERMINAL.getDefaultInstance(),AdvancedTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ADVANCED_TERMINAL.getDefaultInstance(),AdvancedTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ELITE_TERMINAL.getDefaultInstance(),EliteTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ELITE_TERMINAL.getDefaultInstance(),EliteTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ULTIMATE_TERMINAL.getDefaultInstance(),UltimateTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ULTIMATE_TERMINAL.getDefaultInstance(),UltimateTableCategory.UID);
-    }
-
-    public static ItemStack getOtherModsItemStack(String modId, String itemName) {
-        Item item = GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation(modId, itemName));
-        if (item != null) {
-            return new ItemStack(item,1);
-        }
-        return ItemStack.EMPTY;
+        registration.addRecipeCatalyst(ItemRegistry.ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
+        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
     }
 
 }

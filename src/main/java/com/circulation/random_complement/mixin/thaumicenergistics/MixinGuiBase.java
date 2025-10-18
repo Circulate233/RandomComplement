@@ -17,12 +17,12 @@ import java.util.List;
 
 @Mixin(GuiBase.class)
 public abstract class MixinGuiBase extends GuiContainer {
+    @Unique
+    private final List<Slot> r$plusSlot = new ObjectArrayList<>();
+
     public MixinGuiBase(Container inventorySlotsIn) {
         super(inventorySlotsIn);
     }
-
-    @Unique
-    private final List<Slot> r$plusSlot = new ObjectArrayList<>();
 
     @Unique
     protected List<Slot> r$getPlusSlot() {

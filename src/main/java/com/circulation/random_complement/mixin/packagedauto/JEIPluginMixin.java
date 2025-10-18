@@ -8,7 +8,7 @@ import thelm.packagedauto.client.gui.GuiContainerTileBase;
 import thelm.packagedauto.client.gui.GuiEncoder;
 import thelm.packagedauto.container.ContainerEncoder;
 
-@Mixin(value = GuiEncoder.class,remap = false)
+@Mixin(value = GuiEncoder.class, remap = false)
 public abstract class JEIPluginMixin extends GuiContainerTileBase<ContainerEncoder> {
 
     public JEIPluginMixin(ContainerEncoder containerEncoder) {

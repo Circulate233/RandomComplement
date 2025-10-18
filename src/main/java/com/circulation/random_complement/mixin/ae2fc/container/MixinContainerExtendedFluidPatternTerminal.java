@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ContainerExtendedFluidPatternTerminal.class,remap = false)
+@Mixin(value = ContainerExtendedFluidPatternTerminal.class, remap = false)
 public abstract class MixinContainerExtendedFluidPatternTerminal extends ContainerExpandedProcessingPatternTerm {
 
     public MixinContainerExtendedFluidPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
     }
 
-    @Inject(method = "encode",at = @At(value = "HEAD"))
+    @Inject(method = "encode", at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
-        MEHandler.refillBlankPatterns(this,patternSlotIN);
+        MEHandler.refillBlankPatterns(this, patternSlotIN);
     }
 }

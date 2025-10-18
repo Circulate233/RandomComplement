@@ -13,13 +13,13 @@ public enum InscriberMaxStackLimit implements InterfaceButton {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getName(){
+    public String getName() {
         return I18n.format("gui.inscriber.max_stack_limit.name");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getTooltip(){
+    public String getTooltip() {
         return I18n.format(key);
     }
 }

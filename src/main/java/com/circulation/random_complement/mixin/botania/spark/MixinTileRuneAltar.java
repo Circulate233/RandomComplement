@@ -25,13 +25,13 @@ import java.util.List;
 public abstract class MixinTileRuneAltar extends TileSimpleInventory implements IManaReceiver, ITickable, ISparkAttachable {
 
     @Shadow(remap = false)
-    public abstract int getTargetMana();
-
-    @Shadow(remap = false)
     public int manaToGet;
 
-    @Inject(method = "update",at = @At("HEAD"))
-    public void onUpdate(CallbackInfo ci){
+    @Shadow(remap = false)
+    public abstract int getTargetMana();
+
+    @Inject(method = "update", at = @At("HEAD"))
+    public void onUpdate(CallbackInfo ci) {
         if (this.manaToGet != 0) {
             ISparkEntity spark = this.getAttachedSpark();
             if (spark != null) {
@@ -58,7 +58,7 @@ public abstract class MixinTileRuneAltar extends TileSimpleInventory implements 
 
     public ISparkEntity getAttachedSpark() {
         List<EntitySpark> sparks = world.getEntitiesWithinAABB(EntitySpark.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
-        if(sparks.size() == 1)
+        if (sparks.size() == 1)
             return sparks.get(0);
         return null;
     }

@@ -52,6 +52,41 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         super(container);
     }
 
+    @Unique
+    private static String randomComplement$getItemInformation(final Object o) {
+        String dspToolTip = "";
+        List<String> lineList = new ArrayList<>();
+        if (o == null) {
+            return "** Null";
+        }
+        ITooltipFlag.TooltipFlags tooltipFlag = ITooltipFlag.TooltipFlags.NORMAL;
+        try {
+            tooltipFlag = Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
+        } catch (final Exception ignored) {
+
+        }
+        ItemStack itemStack = ItemStack.EMPTY;
+        if (o instanceof AEItemStack aeItemStack) {
+            try {
+                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
+            } catch (Exception ignored) {
+            }
+        } else if (o instanceof ItemStack stack) {
+            itemStack = stack;
+        } else {
+            return "";
+        }
+        try {
+            itemStack.getItem().addInformation(itemStack, null, lineList, tooltipFlag);
+        } catch (Exception ignored) {
+        }
+
+        if (!lineList.isEmpty()) {
+            dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
+        }
+        return dspToolTip;
+    }
+
     /**
      * @author sddsd2332
      * @reason 额外添加制作耗时
@@ -103,42 +138,6 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         super.mouseClicked(xCord, yCord, btn);
         //   this.searchField.mouseClicked(xCord, yCord, btn);
     }
-
-    @Unique
-    private static String randomComplement$getItemInformation(final Object o) {
-        String dspToolTip = "";
-        List<String> lineList = new ArrayList<>();
-        if (o == null) {
-            return "** Null";
-        }
-        ITooltipFlag.TooltipFlags tooltipFlag = ITooltipFlag.TooltipFlags.NORMAL;
-        try {
-            tooltipFlag = Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
-        } catch (final Exception ignored) {
-
-        }
-        ItemStack itemStack = ItemStack.EMPTY;
-        if (o instanceof AEItemStack aeItemStack) {
-            try {
-                aeItemStack.getItem().addInformation(aeItemStack.getDefinition(), null, lineList, tooltipFlag);
-            } catch (Exception ignored) {
-            }
-        } else if (o instanceof ItemStack stack) {
-            itemStack = stack;
-        } else {
-            return "";
-        }
-        try {
-            itemStack.getItem().addInformation(itemStack, null, lineList, tooltipFlag);
-        } catch (Exception ignored) {
-        }
-
-        if (!lineList.isEmpty()) {
-            dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
-        }
-        return dspToolTip;
-    }
-
 
     @Unique
     private String randomComplement$getItemDisplayName(Object n) {

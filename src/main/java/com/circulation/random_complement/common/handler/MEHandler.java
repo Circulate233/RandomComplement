@@ -44,6 +44,18 @@ public class MEHandler {
 
     @Getter
     private static final Set<IAEItemStack> craftableCacheS = new ObjectOpenHashSet<>();
+    private static final Map<Integer, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
+
+    static {
+        textures.put(0, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
+        textures.put(1, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
+        textures.put(2, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
+        final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
+        textures.put(3, rl);
+        textures.put(4, rl);
+        textures.put(5, rl);
+        textures.put(6, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
+    }
 
     @SideOnly(Side.CLIENT)
     public static void drawSlotPluses(List<Slot> slots) {
@@ -176,19 +188,6 @@ public class MEHandler {
             }
         }
         return null;
-    }
-
-    private static final Map<Integer, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
-
-    static {
-        textures.put(0, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
-        textures.put(1, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned1.png"));
-        textures.put(2, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned2.png"));
-        final ResourceLocation rl = new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned3.png");
-        textures.put(3, rl);
-        textures.put(4, rl);
-        textures.put(5, rl);
-        textures.put(6, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned4.png"));
     }
 
     @SideOnly(Side.CLIENT)

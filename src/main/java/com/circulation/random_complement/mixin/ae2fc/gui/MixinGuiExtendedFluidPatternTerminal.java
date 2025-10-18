@@ -66,13 +66,13 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
             if (!item.isEmpty()) {
                 if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item))) {
                     r$getPlusSlot().add(slotFake);
-                } else if (item.getItem() instanceof ItemFluidPacket){
+                } else if (item.getItem() instanceof ItemFluidPacket) {
                     var item1 = FakeFluids.packFluid2Drops(((IAEFluidStack) FakeItemRegister.getAEStack(item)).getFluidStack());
                     if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {
                         r$getPlusSlot().add(slotFake);
                     }
-                } else if (Loader.isModLoaded("mekeng")){
-                    randomComplement$mekengDrawSlot(item,slot);
+                } else if (Loader.isModLoaded("mekeng")) {
+                    randomComplement$mekengDrawSlot(item, slot);
                 }
             }
         }
@@ -80,7 +80,7 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot){
+    private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot) {
         if (item.getItem() instanceof ItemGasPacket) {
             var item1 = FakeGases.packGas2Drops(((IAEGasStack) FakeItemRegister.getAEStack(item)).getGasStack());
             if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(item1))) {

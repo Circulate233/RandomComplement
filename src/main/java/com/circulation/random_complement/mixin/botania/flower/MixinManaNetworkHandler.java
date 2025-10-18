@@ -16,7 +16,7 @@ import vazkii.botania.common.core.handler.ManaNetworkHandler;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-@Mixin(value = ManaNetworkHandler.class,remap = false)
+@Mixin(value = ManaNetworkHandler.class, remap = false)
 public class MixinManaNetworkHandler {
 
     @Final

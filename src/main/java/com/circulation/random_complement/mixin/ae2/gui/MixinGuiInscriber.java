@@ -44,7 +44,7 @@ public abstract class MixinGuiInscriber extends AEBaseGui {
         super(container);
     }
 
-    @Inject(method = "initGui",at = @At("TAIL"))
+    @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         int i = -1;
         this.randomComplement$BlockMode = new RCGuiButton(this.guiLeft - 18, this.guiTop + ++i * 20 + 8, RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
@@ -55,11 +55,11 @@ public abstract class MixinGuiInscriber extends AEBaseGui {
         this.buttonList.add(this.randomComplement$MaxStackLimit);
     }
 
-    @Inject(method = "drawFG",at = @At("HEAD"),remap = false)
+    @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
-        this.randomComplement$BlockMode.set(((InscriberConfigs)this.cvc).r$getBlockMode());
-        this.randomComplement$AutoOutput.set(((InscriberConfigs)this.cvc).r$getAutoOutput());
-        this.randomComplement$MaxStackLimit.set(((InscriberConfigs)this.cvc).r$getMaxStackLimit());
+        this.randomComplement$BlockMode.set(((InscriberConfigs) this.cvc).r$getBlockMode());
+        this.randomComplement$AutoOutput.set(((InscriberConfigs) this.cvc).r$getAutoOutput());
+        this.randomComplement$MaxStackLimit.set(((InscriberConfigs) this.cvc).r$getMaxStackLimit());
     }
 
     @Intrinsic
@@ -68,15 +68,15 @@ public abstract class MixinGuiInscriber extends AEBaseGui {
         boolean backwards = Mouse.isButtonDown(1);
         if (btn == this.randomComplement$BlockMode) {
             var option = this.randomComplement$BlockMode.getRCSetting();
-            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option,backwards));
+            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
         }
         if (btn == this.randomComplement$AutoOutput) {
             var option = this.randomComplement$AutoOutput.getRCSetting();
-            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option,backwards));
+            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
         }
         if (btn == this.randomComplement$MaxStackLimit) {
             var option = this.randomComplement$MaxStackLimit.getRCSetting();
-            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option,backwards));
+            RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
         }
     }
 

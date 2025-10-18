@@ -19,16 +19,6 @@ public class RCJEIInputHandler {
 
     @Setter
     private static Class<?>[] jeiGui;
-
-    public static boolean isJeiGui(GuiScreen gui) {
-        for (var aClass : jeiGui) {
-            if (aClass.isInstance(gui)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Setter
     @Getter
     private static boolean click;
@@ -38,6 +28,18 @@ public class RCJEIInputHandler {
     private static Runnable shiftClickCache;
     @Getter
     private static XYPair xy;
+    private RCJEIInputHandler() {
+
+    }
+
+    public static boolean isJeiGui(GuiScreen gui) {
+        for (var aClass : jeiGui) {
+            if (aClass.isInstance(gui)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static void runClickCache() {
         if (clickCache != null) {
@@ -70,10 +72,6 @@ public class RCJEIInputHandler {
                 }
             }
         }
-    }
-
-    private RCJEIInputHandler() {
-
     }
 
 }

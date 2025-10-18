@@ -49,7 +49,7 @@ public class ItemTooltipHandler {
                     }
                 }
             }
-            if (b) event.getToolTip().add(I18n.format("hei.tooltip.press_alt"));
+            if (b) event.getToolTip().add(I18n.format("text.rc.tooltip.press_alt"));
         }
     }
 

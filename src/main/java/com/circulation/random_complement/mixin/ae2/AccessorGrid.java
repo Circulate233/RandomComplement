@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
 
-@Mixin(value = Grid.class,remap = false)
+@Mixin(value = Grid.class, remap = false)
 public interface AccessorGrid {
 
     @Accessor("machines")

@@ -38,6 +38,14 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Unique
     private final List<Slot> r$plusSlot = new ObjectArrayList<>();
+    @Unique
+    private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
+    @Unique
+    private Set<IAEItemStack> randomComplement$craftableCache;
+
+    public MixinAEBaseGui(Container inventorySlotsIn) {
+        super(inventorySlotsIn);
+    }
 
     @Unique
     protected List<Slot> r$getPlusSlot() {
@@ -46,13 +54,6 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Shadow(remap = false)
     protected abstract List<Slot> getInventorySlots();
-
-    @Unique
-    private Set<IAEItemStack> randomComplement$craftableCache;
-
-    public MixinAEBaseGui(Container inventorySlotsIn) {
-        super(inventorySlotsIn);
-    }
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage(SpecialLogic gui) {
@@ -103,9 +104,6 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         MEHandler.drawSlotPluses(r$getPlusSlot());
         GlStateManager.translate(-this.guiLeft, -this.guiTop, 0);
     }
-
-    @Unique
-    private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", remap = false, shift = At.Shift.AFTER))
     private void drawPin(float f, int x, int y, CallbackInfo ci) {

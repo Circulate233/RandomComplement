@@ -12,7 +12,7 @@ public interface InterfaceButton {
     @SideOnly(Side.CLIENT)
     String getTooltip();
 
-    default boolean isClient(){
+    default boolean isClient() {
         return FMLCommonHandler.instance().getSide().isClient();
     }
 

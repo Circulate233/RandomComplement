@@ -13,21 +13,21 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Comparator;
 import java.util.List;
 
-@Mixin(value = ItemRepo.class,remap = false)
+@Mixin(value = ItemRepo.class, remap = false)
 public abstract class MixinItemRepo {
 
     @Unique
     private final Comparator<IAEItemStack> randomComplement$priorityComparator = (a, b) -> {
         boolean aPri = randomComplement$isPriorityItem(a);
         boolean bPri = randomComplement$isPriorityItem(b);
-        if (aPri == bPri){
+        if (aPri == bPri) {
             return 0;
         } else {
             return aPri ? -1 : 1;
         }
     };
 
-    @Redirect(method = "updateView",at = @At(value = "INVOKE", target = "Ljava/util/List;sort(Ljava/util/Comparator;)V"))
+    @Redirect(method = "updateView", at = @At(value = "INVOKE", target = "Ljava/util/List;sort(Ljava/util/Comparator;)V"))
     public void updateView(List<IAEItemStack> instance, Comparator<IAEItemStack> comparator) {
         instance.sort(comparator);
         instance.sort(randomComplement$priorityComparator);

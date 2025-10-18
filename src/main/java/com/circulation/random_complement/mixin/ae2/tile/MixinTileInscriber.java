@@ -59,12 +59,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Mixin(value = TileInscriber.class,remap = false)
-public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject,RCIConfigManagerHost, ItemHandlerTool, RCTileInscriber {
+@Mixin(value = TileInscriber.class, remap = false)
+public abstract class MixinTileInscriber extends AENetworkPowerTile implements RCIConfigurableObject, RCIConfigManagerHost, ItemHandlerTool, RCTileInscriber {
 
     @Unique
+    private final static IItemDefinition randomComplement$namePress = AEApi.instance().definitions().materials().namePress();
+    @Unique
+    final IAEItemFilter randomComplement$filter = new InscriberItemHandler((TileInscriber) (Object) this);
+    @Unique
+    private final List<IItemHandler> randomComplement$list = new ObjectArrayList<>();
+    @Unique
     private RCIConfigManager randomComplement$rcSettings;
-
     @Shadow
     @Final
     private AppEngInternalInventory topItemHandler;
@@ -74,39 +79,32 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     @Shadow
     @Final
     private AppEngInternalInventory sideItemHandler;
-
-    @Unique
-    final IAEItemFilter randomComplement$filter = new InscriberItemHandler((TileInscriber)(Object)this);
     @Unique
     private IItemHandler randomComplement$topItemHandlerExtern;
     @Unique
     private IItemHandler randomComplement$bottomItemHandlerExtern;
     @Unique
     private IItemHandler randomComplement$sideItemHandlerExtern;
-
-    @Unique
-    private final List<IItemHandler> randomComplement$list = new ObjectArrayList<>();
-
     @Unique
     private IItemHandlerModifiable randomComplement$input;
-
     @Unique
     private EnumMap<EnumFacing, Object> randomComplement$neighbors;
-
     @Unique
     private IActionSource randomComplement$mySrc;
+    @Unique
+    private int randomComplement$tick = 0;
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(CallbackInfo ci){
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(CallbackInfo ci) {
         this.randomComplement$rcSettings = new RCConfigManager(this);
 
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberBlockMode, InscriberBlockMode.CLOSE);
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberAutoOutput, InscriberAutoOutput.CLOSE);
         this.randomComplement$rcSettings.registerSetting(RCSettings.InscriberMaxStackLimit, InscriberMaxStackLimit.SMALL);
 
-        randomComplement$topItemHandlerExtern = new WrapperFilteredItemHandler(topItemHandler,randomComplement$filter);
-        randomComplement$bottomItemHandlerExtern = new WrapperFilteredItemHandler(bottomItemHandler,randomComplement$filter);
-        randomComplement$sideItemHandlerExtern = new WrapperFilteredItemHandler(sideItemHandler,randomComplement$filter);
+        randomComplement$topItemHandlerExtern = new WrapperFilteredItemHandler(topItemHandler, randomComplement$filter);
+        randomComplement$bottomItemHandlerExtern = new WrapperFilteredItemHandler(bottomItemHandler, randomComplement$filter);
+        randomComplement$sideItemHandlerExtern = new WrapperFilteredItemHandler(sideItemHandler, randomComplement$filter);
 
         this.randomComplement$input = new WrapperChainedItemHandler(this.randomComplement$topItemHandlerExtern, this.randomComplement$bottomItemHandlerExtern, this.randomComplement$sideItemHandlerExtern);
         this.randomComplement$list.add(topItemHandler);
@@ -123,9 +121,9 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         return this.randomComplement$rcSettings;
     }
 
-    @Inject(method = "getItemHandlerForSide",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getItemHandlerForSide", at = @At("HEAD"), cancellable = true)
     protected void getItemHandlerForSideMixin(EnumFacing facing, CallbackInfoReturnable<IItemHandler> cir) {
-        if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN){
+        if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN) {
             cir.setReturnValue(this.randomComplement$input);
         }
     }
@@ -136,17 +134,17 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         this.saveChanges();
     }
 
-    @Inject(method = "writeToNBT",at = @At("TAIL"),remap = true)
+    @Inject(method = "writeToNBT", at = @At("TAIL"), remap = true)
     public void writeToNBTMixin(NBTTagCompound data, CallbackInfoReturnable<NBTTagCompound> cir) {
         this.randomComplement$rcSettings.writeToNBT(data);
     }
 
-    @Inject(method = "readFromNBT",at = @At("TAIL"),remap = true)
+    @Inject(method = "readFromNBT", at = @At("TAIL"), remap = true)
     public void readFromNBTMixin(NBTTagCompound data, CallbackInfo ci) {
         this.randomComplement$rcSettings.readFromNBT(data);
     }
 
-    @Redirect(method = "tickingRequest",at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;insertItem(ILnet/minecraft/item/ItemStack;Z)Lnet/minecraft/item/ItemStack;",ordinal = 0))
+    @Redirect(method = "tickingRequest", at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;insertItem(ILnet/minecraft/item/ItemStack;Z)Lnet/minecraft/item/ItemStack;", ordinal = 0))
     public ItemStack tickingRequestMixin0(AppEngInternalInventory instance, int slot, ItemStack stack, boolean simulate) {
         if (!simulate && this.r$getConfigManager().getSetting(RCSettings.InscriberAutoOutput) == InscriberAutoOutput.OPEN) {
             return randomComplement$pushOut(stack);
@@ -155,15 +153,15 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         }
     }
 
-    @Redirect(method = "tickingRequest",at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;setStackInSlot(ILnet/minecraft/item/ItemStack;)V"))
+    @Redirect(method = "tickingRequest", at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;setStackInSlot(ILnet/minecraft/item/ItemStack;)V"))
     public void tickingRequestMixin1(AppEngInternalInventory instance, int slot, ItemStack stack) {
         var item = instance.getStackInSlot(slot);
-        if (!item.isEmpty()){
-            if (item.getCount() <= 1){
-                instance.setStackInSlot(slot,stack);
+        if (!item.isEmpty()) {
+            if (item.getCount() <= 1) {
+                instance.setStackInSlot(slot, stack);
             } else {
                 if (randomComplement$hasNamePress()) {
-                    instance.setStackInSlot(slot,stack);
+                    instance.setStackInSlot(slot, stack);
                 } else {
                     item.setCount(item.getCount() - 1);
                 }
@@ -171,10 +169,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         }
     }
 
-    @Unique
-    private int randomComplement$tick = 0;
-
-    @Inject(method = "tickingRequest",at = @At("TAIL"))
+    @Inject(method = "tickingRequest", at = @At("TAIL"))
     public void tickingRequestMixin2(IGridNode node, int ticksSinceLastCall, CallbackInfoReturnable<TickRateModulation> cir) {
         if (!sideItemHandler.getStackInSlot(1).isEmpty() && this.r$getConfigManager().getSetting(RCSettings.InscriberAutoOutput) == InscriberAutoOutput.OPEN) {
             if (randomComplement$tick++ >= 20 && !sideItemHandler.getStackInSlot(1).isEmpty()) {
@@ -185,20 +180,20 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         }
     }
 
-    @Redirect(method = "getTask(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Lappeng/api/features/IInscriberRecipe;",at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getCount()I",remap = true))
+    @Redirect(method = "getTask(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Lappeng/api/features/IInscriberRecipe;", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getCount()I", remap = true))
     private int getTaskMixin(ItemStack input, ItemStack plateA, ItemStack plateB) {
         return 1;
     }
 
     @Unique
     @Override
-    public List<IItemHandler> r$getItemHandlers(){
+    public List<IItemHandler> r$getItemHandlers() {
         return randomComplement$list;
     }
 
     @Unique
     public void r$updateNeighbors() {
-        for(EnumFacing f : EnumFacing.VALUES) {
+        for (EnumFacing f : EnumFacing.VALUES) {
             TileEntity te = this.world.getTileEntity(this.pos.offset(f));
             Object capability = null;
             if (te != null) {
@@ -234,7 +229,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     private ItemStack randomComplement$pushTickOut(ItemStack output) {
         if (output.isEmpty()) return output;
 
-        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(),this.getUp().getOpposite());
+        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(), this.getUp().getOpposite());
         if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN) {
             for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
                 EnumFacing facing = entry.getKey();
@@ -245,7 +240,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         } else {
             for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
                 EnumFacing facing = entry.getKey();
-                if (FILTERED_KEYS.contains(facing))continue;
+                if (FILTERED_KEYS.contains(facing)) continue;
                 Object capability = entry.getValue();
                 output = randomComplement$pushTo(output, facing, capability);
                 if (output.isEmpty()) break;
@@ -259,7 +254,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     private ItemStack randomComplement$pushOut(ItemStack output) {
         if (output.isEmpty()) return output;
 
-        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(),this.getUp().getOpposite());
+        final Set<EnumFacing> FILTERED_KEYS = EnumSet.of(this.getUp(), this.getUp().getOpposite());
         if (r$getConfigManager().getSetting(RCSettings.InscriberBlockMode) == InscriberBlockMode.OPEN) {
             for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
                 EnumFacing facing = entry.getKey();
@@ -270,7 +265,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
         } else {
             for (Map.Entry<EnumFacing, Object> entry : randomComplement$neighbors.entrySet()) {
                 EnumFacing facing = entry.getKey();
-                if (FILTERED_KEYS.contains(facing))continue;
+                if (FILTERED_KEYS.contains(facing)) continue;
                 Object capability = entry.getValue();
                 output = randomComplement$pushTo(output, facing, capability);
                 if (output.isEmpty()) break;
@@ -302,9 +297,6 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
     }
 
     @Unique
-    private final static IItemDefinition randomComplement$namePress = AEApi.instance().definitions().materials().namePress();
-
-    @Unique
     public boolean randomComplement$hasNamePress() {
         ItemStack slot0 = randomComplement$topItemHandlerExtern.getStackInSlot(0);
         ItemStack slot1 = randomComplement$bottomItemHandlerExtern.getStackInSlot(0);
@@ -313,7 +305,7 @@ public abstract class MixinTileInscriber extends AENetworkPowerTile implements R
 
     @Override
     @Unique
-    public void r$updateNeighbors(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull BlockPos neighbor){
+    public void r$updateNeighbors(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull BlockPos neighbor) {
         EnumFacing updateFromFacing;
         if (pos.getX() != neighbor.getX()) {
             if (pos.getX() > neighbor.getX()) {

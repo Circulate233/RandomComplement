@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = SecurityCache.class,remap = false)
+@Mixin(value = SecurityCache.class, remap = false)
 public class MixinSecurityCache {
 
-    @Inject(method = "hasPermission(ILappeng/api/config/SecurityPermissions;)Z", at = @At(value= "HEAD"), cancellable = true)
+    @Inject(method = "hasPermission(ILappeng/api/config/SecurityPermissions;)Z", at = @At(value = "HEAD"), cancellable = true)
     public void hasPermissionMixin1(int playerID, SecurityPermissions perm, CallbackInfoReturnable<Boolean> cir) {
-        if (RCConfig.AE2.SecurityCache && perm == SecurityPermissions.BUILD){
+        if (RCConfig.AE2.SecurityCache && perm == SecurityPermissions.BUILD) {
             cir.setReturnValue(true);
             cir.cancel();
         }

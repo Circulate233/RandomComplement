@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 public class RCGuiButton extends GuiImgButton {
     private static final Pattern COMPILE = Pattern.compile("%s");
     private static final Pattern PATTERN_NEW_LINE = Pattern.compile("\\n", Pattern.LITERAL);
+    private static final ResourceLocation texture = new ResourceLocation(RandomComplement.MOD_ID, "textures/gui/states.png");
     private static Map<RCEnumPair, RCButtonAppearance> appearances;
     private final Enum<?> buttonSetting;
-    private static final ResourceLocation texture = new ResourceLocation(RandomComplement.MOD_ID, "textures/gui/states.png");
     private String exMessage = "";
 
     public RCGuiButton(int x, int y, Enum idx, Enum val) {

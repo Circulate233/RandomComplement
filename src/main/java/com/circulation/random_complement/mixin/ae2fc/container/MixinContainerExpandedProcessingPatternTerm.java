@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ContainerExpandedProcessingPatternTerm.class,remap = false)
+@Mixin(value = ContainerExpandedProcessingPatternTerm.class, remap = false)
 public abstract class MixinContainerExpandedProcessingPatternTerm extends ContainerPatternEncoder {
 
     protected MixinContainerExpandedProcessingPatternTerm(InventoryPlayer ip, ITerminalHost monitorable, boolean bindInventory) {

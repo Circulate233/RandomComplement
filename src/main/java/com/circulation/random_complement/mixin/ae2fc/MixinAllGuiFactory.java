@@ -15,11 +15,17 @@ import org.spongepowered.asm.mixin.Unique;
 
 import javax.annotation.Nullable;
 
-@Mixin(value = GuiType.AllGuiFactory.class,remap = false)
+@Mixin(value = GuiType.AllGuiFactory.class, remap = false)
 public abstract class MixinAllGuiFactory<T> extends GuiType.PartOrTileGuiFactory<T> {
 
     public MixinAllGuiFactory(Class<T> invClass) {
         super(invClass);
+    }
+
+    @Unique
+    @Optional.Method(modid = "baubles")
+    private static ItemStack randomComplement$getStackInBaubleSlot(EntityPlayer player, int slot) {
+        return slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots() ? BaublesApi.getBaublesHandler(player).getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
     /**
@@ -48,12 +54,6 @@ public abstract class MixinAllGuiFactory<T> extends GuiType.PartOrTileGuiFactory
         }
 
         return super.getInventory(tile, player, face, pos);
-    }
-
-    @Unique
-    @Optional.Method(modid = "baubles")
-    private static ItemStack randomComplement$getStackInBaubleSlot(EntityPlayer player, int slot) {
-        return slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots() ? BaublesApi.getBaublesHandler(player).getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
 }

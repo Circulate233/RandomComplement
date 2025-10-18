@@ -12,13 +12,13 @@ public enum InscriberAutoOutput implements InterfaceButton {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getName(){
+    public String getName() {
         return I18n.format("gui.inscriber.auto_output.name");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getTooltip(){
+    public String getTooltip() {
         return I18n.format(key);
     }
 }

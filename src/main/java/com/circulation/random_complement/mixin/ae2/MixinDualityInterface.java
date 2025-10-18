@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = DualityInterface.class,remap = false)
+@Mixin(value = DualityInterface.class, remap = false)
 public abstract class MixinDualityInterface implements RCIConfigurableObject, RCIConfigManagerHost {
 
     @Unique
@@ -37,6 +37,14 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
     @Shadow
     @Final
     private IInterfaceHost iHost;
+    @Shadow
+    @Final
+    private ConfigManager cm;
+    @Shadow
+    @Final
+    private UpgradeInventory upgrades;
+    @Unique
+    private int r$lastInputHash;
 
     @Shadow
     protected abstract void cancelCrafting();
@@ -70,17 +78,6 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
     public void readFromNBTMixin(NBTTagCompound data, CallbackInfo ci) {
         this.randomComplement$rcSettings.readFromNBT(data);
     }
-
-    @Shadow
-    @Final
-    private ConfigManager cm;
-
-    @Shadow
-    @Final
-    private UpgradeInventory upgrades;
-
-    @Unique
-    private int r$lastInputHash;
 
     @Inject(method = "isBusy", at = @At(value = "INVOKE", target = "Lappeng/helpers/DualityInterface;isBlocking()Z", shift = At.Shift.AFTER), cancellable = true)
     public void isIntelligentBlocking(CallbackInfoReturnable<Boolean> cir) {

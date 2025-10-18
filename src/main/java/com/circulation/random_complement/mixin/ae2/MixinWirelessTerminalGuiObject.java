@@ -19,17 +19,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = WirelessTerminalGuiObject.class,remap = false)
+@Mixin(value = WirelessTerminalGuiObject.class, remap = false)
 public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableObject, RCIConfigManagerHost {
-
-    @Shadow
-    public abstract void saveChanges();
 
     @Unique
     private RCIConfigManager randomComplement$rcSettings;
-
     @Unique
     private boolean r$init = false;
+
+    @Shadow
+    public abstract void saveChanges();
 
     @Unique
     @Override
@@ -42,14 +41,14 @@ public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableO
         this.saveChanges();
     }
 
-    @Inject(method = "saveChanges()V",at = @At("TAIL"))
-    public void saveChanges(CallbackInfo ci , @Local(name = "data") NBTTagCompound data) {
+    @Inject(method = "saveChanges()V", at = @At("TAIL"))
+    public void saveChanges(CallbackInfo ci, @Local(name = "data") NBTTagCompound data) {
         this.randomComplement$rcSettings.writeToNBT(data);
     }
 
-    @Inject(method = "loadFromNBT",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "loadFromNBT", at = @At("HEAD"), cancellable = true)
     public void loadFromNBT(CallbackInfo ci) {
-        if (Loader.isModLoaded("ae2exttable") && r$init()){
+        if (Loader.isModLoaded("ae2exttable") && r$init()) {
             ci.cancel();
             return;
         }

@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static appeng.core.sync.AppEngPacketHandlerBase.PacketTypes.PACKET_ME_INVENTORY_UPDATE;
 
-@Mixin(value = AppEngClientPacketHandler.class,remap = false)
+@Mixin(value = AppEngClientPacketHandler.class, remap = false)
 public class MixinAppEngClientPacketHandler {
 
     @Unique

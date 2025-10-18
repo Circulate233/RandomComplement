@@ -1,15 +1,15 @@
 {
-	"package": "com.circulation.random_complement.mixin.nee.ae2e",
-	"required": true,
-	"refmap": "mixins.random_complement.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"MixinCraftingTransferHandler",
-		"MixinJEIPlugin",
-		"MixinNEEGuiHandler"
-	],
-	"server": [],
-	"client": []
+  "package": "com.circulation.random_complement.mixin.nee.ae2e",
+  "required": true,
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinCraftingTransferHandler",
+    "MixinJEIPlugin",
+    "MixinNEEGuiHandler"
+  ],
+  "server": [],
+  "client": []
 }

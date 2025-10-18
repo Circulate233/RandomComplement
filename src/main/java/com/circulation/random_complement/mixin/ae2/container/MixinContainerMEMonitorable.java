@@ -49,31 +49,30 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
     @Unique
     @SuppressWarnings("FieldCanBeLocal")
     private Container rc$oldContainer;
+    @Unique
+    private boolean randomComplement$incomplete = true;
 
     public MixinContainerMEMonitorable(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
     }
 
-    @Unique
-    private boolean randomComplement$incomplete = true;
-
-    @Inject(method = "detectAndSendChanges",at = @At("TAIL"))
+    @Inject(method = "detectAndSendChanges", at = @At("TAIL"))
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer() && randomComplement$incomplete) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,1);
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player, 1);
             randomComplement$incomplete = false;
         }
     }
 
-    @Inject(method = "onContainerClosed",at = @At("TAIL"))
-    public void onClosedMixin(EntityPlayer player, CallbackInfo ci){
+    @Inject(method = "onContainerClosed", at = @At("TAIL"))
+    public void onClosedMixin(EntityPlayer player, CallbackInfo ci) {
         if (Platform.isServer()) {
-            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player,2);
+            randomComplement$queueInventory((EntityPlayerMP) this.getInventoryPlayer().player, 2);
         }
     }
 
     @Unique
-    private void randomComplement$queueInventory(EntityPlayerMP playerMP,int id) {
+    private void randomComplement$queueInventory(EntityPlayerMP playerMP, int id) {
         try {
             var piu = new RCPacketMEInventoryUpdate((short) id);
             List<IAEItemStack> items = new ArrayList<>();
@@ -94,12 +93,12 @@ public abstract class MixinContainerMEMonitorable extends AEBaseContainer implem
                     }
                 }
             }
-            if (items.isEmpty())return;
+            if (items.isEmpty()) return;
             for (IAEItemStack send : items) {
                 try {
                     piu.appendItem(send);
                 } catch (BufferOverflowException var7) {
-                    NetworkHandler.instance().sendTo(piu,playerMP);
+                    NetworkHandler.instance().sendTo(piu, playerMP);
                     piu = new RCPacketMEInventoryUpdate((short) id);
                     piu.appendItem(send);
                 }

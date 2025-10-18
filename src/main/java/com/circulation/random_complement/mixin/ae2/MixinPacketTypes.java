@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = AppEngPacketHandlerBase.PacketTypes.class,remap = false)
+@Mixin(value = AppEngPacketHandlerBase.PacketTypes.class, remap = false)
 public class MixinPacketTypes {
 
-    @Inject(method = "getID",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getID", at = @At("HEAD"), cancellable = true)
     private static void getIDMixin(Class<? extends AppEngPacket> c, CallbackInfoReturnable<AppEngPacketHandlerBase.PacketTypes> cir) {
-        if (c == RCPacketMEInventoryUpdate.class){
+        if (c == RCPacketMEInventoryUpdate.class) {
             cir.setReturnValue(AppEngPacketHandlerBase.PacketTypes.PACKET_ME_INVENTORY_UPDATE);
         }
     }

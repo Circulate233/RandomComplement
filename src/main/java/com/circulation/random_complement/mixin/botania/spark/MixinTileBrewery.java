@@ -28,11 +28,11 @@ public abstract class MixinTileBrewery extends TileSimpleInventory implements IM
     @Shadow(remap = false)
     public abstract int getManaCost();
 
-    @Inject(method = "update",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z",ordinal = 0))
-    public void onUpdate(CallbackInfo ci){
+    @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z", ordinal = 0))
+    public void onUpdate(CallbackInfo ci) {
         ISparkEntity spark = this.getAttachedSpark();
         if (spark != null) {
-            for(ISparkEntity otherSpark : SparkHelper.getSparksAround(this.world, (double)this.pos.getX() + (double)0.5F, (double)this.pos.getY() + (double)0.5F, (double)this.pos.getZ() + (double)0.5F)) {
+            for (ISparkEntity otherSpark : SparkHelper.getSparksAround(this.world, (double) this.pos.getX() + (double) 0.5F, (double) this.pos.getY() + (double) 0.5F, (double) this.pos.getZ() + (double) 0.5F)) {
                 if (spark != otherSpark && otherSpark.getAttachedTile() != null && otherSpark.getAttachedTile() instanceof IManaPool) {
                     otherSpark.registerTransfer(spark);
                 }
@@ -55,14 +55,14 @@ public abstract class MixinTileBrewery extends TileSimpleInventory implements IM
     @Unique
     @Override
     public int getAvailableSpaceForMana() {
-        return Math.max(0,this.getManaCost() - getCurrentMana());
+        return Math.max(0, this.getManaCost() - getCurrentMana());
     }
 
     @Unique
     @Override
     public ISparkEntity getAttachedSpark() {
         List<EntitySpark> sparks = world.getEntitiesWithinAABB(EntitySpark.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
-        if(sparks.size() == 1)
+        if (sparks.size() == 1)
             return sparks.get(0);
         return null;
     }

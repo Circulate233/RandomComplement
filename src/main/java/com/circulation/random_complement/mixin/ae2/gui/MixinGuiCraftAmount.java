@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = GuiCraftAmount.class, remap = false,priority = 999)
+@Mixin(value = GuiCraftAmount.class, remap = false, priority = 999)
 public abstract class MixinGuiCraftAmount extends AEBaseGui {
 
     @Shadow

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets = "appeng.me.cache.EnergyGridCache$GridPowerStorage",remap = false)
+@Mixin(targets = "appeng.me.cache.EnergyGridCache$GridPowerStorage", remap = false)
 public abstract class MixinGridPowerStorage implements RCGridPowerStorage {
 
     @Unique
@@ -19,7 +19,7 @@ public abstract class MixinGridPowerStorage implements RCGridPowerStorage {
 
     @Unique
     private boolean r$hasCreativeEnergyCell() {
-        if (r$grid == null)return false;
+        if (r$grid == null) return false;
         if (((AccessorGrid) this.r$grid).r$getMachines().containsKey(TileCreativeEnergyCell.class)) {
             return !this.r$grid.getMachines(TileCreativeEnergyCell.class).isEmpty();
         }

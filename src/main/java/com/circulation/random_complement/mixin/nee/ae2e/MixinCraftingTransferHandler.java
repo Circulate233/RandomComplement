@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Mixin(value = CraftingTransferHandler.class,remap = false)
+@Mixin(value = CraftingTransferHandler.class, remap = false)
 public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & IContainerCraftingPacket> implements IRecipeTransferHandler<C> {
 
     @Final
@@ -52,7 +52,7 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
     private IngredientRequester requester;
 
     @SuppressWarnings("AmbiguousMixinReference")
-    @Inject(method = "transferRecipe", at = @At(value="HEAD"), cancellable=true)
+    @Inject(method = "transferRecipe", at = @At(value = "HEAD"), cancellable = true)
     public void transferRecipeMixin(@Nonnull C container, @Nonnull IRecipeLayout recipeLayout, @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer, CallbackInfoReturnable<Object> cir) {
         GuiScreen parent = GuiUtils.getParentScreen();
         if (parent instanceof com._0xc4de.ae2exttable.client.gui.GuiCraftingTerm craftingTerm) {
@@ -94,10 +94,10 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
         NBTTagCompound recipe = new NBTTagCompound();
         int slotIndex = 0;
 
-        for(Map.Entry<Integer, ? extends IGuiIngredient<ItemStack>> ingredientEntry : ingredients.entrySet()) {
+        for (Map.Entry<Integer, ? extends IGuiIngredient<ItemStack>> ingredientEntry : ingredients.entrySet()) {
             IGuiIngredient<ItemStack> ingredient = ingredientEntry.getValue();
             if (ingredient.isInput()) {
-                for(Slot slot : container.inventorySlots) {
+                for (Slot slot : container.inventorySlots) {
                     if ((slot instanceof SlotCraftingMatrix || slot instanceof SlotFakeCraftingMatrix) && slot.getSlotIndex() == slotIndex) {
                         NBTTagList tags = new NBTTagList();
                         List<ItemStack> list = new ArrayList<>();
@@ -106,7 +106,7 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
                             list.add(displayed);
                         }
 
-                        for(ItemStack stack : ingredient.getAllIngredients()) {
+                        for (ItemStack stack : ingredient.getAllIngredients()) {
                             if (Platform.isRecipePrioritized(stack)) {
                                 list.add(0, stack);
                             } else {
@@ -114,7 +114,7 @@ public abstract class MixinCraftingTransferHandler<C extends AEBaseContainer & I
                             }
                         }
 
-                        for(ItemStack is : list) {
+                        for (ItemStack is : list) {
                             NBTTagCompound tag = new NBTTagCompound();
                             is.writeToNBT(tag);
                             tags.appendTag(tag);

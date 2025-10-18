@@ -23,15 +23,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //TODO:智能阻挡功能未完成
-@Mixin(value = ContainerInterface.class,remap = false)
+@Mixin(value = ContainerInterface.class, remap = false)
 public class MixinContainerInterface extends ContainerUpgradeable implements IOptionalSlotHost, InterfaceConfigs, RCIInterfaceHostHelper {
 
-    @Shadow
-    @Final
-    private DualityInterface myDuality;
     @Unique
     @GuiSync(66)
     public IntelligentBlocking r$IntelligentBlocking;
+    @Shadow
+    @Final
+    private DualityInterface myDuality;
 
     public MixinContainerInterface(InventoryPlayer ip, IUpgradeableHost te) {
         super(ip, te);

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 import static com.circulation.random_complement.RCConfig.IC2;
 
-@Mixin(value = ItemUpgradeModule.class,remap = false)
+@Mixin(value = ItemUpgradeModule.class, remap = false)
 public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule.UpgradeType> implements IFullUpgrade, IHandHeldSubInventory, IItemHudInfo {
 
     protected MixinItemUpgradeModule(ItemName name, Class<ItemUpgradeModule.UpgradeType> typeClass) {
@@ -27,7 +27,7 @@ public abstract class MixinItemUpgradeModule extends ItemMulti<ItemUpgradeModule
     @Overwrite
     public double getProcessTimeMultiplier(ItemStack stack, IUpgradableBlock parent) {
         ItemUpgradeModule.UpgradeType type = this.getType(stack);
-        if (type == ItemUpgradeModule.UpgradeType.overclocker){
+        if (type == ItemUpgradeModule.UpgradeType.overclocker) {
             return IC2.overclockerTime;
         }
         return 1.0d;

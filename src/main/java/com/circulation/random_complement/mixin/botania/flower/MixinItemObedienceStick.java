@@ -15,9 +15,10 @@ import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.item.ItemObedienceStick;
 import vazkii.botania.common.item.ItemTwigWand;
 
-@Mixin(value = ItemObedienceStick.class,remap = false)
+@Mixin(value = ItemObedienceStick.class, remap = false)
 public class MixinItemObedienceStick {
 
+    @SuppressWarnings("UnresolvedLocalCapture")
     @Inject(method = "applyStick", at = @At("RETURN"))
     private static void applyStick(World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, @Local(name = "tileAt") TileEntity tileAt) {
         if (cir.getReturnValue()) {

@@ -29,9 +29,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Mixin(value = ContainerInscriber.class,remap = false)
+@Mixin(value = ContainerInscriber.class, remap = false)
 public class MixinContainerInscriber extends ContainerUpgradeable implements InscriberConfigs {
 
+    @Unique
+    @GuiSync(7)
+    public InscriberBlockMode randomComplement$InscriberBlockMode;
+    @Unique
+    @GuiSync(8)
+    public InscriberAutoOutput randomComplement$InscriberAutoOutput;
+    @Unique
+    @GuiSync(9)
+    public InscriberMaxStackLimit randomComplement$InscriberMaxStackLimit;
     @Shadow
     @Final
     private TileInscriber ti;
@@ -44,24 +53,16 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
     @Shadow
     @Final
     private Slot bottom;
-
     @Unique
-    @GuiSync(7)
-    public InscriberBlockMode randomComplement$InscriberBlockMode;
-    @Unique
-    @GuiSync(8)
-    public InscriberAutoOutput randomComplement$InscriberAutoOutput;
-    @Unique
-    @GuiSync(9)
-    public InscriberMaxStackLimit randomComplement$InscriberMaxStackLimit;
+    private Set<Slot> randomComplement$slotSet;
 
     public MixinContainerInscriber(InventoryPlayer ip, IUpgradeableHost te) {
         super(ip, te);
     }
 
-    @Inject(method = "detectAndSendChanges",at = @At(value = "INVOKE", target = "Lappeng/tile/misc/TileInscriber;getProcessingTime()I",remap = false),remap = true)
+    @Inject(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/tile/misc/TileInscriber;getProcessingTime()I", remap = false), remap = true)
     public void detectAndSendChangesMixin(CallbackInfo ci) {
-        randomComplement$loadSettingsFromHost(((RCIConfigurableObject)ti).r$getConfigManager());
+        randomComplement$loadSettingsFromHost(((RCIConfigurableObject) ti).r$getConfigManager());
     }
 
     @Unique
@@ -74,42 +75,39 @@ public class MixinContainerInscriber extends ContainerUpgradeable implements Ins
             case MEDIUM -> 4;
             case BIG -> 64;
         };
-        ((SlotRestrictedInput)this.top).setStackLimit(limit);
-        ((SlotRestrictedInput)this.middle).setStackLimit(limit);
-        ((SlotRestrictedInput)this.bottom).setStackLimit(limit);
+        ((SlotRestrictedInput) this.top).setStackLimit(limit);
+        ((SlotRestrictedInput) this.middle).setStackLimit(limit);
+        ((SlotRestrictedInput) this.bottom).setStackLimit(limit);
     }
 
-    @Unique
-    private Set<Slot> randomComplement$slotSet;
-
-    @Inject(method = "isValidForSlot",at = @At("HEAD"))
-    public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir){
+    @Inject(method = "isValidForSlot", at = @At("HEAD"))
+    public void isValidForSlotMixin(Slot s, ItemStack is, CallbackInfoReturnable<Boolean> cir) {
         if (randomComplement$slotSet.contains(s)) {
             int limit = switch (this.r$getMaxStackLimit()) {
                 case SMALL -> 1;
                 case MEDIUM -> 4;
                 case BIG -> 64;
             };
-            ((SlotRestrictedInput)s).setStackLimit(limit);
+            ((SlotRestrictedInput) s).setStackLimit(limit);
         }
     }
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(InventoryPlayer ip, TileInscriber te, CallbackInfo ci){
-        RCIConfigurableObject obj = (RCIConfigurableObject)te;
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(InventoryPlayer ip, TileInscriber te, CallbackInfo ci) {
+        RCIConfigurableObject obj = (RCIConfigurableObject) te;
         var cm = obj.r$getConfigManager();
         this.randomComplement$InscriberBlockMode = (InscriberBlockMode) cm.getSetting(RCSettings.InscriberBlockMode);
         this.randomComplement$InscriberAutoOutput = (InscriberAutoOutput) cm.getSetting(RCSettings.InscriberAutoOutput);
         this.randomComplement$InscriberMaxStackLimit = (InscriberMaxStackLimit) cm.getSetting(RCSettings.InscriberMaxStackLimit);
-        randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top,this.bottom,this.middle));
+        randomComplement$slotSet = new HashSet<>(Arrays.asList(this.top, this.bottom, this.middle));
         int limit = switch (this.r$getMaxStackLimit()) {
             case SMALL -> 1;
             case MEDIUM -> 4;
             case BIG -> 64;
         };
-        ((SlotRestrictedInput)this.top).setStackLimit(limit);
-        ((SlotRestrictedInput)this.middle).setStackLimit(limit);
-        ((SlotRestrictedInput)this.bottom).setStackLimit(limit);
+        ((SlotRestrictedInput) this.top).setStackLimit(limit);
+        ((SlotRestrictedInput) this.middle).setStackLimit(limit);
+        ((SlotRestrictedInput) this.bottom).setStackLimit(limit);
     }
 
     @Unique

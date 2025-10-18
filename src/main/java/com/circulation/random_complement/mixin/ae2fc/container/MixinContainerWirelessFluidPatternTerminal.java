@@ -15,20 +15,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ContainerWirelessFluidPatternTerminal.class,remap = false)
+@Mixin(value = ContainerWirelessFluidPatternTerminal.class, remap = false)
 public abstract class MixinContainerWirelessFluidPatternTerminal extends ContainerWirelessPatternTerminal implements PatternConsumer, IUpgradeableCellContainer, IInventorySlotAware {
 
     public MixinContainerWirelessFluidPatternTerminal(InventoryPlayer ip, WirelessTerminalGuiObject gui) {
         super(ip, gui);
     }
 
-    @Redirect(method = "saveChanges",at = @At(value = "INVOKE", target = "Lappeng/helpers/WirelessTerminalGuiObject;saveChanges(Lnet/minecraft/nbt/NBTTagCompound;)V"))
+    @Redirect(method = "saveChanges", at = @At(value = "INVOKE", target = "Lappeng/helpers/WirelessTerminalGuiObject;saveChanges(Lnet/minecraft/nbt/NBTTagCompound;)V"))
     public void saveChangesMixin(WirelessTerminalGuiObject instance, NBTTagCompound data) {
-        ((AccessorContainerWirelessPatternTerminal)this).getWirelessTerminalGUIObject().saveChanges(data);
+        ((AccessorContainerWirelessPatternTerminal) this).getWirelessTerminalGUIObject().saveChanges(data);
     }
 
-    @Inject(method = "encode",at = @At(value = "HEAD"))
+    @Inject(method = "encode", at = @At(value = "HEAD"))
     public void encode(CallbackInfo ci) {
-        MEHandler.refillBlankPatterns(this,patternSlotIN);
+        MEHandler.refillBlankPatterns(this, patternSlotIN);
     }
 }

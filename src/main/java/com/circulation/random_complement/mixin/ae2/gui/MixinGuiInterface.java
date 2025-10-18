@@ -39,10 +39,10 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
         super(inventoryPlayer, te);
     }
 
-    @Inject(method = "initGui",at = @At("TAIL"))
+    @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         int i = -1;
-        if (Loader.isModLoaded("ae2fc"))++i;
+        if (Loader.isModLoaded("ae2fc")) ++i;
         final int left = this.guiLeft - 18;
         final int top = r$getTop();
         this.r$IntelligentBlocking = new RCGuiButton(left, top + ++i * 18, RCSettings.IntelligentBlocking, IntelligentBlocking.CLOSE);
@@ -58,12 +58,12 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
     }
 
     @Unique
-    public int r$getTop(){
+    public int r$getTop() {
         int top = this.guiTop + 8;
         final int left = this.guiLeft - 18;
         for (GuiButton guiButton : this.buttonList) {
-            if (guiButton.x != left)continue;
-            if (top < guiButton.y)top = guiButton.y;
+            if (guiButton.x != left) continue;
+            if (top < guiButton.y) top = guiButton.y;
         }
         return top;
     }
@@ -73,7 +73,7 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
         this.r$IntelligentBlocking.set(((InterfaceConfigs) this.cvb).r$getIntelligentBlocking());
     }
 
-    @Inject(method = "actionPerformed",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     protected void actionPerformed(GuiButton btn, CallbackInfo ci) {
         boolean backwards = Mouse.isButtonDown(1);
         if (btn == this.r$IntelligentBlocking) {

@@ -48,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-@Mixin(value = InputHandler.class,remap = false)
+@Mixin(value = InputHandler.class, remap = false)
 public abstract class MixinInputHandler {
 
     @Shadow
@@ -63,9 +63,9 @@ public abstract class MixinInputHandler {
     @Nullable
     protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
 
-    @Inject(method = "<init>",at = @At("TAIL"))
-    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci){
-        ItemTooltipHandler.regItemTooltip(GuiScreen.class,() -> {
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci) {
+        ItemTooltipHandler.regItemTooltip(GuiScreen.class, () -> {
             val ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
             if (ing == null) return ObjectLists.emptyList();
             return KeyBindings.getTooltipList();

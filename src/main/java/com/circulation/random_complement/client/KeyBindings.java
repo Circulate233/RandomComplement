@@ -35,10 +35,6 @@ public enum KeyBindings {
         return KeyBindings.values()[id];
     }
 
-    public int getID() {
-        return this.ordinal();
-    }
-
     public static List<String> getTooltipList() {
         val outs = new String[values().length];
         for (int i = 0; i < values().length; i++) {
@@ -52,5 +48,9 @@ public enum KeyBindings {
         for (KeyBindings k : KeyBindings.values()) {
             ClientRegistry.registerKeyBinding(k.keyBinding);
         }
+    }
+
+    public int getID() {
+        return this.ordinal();
     }
 }

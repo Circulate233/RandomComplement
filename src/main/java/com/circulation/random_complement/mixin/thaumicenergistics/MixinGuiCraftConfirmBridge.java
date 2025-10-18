@@ -12,7 +12,7 @@ import thaumicenergistics.client.gui.crafting.GuiCraftConfirmBridge;
 
 import java.util.List;
 
-@Mixin(value = GuiCraftConfirmBridge.class,priority = 999)
+@Mixin(value = GuiCraftConfirmBridge.class, priority = 999)
 public abstract class MixinGuiCraftConfirmBridge extends MixinGuiCraftConfirm {
 
     @Unique

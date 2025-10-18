@@ -14,11 +14,11 @@ public interface SpecialLogic {
 
     void r$addAllList(Collection<IAEItemStack> list);
 
-    default ItemRepo r$getRepo(){
+    default ItemRepo r$getRepo() {
         return null;
     }
 
-    default boolean r$notMonitorable(){
+    default boolean r$notMonitorable() {
         return r$getRepo() == null;
     }
 }

@@ -17,16 +17,11 @@ import thaumicenergistics.client.gui.helpers.ThEItemSorters;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-@Mixin(value = MERepo.class,remap = false)
+@Mixin(value = MERepo.class, remap = false)
 public class MixinMERepo<T extends IAEStack<T>> {
 
     @Shadow
-    private static Comparator<IAEStack<?>> getComparator(SortOrder sortBy) {
-        return ThEItemSorters.CONFIG_BASED_SORT_BY_MOD;
-    }
-
-    @Shadow private ArrayList<T> view;
-
+    private ArrayList<T> view;
     @Unique
     private Comparator<IAEStack<?>> r$priorityComparator = (a, b) -> {
         boolean aPri = randomComplement$isPriorityItem(a);
@@ -34,12 +29,17 @@ public class MixinMERepo<T extends IAEStack<T>> {
         return Boolean.compare(bPri, aPri);
     };
 
-    @Redirect(method = "updateView",at = @At(value = "INVOKE", target = "Lthaumicenergistics/client/gui/helpers/MERepo;getComparator(Lappeng/api/config/SortOrder;)Ljava/util/Comparator;"))
+    @Shadow
+    private static Comparator<IAEStack<?>> getComparator(SortOrder sortBy) {
+        return ThEItemSorters.CONFIG_BASED_SORT_BY_MOD;
+    }
+
+    @Redirect(method = "updateView", at = @At(value = "INVOKE", target = "Lthaumicenergistics/client/gui/helpers/MERepo;getComparator(Lappeng/api/config/SortOrder;)Ljava/util/Comparator;"))
     public Comparator<IAEStack<?>> updateView(SortOrder c) {
-        if (this.view.isEmpty()){
+        if (this.view.isEmpty()) {
             return getComparator(c);
         }
-        if (this.view.get(0) instanceof IAEItemStack){
+        if (this.view.get(0) instanceof IAEItemStack) {
             return r$priorityComparator.thenComparing(getComparator(c));
         }
         return getComparator(c);

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
 
-@Mixin(value = FTBLibClientEventHandler.class,remap = false)
+@Mixin(value = FTBLibClientEventHandler.class, remap = false)
 public class MixinFTBLibClientEventHandler {
 
     @WrapOperation(method = "onGuiInit", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/event/GuiScreenEvent$InitGuiEvent$Post;getGui()Lnet/minecraft/client/gui/GuiScreen;"))

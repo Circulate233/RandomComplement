@@ -1,0 +1,20 @@
+{
+  "package": "com.circulation.random_complement.mixin.ae2.new_patten_gui",
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinContainerPatternEncoder",
+    "MixinContainerPatternTerm",
+    "MixinContainerWirelessPatternTerminal",
+    "MixinCraftingCPUCluster",
+    "MixinPartPatternTerminal",
+    "MixinPatternHelper"
+  ],
+  "server": [],
+  "client": [
+    "MixinGuiMEMonitorableTwo",
+    "MixinGuiPatternTerm"
+  ]
+}

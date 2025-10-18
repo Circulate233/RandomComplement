@@ -30,12 +30,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nonnull;
 
-@Mixin(value = PacketCraftRequest.class,remap = false)
+@Mixin(value = PacketCraftRequest.class, remap = false)
 public class MixinPacketCraftRequest {
 
     @Shadow
     @Final
     private boolean heldShift;
+
+    @Unique
+    @Optional.Method(modid = "baubles")
+    private static ItemStack r$readBaubles(EntityPlayer player, int slot) {
+        return BaublesApi.getBaublesHandler(player).getStackInSlot(slot);
+    }
 
     @Redirect(method = "serverPacketData", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;openGUI(Lnet/minecraft/entity/player/EntityPlayer;ILappeng/core/sync/GuiBridge;Z)V"))
     public void serverPacketData(@Nonnull EntityPlayer p, int slot, @Nonnull GuiBridge type, boolean isBauble) {
@@ -75,12 +81,6 @@ public class MixinPacketCraftRequest {
                 }
             }
         }
-    }
-
-    @Unique
-    @Optional.Method(modid = "baubles")
-    private static ItemStack r$readBaubles(EntityPlayer player, int slot) {
-        return BaublesApi.getBaublesHandler(player).getStackInSlot(slot);
     }
 
     @Redirect(method = "serverPacketData", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerCraftAmount;detectAndSendChanges()V"))

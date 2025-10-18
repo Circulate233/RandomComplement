@@ -15,27 +15,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = GuiCraftingStatus.class, remap = false)
 public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
 
+    @Unique
+    private static int randomComplement$processBarStartColorInt = GuiColors.ProcessBarStartColor.getColor();
+    @Unique
+    private static final int[] PROCESS_BAR_START_COLOR_INT_ARR = new int[]{(randomComplement$processBarStartColorInt >> 24) & 0xFF, (randomComplement$processBarStartColorInt >> 16) & 0xFF, (randomComplement$processBarStartColorInt >> 8) & 0xFF, randomComplement$processBarStartColorInt & 0xFF};
+    @Unique
+    private static int randomComplement$processBarMiddleColorInt = GuiColors.ProcessBarMiddleColor.getColor();
+    @Unique
+    private static final int[] PROCESS_BAR_MIDDLE_COLOR_INT_ARR = new int[]{(randomComplement$processBarMiddleColorInt >> 24) & 0xFF, (randomComplement$processBarMiddleColorInt >> 16) & 0xFF, (randomComplement$processBarMiddleColorInt >> 8) & 0xFF, randomComplement$processBarMiddleColorInt & 0xFF};
+    @Unique
+    private static int randomComplement$processBarEndColorInt = GuiColors.ProcessBarEndColor.getColor();
+    @Unique
+    private static final int[] PROCESS_BAR_END_COLOR_INT_ARR = new int[]{(randomComplement$processBarEndColorInt >> 24) & 0xFF, (randomComplement$processBarEndColorInt >> 16) & 0xFF, (randomComplement$processBarEndColorInt >> 8) & 0xFF, randomComplement$processBarEndColorInt & 0xFF};
+
     public MixinGuiCraftingStatus(InventoryPlayer inventoryPlayer, Object te) {
         super(inventoryPlayer, te);
     }
-
-    @Unique
-    private static int randomComplement$processBarStartColorInt = GuiColors.ProcessBarStartColor.getColor();
-
-    @Unique
-    private static final int[] PROCESS_BAR_START_COLOR_INT_ARR = new int[]{(randomComplement$processBarStartColorInt >> 24) & 0xFF, (randomComplement$processBarStartColorInt >> 16) & 0xFF, (randomComplement$processBarStartColorInt >> 8) & 0xFF, randomComplement$processBarStartColorInt & 0xFF};
-
-    @Unique
-    private static int randomComplement$processBarMiddleColorInt = GuiColors.ProcessBarMiddleColor.getColor();
-
-    @Unique
-    private static final int[] PROCESS_BAR_MIDDLE_COLOR_INT_ARR = new int[]{(randomComplement$processBarMiddleColorInt >> 24) & 0xFF, (randomComplement$processBarMiddleColorInt >> 16) & 0xFF, (randomComplement$processBarMiddleColorInt >> 8) & 0xFF, randomComplement$processBarMiddleColorInt & 0xFF};
-
-    @Unique
-    private static int randomComplement$processBarEndColorInt = GuiColors.ProcessBarEndColor.getColor();
-
-    @Unique
-    private static final int[] PROCESS_BAR_END_COLOR_INT_ARR = new int[]{(randomComplement$processBarEndColorInt >> 24) & 0xFF, (randomComplement$processBarEndColorInt >> 16) & 0xFF, (randomComplement$processBarEndColorInt >> 8) & 0xFF, randomComplement$processBarEndColorInt & 0xFF};
 
     @Unique
     private int randomComplement$calculateGradientColor(double percentage) {
@@ -64,7 +59,7 @@ public abstract class MixinGuiCraftingStatus extends GuiCraftingCPU {
      *
      * <a href="https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/698">代码来自GTNH团队的AE2U。</a>
      */
-    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V",ordinal = 2,shift = At.Shift.AFTER))
+    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", ordinal = 2, shift = At.Shift.AFTER))
     private void draw(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(name = "cpu") CraftingCPUStatus cpu, @Local(name = "x") int x, @Local(name = "y") int y) {
         if (cpu != null) {
             double craftingPercentage = (double) (cpu.getTotalItems() - Math.max(cpu.getRemainingItems(), 0)) / (double) cpu.getTotalItems();

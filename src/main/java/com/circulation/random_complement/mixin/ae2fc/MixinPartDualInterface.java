@@ -7,7 +7,7 @@ import com.glodblock.github.common.part.PartDualInterface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(value = PartDualInterface.class,remap = false)
+@Mixin(value = PartDualInterface.class, remap = false)
 public abstract class MixinPartDualInterface implements RCIConfigurableObject {
     @Shadow
     public abstract DualityInterface getInterfaceDuality();

@@ -13,19 +13,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = GuiFCCraftConfirm.class,priority = 999)
+@Mixin(value = GuiFCCraftConfirm.class, priority = 999)
 public abstract class MixinGuiFCCraftConfirm extends MixinGuiCraftConfirm {
 
     @Shadow(remap = false)
     private GuiButton cancel;
 
+    public MixinGuiFCCraftConfirm(Container container) {
+        super(container);
+    }
+
     @Override
     protected GuiButton r$getCancel() {
         return this.cancel;
-    }
-
-    public MixinGuiFCCraftConfirm(Container container) {
-        super(container);
     }
 
     @Intrinsic

@@ -18,7 +18,7 @@ public class RCConfigManager implements RCIConfigManager {
     private final RCIConfigManagerHost target;
     private final Map<RCSettings, Enum<?>> oldSettings = new EnumMap<>(RCSettings.class);
 
-    public RCConfigManager(RCIConfigManagerHost tile){
+    public RCConfigManager(RCIConfigManagerHost tile) {
         this.target = tile;
     }
 
@@ -57,14 +57,14 @@ public class RCConfigManager implements RCIConfigManager {
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
-        for(Map.Entry<RCSettings, Enum<?>> entry : this.settings.entrySet()) {
+        for (Map.Entry<RCSettings, Enum<?>> entry : this.settings.entrySet()) {
             tagCompound.setString(entry.getKey().name(), this.settings.get(entry.getKey()).toString());
         }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
-        for(Map.Entry<RCSettings, Enum<?>> entry : this.settings.entrySet()) {
+        for (Map.Entry<RCSettings, Enum<?>> entry : this.settings.entrySet()) {
             try {
                 if (tagCompound.hasKey(entry.getKey().name())) {
                     String value = tagCompound.getString(entry.getKey().name());

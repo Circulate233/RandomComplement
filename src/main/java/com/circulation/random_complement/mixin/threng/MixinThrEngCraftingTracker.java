@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-@Mixin(value = ThrEngCraftingTracker.class,remap = false)
+@Mixin(value = ThrEngCraftingTracker.class, remap = false)
 public abstract class MixinThrEngCraftingTracker {
 
     @Final
@@ -42,8 +42,8 @@ public abstract class MixinThrEngCraftingTracker {
     @Shadow
     public abstract boolean isSlotOpen(int slot);
 
-    @Inject(method = "requestCrafting",at = @At("HEAD"), cancellable = true)
-    public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir){
+    @Inject(method = "requestCrafting", at = @At("HEAD"), cancellable = true)
+    public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir) {
         if (item != null) {
             ItemStack inputStack = item.getCachedItemStack(item.getStackSize());
             ItemStack remaining = ItemStack.EMPTY;
@@ -73,7 +73,7 @@ public abstract class MixinThrEngCraftingTracker {
                         this.jobs[slot] = null;
                         if (link != null) {
                             this.randomComplement$setLink(slot, link);
-                            this.linksInv.put(link,slot);
+                            this.linksInv.put(link, slot);
                             cir.setReturnValue(true);
                             return;
                         }
@@ -92,7 +92,7 @@ public abstract class MixinThrEngCraftingTracker {
         this.links[slot] = l;
         boolean hasStuff = false;
 
-        for(int x = 0; x < links.length; ++x) {
+        for (int x = 0; x < links.length; ++x) {
             ICraftingLink g = links[x];
             if (g != null && !g.isCanceled() && !g.isDone()) {
                 hasStuff = true;
@@ -102,7 +102,7 @@ public abstract class MixinThrEngCraftingTracker {
         }
     }
 
-    @Inject(method = "isSlotOpen",at = @At("HEAD"))
+    @Inject(method = "isSlotOpen", at = @At("HEAD"))
     public void isSlotOpenMixin(int i, CallbackInfoReturnable<Boolean> cir) {
         if (this.links[i] != null && (this.links[i].isCanceled() || this.links[i].isDone())) {
             this.linksInv.remove(this.links[i]);
@@ -114,8 +114,8 @@ public abstract class MixinThrEngCraftingTracker {
      * @author circulation
      * @reason 和见鬼毫无区别的导致崩溃
      */
-    @Inject(method = "updateLinks",at = @At("HEAD"), cancellable = true)
-    private void updateLinks(CallbackInfo ci){
+    @Inject(method = "updateLinks", at = @At("HEAD"), cancellable = true)
+    private void updateLinks(CallbackInfo ci) {
         ci.cancel();
         //这东西究竟是怎么无限循环的？？？
     }
