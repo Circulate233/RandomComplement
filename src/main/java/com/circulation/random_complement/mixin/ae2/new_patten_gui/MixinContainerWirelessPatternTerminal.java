@@ -31,10 +31,7 @@ public abstract class MixinContainerWirelessPatternTerminal extends MixinContain
     public AppEngInternalInventory newCrafting(IAEAppEngInventory inventory, int size) {
         return new AppEngInternalInventory(inventory, 81) {
             @Override
-            public void setSize(int size) {
-                if (size < getSlots()) return;
-                super.setSize(size);
-            }
+            public void setSize(int size) {}
         };
     }
 
@@ -42,10 +39,7 @@ public abstract class MixinContainerWirelessPatternTerminal extends MixinContain
     public AppEngInternalInventory newOutput(IAEAppEngInventory inventory, int size) {
         return new AppEngInternalInventory(inventory, 27) {
             @Override
-            public void setSize(int size) {
-                if (size < getSlots()) return;
-                super.setSize(size);
-            }
+            public void setSize(int size) {}
         };
     }
 
