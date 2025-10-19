@@ -86,6 +86,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
+        if (slot.xPos < 0 || slot.yPos < 0) return;
         if (Minecraft.getMinecraft().currentScreen instanceof SpecialLogic patternTerm) {
             if (patternTerm.r$notMonitorable()) return;
             if (slot instanceof SlotFake slotFake) {

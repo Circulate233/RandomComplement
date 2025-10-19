@@ -15,28 +15,41 @@ import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = ContainerWirelessPatternTerminal.class, remap = false)
+@Mixin(ContainerWirelessPatternTerminal.class)
 public abstract class MixinContainerWirelessPatternTerminal extends MixinContainerPatternEncoder {
 
-    @Shadow
+    @Shadow(remap = false)
     protected AppEngInternalInventory output;
 
     public MixinContainerWirelessPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 0))
-    public AppEngInternalInventory newCrafting(IAEAppEngInventory inventory, int size, Operation<AppEngInternalInventory> original) {
-        return original.call(inventory, 81);
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 0, remap = false))
+    public AppEngInternalInventory newCrafting(IAEAppEngInventory inventory, int size) {
+        return new AppEngInternalInventory(inventory, 81) {
+            @Override
+            public void setSize(int size) {
+                if (size < getSlots()) return;
+                super.setSize(size);
+            }
+        };
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 1))
-    public AppEngInternalInventory newOutput(IAEAppEngInventory inventory, int size, Operation<AppEngInternalInventory> original) {
-        return original.call(inventory, 27);
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 1, remap = false))
+    public AppEngInternalInventory newOutput(IAEAppEngInventory inventory, int size) {
+        return new AppEngInternalInventory(inventory, 27) {
+            @Override
+            public void setSize(int size) {
+                if (size < getSlots()) return;
+                super.setSize(size);
+            }
+        };
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerWirelessPatternTerminal;addSlotToContainer(Lnet/minecraft/inventory/Slot;)Lnet/minecraft/inventory/Slot;", remap = true))
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerWirelessPatternTerminal;addSlotToContainer(Lnet/minecraft/inventory/Slot;)Lnet/minecraft/inventory/Slot;"))
     public Slot redirectAddSlot(ContainerWirelessPatternTerminal instance, Slot slot, Operation<Slot> original) {
         if (slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) {
             return null;
@@ -44,7 +57,7 @@ public abstract class MixinContainerWirelessPatternTerminal extends MixinContain
         return original.call(instance, slot);
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/slot/SlotRestrictedInput;setStackLimit(I)Lnet/minecraft/inventory/Slot;"))
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/slot/SlotRestrictedInput;setStackLimit(I)Lnet/minecraft/inventory/Slot;", remap = false))
     public Slot onInit(SlotRestrictedInput instance, int size, Operation<Slot> original) {
         this.craftingSlots = new SlotFakeCraftingMatrix[81];
         this.outputSlots = new OptionalSlotFake[27];

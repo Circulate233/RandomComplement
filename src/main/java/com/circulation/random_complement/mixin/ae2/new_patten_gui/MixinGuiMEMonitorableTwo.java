@@ -26,6 +26,7 @@ import java.util.List;
 public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISortSource {
 
     @Unique
+    @NotNull
     private final List<RCGuiScrollbar> r$guiScrollbars = new ObjectArrayList<>();
     @Mutable
     @Shadow(remap = false)

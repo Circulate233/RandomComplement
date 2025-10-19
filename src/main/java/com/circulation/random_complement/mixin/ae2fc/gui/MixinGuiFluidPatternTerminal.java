@@ -61,6 +61,7 @@ public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable
 
     @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Slot;getStack()Lnet/minecraft/item/ItemStack;", ordinal = 0))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
+        if (slot.xPos < 0 || slot.yPos < 0) return;
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();

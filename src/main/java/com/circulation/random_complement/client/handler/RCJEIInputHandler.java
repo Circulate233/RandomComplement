@@ -28,6 +28,7 @@ public class RCJEIInputHandler {
     private static Runnable shiftClickCache;
     @Getter
     private static XYPair xy;
+
     private RCJEIInputHandler() {
 
     }

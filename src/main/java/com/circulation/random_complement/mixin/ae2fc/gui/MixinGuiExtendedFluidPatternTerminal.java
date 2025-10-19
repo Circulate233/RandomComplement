@@ -61,6 +61,7 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
 
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
+        if (slot.xPos < 0 || slot.yPos < 0) return;
         if (slot instanceof SlotFake slotFake) {
             var item = slotFake.getDisplayStack();
             if (!item.isEmpty()) {
