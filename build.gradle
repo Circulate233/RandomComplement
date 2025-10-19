@@ -4,7 +4,6 @@
 //file:noinspection SpellCheckingInspection
 import com.gtnewhorizons.retrofuturagradle.mcp.InjectTagsTask
 import org.jetbrains.changelog.Changelog
-import org.jetbrains.gradle.ext.Gradle
 
 plugins {
     id 'java'
@@ -213,7 +212,7 @@ dependencies {
     implementation(rfg.deobf("curse.maven:ae2-extended-life-570458:6302098"))
     implementation(rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5504001"))
     implementation(rfg.deobf("curse.maven:baubles-227083:2518667"))
-    compileOnly(rfg.deobf("curse.maven:not-enough-energistics-515565:5234732"))
+    implementation(rfg.deobf("curse.maven:not-enough-energistics-515565:5234732"))
     implementation(rfg.deobf("curse.maven:extended-crafting-nomifactory-edition-398267:5778512"))
     implementation(rfg.deobf("curse.maven:libnine-322344:3509087"))
     implementation(rfg.deobf("curse.maven:lazy-ae2-322347:3254160"))

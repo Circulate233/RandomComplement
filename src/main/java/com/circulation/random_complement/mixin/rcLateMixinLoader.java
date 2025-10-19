@@ -29,12 +29,16 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
-            addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json", () -> RCConfig.AE2.newPattenGui);
-            addMixinCFG("mixins.random_complement.ae2fc.new_patten_gui.json", () -> modLoaded("ae2fc") && RCConfig.AE2.newPattenGui);
+            addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json",
+                    () -> RCConfig.AE2.newPattenGui);
+            addMixinCFG("mixins.random_complement.ae2fc.new_patten_gui.json",
+                    () -> modLoaded("ae2fc") && RCConfig.AE2.newPattenGui);
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
             addModdedMixinCFG("mixins.random_complement.nae2.json", "nae2");
             if (modLoaded("neenergistics")) {
+                addMixinCFG("mixins.random_complement.nee.new_patten_gui.json",
+                        () -> RCConfig.AE2.newPattenGui);
                 addMixinCFG("mixins.random_complement.nee.json");
                 addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
                 addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
