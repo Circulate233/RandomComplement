@@ -15,24 +15,21 @@ public class RCGuiScrollbar extends GuiScrollbar {
     private final Rectangle rectangle = new Rectangle(getLeft(), getTop(), getWidth(), getHeight());
     @Getter
     private boolean visible = true;
-
-    public void setVisible(boolean visible) {
-        if (this.visible != visible) {
-            this.visible = visible;
-            rcScrollbarGui.onCurrentScrollChance(getCurrentScroll());
-        }
-    }
-
     @Setter
     private RCScrollbarGui rcScrollbarGui;
-
     @Setter
     private int leftEx = 0;
     @Setter
     private int widthEx = 0;
-
     @Setter
     private Runnable drawBG;
+
+    public void setVisible(boolean visible) {
+        if (this.visible != visible) {
+            this.visible = visible;
+            if (rcScrollbarGui != null) rcScrollbarGui.onCurrentScrollChance(getCurrentScroll());
+        }
+    }
 
     public void drawBG() {
         if (drawBG != null) {

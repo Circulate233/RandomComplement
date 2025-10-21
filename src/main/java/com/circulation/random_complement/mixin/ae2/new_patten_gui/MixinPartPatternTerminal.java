@@ -14,7 +14,8 @@ public class MixinPartPatternTerminal {
     public AppEngInternalInventory newCrafting(IAEAppEngInventory inventory, int size) {
         return new AppEngInternalInventory(inventory, 81) {
             @Override
-            public void setSize(int size) {}
+            public void setSize(int size) {
+            }
         };
     }
 
@@ -22,7 +23,8 @@ public class MixinPartPatternTerminal {
     public AppEngInternalInventory newOutput(IAEAppEngInventory inventory, int size) {
         return new AppEngInternalInventory(inventory, 27) {
             @Override
-            public void setSize(int size) {}
+            public void setSize(int size) {
+            }
         };
     }
 }

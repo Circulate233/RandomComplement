@@ -6,8 +6,5 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinPartFluidPatternTerminal"
-  ],
-  "client": [
-    "MixinGuiFluidPatternTerminal"
   ]
 }
