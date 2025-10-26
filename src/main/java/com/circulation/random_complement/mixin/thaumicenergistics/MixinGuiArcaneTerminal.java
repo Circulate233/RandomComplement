@@ -106,7 +106,7 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
                         : (randomComplement$textureIndex - 3) * 18;
 
                 this.drawTexturedModalRect(
-                        this.getGuiLeft() + 8,
+                        this.getGuiLeft() + 7,
                         this.getGuiTop() + 17 + 18 * i,
                         0,
                         yOffset,
