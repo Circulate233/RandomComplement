@@ -11,7 +11,7 @@ public class RCSlotFakeCraftingMatrix extends SlotFakeCraftingMatrix {
         super(inv, idx, x, y);
     }
 
-    public boolean isSlotEnabled() {
+    public boolean shouldDisplay() {
         return visible;
     }
 }

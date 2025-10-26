@@ -2,7 +2,7 @@ package com.circulation.random_complement.mixin.ae2fc.container;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerExpandedProcessingPatternTerm;
-import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.util.MEHandler;
 import com.glodblock.github.client.container.ContainerExtendedFluidPatternTerminal;
 import com.glodblock.github.interfaces.PatternConsumer;
 import net.minecraft.entity.player.InventoryPlayer;

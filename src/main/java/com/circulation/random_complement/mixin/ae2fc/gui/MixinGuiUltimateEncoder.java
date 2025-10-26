@@ -5,11 +5,11 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.container.slot.SlotFake;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.RCGuiButton;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
-import com.circulation.random_complement.common.interfaces.SpecialLogic;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
@@ -21,6 +21,7 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
@@ -41,7 +42,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiUltimateEncoder.class, remap = false)
-public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements SpecialLogic {
+public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements RCAECraftablesGui {
 
     @Unique
     public Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
@@ -100,6 +101,11 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
     }
 
     @Unique
+    public Set<IAEItemStack> r$getCraftablesCache() {
+        return this.randomComplement$craftableCache;
+    }
+
+    @Unique
     @Optional.Method(modid = "mekeng")
     private void randomComplement$mekengDrawSlot(ItemStack item, Slot slot) {
         if (item.getItem() instanceof ItemGasPacket) {
@@ -112,20 +118,19 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
 
     @Unique
     @Override
-    public Set<IAEItemStack> r$getList() {
-        return randomComplement$craftableCache;
+    public Set<IAEItemStack> r$getCpuCache() {
+        return ObjectSets.emptySet();
     }
 
     @Unique
     @Override
-    public void r$setList(Collection<IAEItemStack> list) {
-        randomComplement$craftableCache.clear();
-        randomComplement$craftableCache.addAll(list);
+    public void r$addCpuCache(Collection<IAEItemStack> list) {
+
     }
 
     @Unique
     @Override
-    public void r$addAllList(Collection<IAEItemStack> list) {
+    public void r$addCraftablesCache(Collection<IAEItemStack> list) {
         randomComplement$craftableCache.addAll(list);
     }
 }

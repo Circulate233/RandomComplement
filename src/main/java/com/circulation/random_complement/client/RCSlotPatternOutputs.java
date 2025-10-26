@@ -12,14 +12,7 @@ public class RCSlotPatternOutputs extends SlotPatternOutputs {
         super(inv, containerBus, idx, x, y, offX, offY, groupNum);
     }
 
-    public boolean isSlotEnabled() {
-        return visible;
-    }
-
     public boolean shouldDisplay() {
-        if (super.isSlotEnabled()) {
-            return visible;
-        }
-        return false;
+        return visible;
     }
 }

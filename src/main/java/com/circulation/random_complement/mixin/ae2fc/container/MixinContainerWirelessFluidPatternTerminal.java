@@ -4,7 +4,7 @@ import appeng.api.implementations.IUpgradeableCellContainer;
 import appeng.container.implementations.ContainerWirelessPatternTerminal;
 import appeng.container.interfaces.IInventorySlotAware;
 import appeng.helpers.WirelessTerminalGuiObject;
-import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.util.MEHandler;
 import com.glodblock.github.client.container.ContainerWirelessFluidPatternTerminal;
 import com.glodblock.github.interfaces.PatternConsumer;
 import net.minecraft.entity.player.InventoryPlayer;

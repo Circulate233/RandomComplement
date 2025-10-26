@@ -1,4 +1,4 @@
-package com.circulation.random_complement.common.handler;
+package com.circulation.random_complement.common.util;
 
 import appeng.api.AEApi;
 import appeng.api.features.ILocatable;
@@ -16,9 +16,15 @@ import baubles.api.BaublesApi;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.item.ItemGasPacket;
+import com.glodblock.github.common.item.fake.FakeFluids;
+import com.glodblock.github.common.item.fake.FakeItemRegister;
+import com.glodblock.github.integration.mek.FakeGases;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import mekanism.api.gas.GasStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,6 +36,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +52,8 @@ public class MEHandler {
     @Getter
     private static final Set<IAEItemStack> craftableCacheS = new ObjectOpenHashSet<>();
     private static final Map<Integer, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
+    public static final boolean loadAE2FC = Loader.isModLoaded("ae2fc");
+    public static final boolean loadMEKEng = Loader.isModLoaded("mekeng");
 
     static {
         textures.put(0, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
@@ -58,35 +67,25 @@ public class MEHandler {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void drawSlotPluses(List<Slot> slots) {
-        RenderHelper.disableStandardItemLighting();
+    public static void drawXYPluses(List<XYPair> slots) {
+        drawPlusesPre();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         for (var slot : slots) {
-            int x = slot.xPos;
-            int y = slot.yPos;
-            float startX = x + 0.5f;
-            float startY = y + 0.25f;
-            float endX = startX + 3f;
-            float endY = startY + 3f;
-
-            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-            buffer.pos(startX, startY + 1.5f, 0).endVertex();
-            buffer.pos(endX, startY + 1.5f, 0).endVertex();
-            buffer.pos(startX + 1.5f, startY, 0).endVertex();
-            buffer.pos(startX + 1.5f, endY, 0).endVertex();
-            tessellator.draw();
+            drawPluses(slot.x(), slot.y(), tessellator, buffer);
         }
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
-        RenderHelper.enableGUIStandardItemLighting();
-        slots.clear();
+        drawPlusesPost();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawSlotPluses(List<Slot> slots) {
+        drawPlusesPre();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        for (var slot : slots) {
+            drawPluses(slot.xPos, slot.yPos, tessellator, buffer);
+        }
+        drawPlusesPost();
     }
 
     /*
@@ -193,5 +192,74 @@ public class MEHandler {
     @SideOnly(Side.CLIENT)
     public static void bindTexture(Minecraft mc, int craftingSlotTextureIndex) {
         mc.getTextureManager().bindTexture(textures.get(craftingSlotTextureIndex));
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public static IAEItemStack packItem(Object obj) {
+        if (obj instanceof ItemStack i) {
+            if (loadAE2FC && i.getItem() instanceof ItemFluidPacket) {
+                return AEItemStack.fromItemStack(FakeFluids.packFluid2Drops(FakeItemRegister.getStack(i)));
+            } else if (loadMEKEng && i.getItem() instanceof ItemGasPacket) {
+                return AEItemStack.fromItemStack(FakeGases.packGas2Drops(FakeItemRegister.getStack(i)));
+            } else {
+                return AEItemStack.fromItemStack(i);
+            }
+        } else if (loadAE2FC) {
+            return packAE2FCItem(obj);
+        }
+        return null;
+    }
+
+    @Optional.Method(modid = "ae2fc")
+    private static IAEItemStack packAE2FCItem(Object obj) {
+        if (obj instanceof FluidStack i) {
+            return FakeFluids.packFluid2AEDrops(i);
+        } else if (loadMEKEng) {
+            return packMEKEngItem(obj);
+        }
+        return null;
+    }
+
+    @Optional.Method(modid = "mekeng")
+    private static IAEItemStack packMEKEngItem(Object obj) {
+        if (obj instanceof GasStack i) {
+            return FakeGases.packGas2AEDrops(i);
+        }
+        return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static void drawPlusesPre() {
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1, 1, 0, 1);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static void drawPluses(int x, int y, Tessellator tessellator, BufferBuilder buffer) {
+        float startX = x + 0.5f;
+        float startY = y + 0.25f;
+        float endX = startX + 3f;
+        float endY = startY + 3f;
+        float z = 1000;
+
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        buffer.pos(startX, startY + 1.5f, z).endVertex();
+        buffer.pos(endX, startY + 1.5f, z).endVertex();
+        buffer.pos(startX + 1.5f, startY, z).endVertex();
+        buffer.pos(startX + 1.5f, endY, z).endVertex();
+        tessellator.draw();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static void drawPlusesPost() {
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+        RenderHelper.enableGUIStandardItemLighting();
     }
 }

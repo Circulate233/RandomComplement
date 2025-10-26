@@ -4,12 +4,12 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import appeng.util.item.AEItemStack;
+import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.handler.RCInputHandler;
-import com.circulation.random_complement.common.handler.MEHandler;
-import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
@@ -27,28 +27,25 @@ import thaumicenergistics.container.slot.SlotGhost;
 import thaumicenergistics.container.slot.SlotME;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static com.circulation.random_complement.RCConfig.AE2;
 
 @Mixin(GuiArcaneTerminal.class)
-public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements SpecialLogic {
+public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements RCAECraftablesGui {
 
     @Unique
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;
 
     @Unique
-    private Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
-
-    @Unique
-    private Set<IAEItemStack> randomComplement$cpuCache;
+    private Set<IAEItemStack> randomComplement$cpuCache = new ObjectOpenHashSet<>();
 
     @Unique
     private Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
+
+    @Unique
+    private Set<IAEItemStack> randomComplement$craftableCache;
 
     public MixinGuiArcaneTerminal(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -56,25 +53,37 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
 
     @Unique
     private Set<IAEItemStack> randomComplement$getStorage() {
-        IItemList<IAEItemStack> all = ((AccessorMERepo<IAEItemStack>) this.getRepo()).getList();
-        return all == null ? Collections.emptySet() : StreamSupport.stream(all.spliterator(), false).collect(Collectors.toCollection(ObjectOpenHashSet::new));
+        var repo = ((AccessorMERepo<IAEItemStack>) this.getRepo());
+        if (repo == null) {
+            return ObjectSets.emptySet();
+        } else {
+            IItemList<IAEItemStack> list = repo.getList();
+            if (list.isEmpty()) return ObjectSets.emptySet();
+            var out = new ObjectOpenHashSet<IAEItemStack>();
+            for (var stack : list) {
+                out.add(stack);
+            }
+            return out;
+        }
     }
 
     @Unique
-    private Set<IAEItemStack> randomComplement$getCraftables() {
-        if (randomComplement$cpuCache == null) {
-            randomComplement$cpuCache = this.randomComplement$getStorage()
-                    .stream()
+    @Override
+    public Set<IAEItemStack> r$getCraftablesCache() {
+        if (randomComplement$craftableCache.isEmpty()) {
+            var s = this.randomComplement$getStorage();
+            if (s.isEmpty()) return ObjectSets.emptySet();
+            s.stream()
                     .filter(IAEStack::isCraftable)
-                    .collect(Collectors.toCollection(ObjectOpenHashSet::new));
+                    .forEach(randomComplement$craftableCache::add);
         }
 
-        return randomComplement$cpuCache;
+        return randomComplement$craftableCache;
     }
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At("TAIL"))
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
-        var items = this.r$getList();
+        var items = this.r$getCpuCache();
         if (!items.isEmpty()) {
             List<SlotME<?>> slots = new ObjectArrayList<>();
             for (Slot slot : this.inventorySlots.inventorySlots) {
@@ -119,7 +128,7 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
         if (slot instanceof SlotGhost slotG) {
             var aeStack = slotG.getStack();
             if (!aeStack.isEmpty()) {
-                if (randomComplement$getCraftables().contains(AEItemStack.fromItemStack(aeStack))) {
+                if (r$getCraftablesCache().contains(MEHandler.packItem(aeStack))) {
                     r$getPlusSlot().add(slotG);
                 }
             }
@@ -128,10 +137,10 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
 
     @Unique
     @Override
-    public Set<IAEItemStack> r$getList() {
+    public Set<IAEItemStack> r$getCpuCache() {
         if (randomComplement$mergedCache.isEmpty()) {
             randomComplement$mergedCache.addAll(MEHandler.getCraftableCacheS());
-            randomComplement$mergedCache.addAll(randomComplement$craftableCache);
+            randomComplement$mergedCache.addAll(randomComplement$cpuCache);
             MEHandler.getCraftableCacheS().clear();
         }
         return randomComplement$mergedCache;
@@ -139,15 +148,8 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
 
     @Unique
     @Override
-    public void r$setList(Collection<IAEItemStack> list) {
-        randomComplement$craftableCache.clear();
-        randomComplement$craftableCache.addAll(list);
-    }
-
-    @Unique
-    @Override
-    public void r$addAllList(Collection<IAEItemStack> list) {
-        randomComplement$craftableCache.addAll(list);
+    public void r$addCpuCache(Collection<IAEItemStack> list) {
+        randomComplement$cpuCache.addAll(list);
     }
 
     @Mixin(value = MERepo.class, remap = false)

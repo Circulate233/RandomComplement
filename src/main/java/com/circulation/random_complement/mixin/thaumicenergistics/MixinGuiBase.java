@@ -1,6 +1,6 @@
 package com.circulation.random_complement.mixin.thaumicenergistics;
 
-import com.circulation.random_complement.common.handler.MEHandler;
+import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,8 +31,9 @@ public abstract class MixinGuiBase extends GuiContainer {
 
     @Inject(method = "renderHoveredToolTip", at = @At("HEAD"))
     public void drawPlusSlot(int mouseX, int mouseY, CallbackInfo ci) {
-        GlStateManager.translate(this.guiLeft, this.guiTop, 250);
+        GlStateManager.translate(this.guiLeft, this.guiTop, 0);
         MEHandler.drawSlotPluses(r$getPlusSlot());
-        GlStateManager.translate(-this.guiLeft, -this.guiTop, -250);
+        r$getPlusSlot().clear();
+        GlStateManager.translate(-this.guiLeft, -this.guiTop, 0);
     }
 }

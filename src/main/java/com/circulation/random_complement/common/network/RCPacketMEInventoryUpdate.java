@@ -5,14 +5,13 @@ import appeng.core.AELog;
 import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
 import appeng.util.item.AEItemStack;
-import com.circulation.random_complement.common.handler.MEHandler;
-import com.circulation.random_complement.common.interfaces.SpecialLogic;
+import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.common.util.MEHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
@@ -144,9 +143,8 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
         if (id != 0) {
             switch (id) {
                 case 1 -> {
-                    GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-                    if (screen instanceof SpecialLogic gui) {
-                        gui.r$setList(this.list);
+                    if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                        gui.r$addCpuCache(this.list);
                     }
                 }
                 case 2 -> MEHandler.getCraftableCacheS().addAll(this.list);
@@ -160,9 +158,8 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     public void ae2fcClientPacketData() {
         switch (id) {
             case 3 -> {
-                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-                if (screen instanceof SpecialLogic gui) {
-                    gui.r$addAllList(this.list);
+                if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                    gui.r$addCraftablesCache(this.list);
                 }
             }
         }
@@ -172,9 +169,8 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     public void tcClientPacketData() {
         switch (id) {
             case 4 -> {
-                GuiScreen guiS = Minecraft.getMinecraft().currentScreen;
-                if (guiS instanceof SpecialLogic gui) {
-                    gui.r$addAllList(this.list);
+                if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                    gui.r$addCpuCache(this.list);
                 }
             }
             case 5 -> MEHandler.getCraftableCacheS().addAll(this.list);
