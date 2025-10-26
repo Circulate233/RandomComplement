@@ -6,6 +6,8 @@ import appeng.container.slot.OptionalSlotFake;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.container.slot.SlotPatternOutputs;
 import appeng.container.slot.SlotRestrictedInput;
+import com.circulation.random_complement.client.RCSlotFakeCraftingMatrix;
+import com.circulation.random_complement.client.RCSlotPatternOutputs;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -25,20 +27,20 @@ public abstract class MixinContainerPatternTerm extends MixinContainerPatternEnc
         this.craftingSlots = new SlotFakeCraftingMatrix[81];
         this.outputSlots = new OptionalSlotFake[27];
         var output = this.getPart().getInventoryByName("output");
-        this.r$craftingSlotGroup = new SlotFakeCraftingMatrix[9][];
-        this.r$outputSlotGroup = new OptionalSlotFake[9][];
+        this.r$craftingSlotGroup = new RCSlotFakeCraftingMatrix[9][];
+        this.r$outputSlotGroup = new RCSlotPatternOutputs[9][];
 
         for (int i = 0; i < 9; i++) {
-            var inputGroup = new SlotFakeCraftingMatrix[9];
-            var outGroup = new OptionalSlotFake[3];
+            var inputGroup = new RCSlotFakeCraftingMatrix[9];
+            var outGroup = new RCSlotPatternOutputs[3];
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 3; ++x) {
                     final int c = i * inputGroup.length + x + y * 3;
-                    this.addSlotToContainer(inputGroup[x + y * 3] = (this.craftingSlots[c] = new SlotFakeCraftingMatrix(this.crafting, c, 18 + x * 18, -76 + y * 18)));
+                    this.addSlotToContainer(this.craftingSlots[c] = (inputGroup[x + y * 3] = new RCSlotFakeCraftingMatrix(this.crafting, c, 18 + x * 18, -76 + y * 18)));
                 }
 
                 final int o = i * outGroup.length + y;
-                this.addSlotToContainer(outGroup[y] = (this.outputSlots[o] = new SlotPatternOutputs(output, this, o, 110, -76 + y * 18, 0, 0, 1)));
+                this.addSlotToContainer(this.outputSlots[o] = (outGroup[y] = new RCSlotPatternOutputs(output, this, o, 110, -76 + y * 18, 0, 0, 1)));
                 outGroup[y].setRenderDisabled(false);
                 outGroup[y].setIIcon(-1);
             }

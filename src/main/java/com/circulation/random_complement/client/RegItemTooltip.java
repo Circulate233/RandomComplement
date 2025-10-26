@@ -26,7 +26,7 @@ public class RegItemTooltip {
     @Optional.Method(modid = "ae2fc")
     private static void regAE2FCTooltips() {
         ItemTooltipAdd t = () -> {
-            if (((AEBaseGui) Minecraft.getMinecraft().currentScreen).hoveredSlot instanceof SlotFake) {
+            if (((AEBaseGui) Minecraft.getMinecraft().currentScreen).getSlotUnderMouse() instanceof SlotFake) {
                 return ObjectLists.singleton(I18n.format("key.ae2fc.pattern.tooltip.0", GameSettings.getKeyDisplayString(-98)));
             }
             return ObjectLists.emptyList();

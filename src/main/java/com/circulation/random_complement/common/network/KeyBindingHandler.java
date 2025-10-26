@@ -201,7 +201,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             IGrid grid = gridNode.getGrid();
             if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
 
-                RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
+                RCCraftingGridCache cgc = grid.getCache(ICraftingGrid.class);
                 IAEItemStack aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
                 boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
 

@@ -8,6 +8,8 @@ import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.OptionalSlotFake;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.parts.reporting.AbstractPartEncoder;
+import com.circulation.random_complement.client.RCSlotFakeCraftingMatrix;
+import com.circulation.random_complement.client.RCSlotPatternOutputs;
 import com.circulation.random_complement.common.interfaces.RCPatternEncoder;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.items.IItemHandler;
@@ -33,10 +35,10 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
     protected IItemHandler crafting;
 
     @Unique
-    protected SlotFakeCraftingMatrix[][] r$craftingSlotGroup;
+    protected RCSlotFakeCraftingMatrix[][] r$craftingSlotGroup;
 
     @Unique
-    protected OptionalSlotFake[][] r$outputSlotGroup;
+    protected RCSlotPatternOutputs[][] r$outputSlotGroup;
 
     @Unique
     protected GuiScrollbar r$guiScrollbar;
@@ -62,16 +64,20 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
                     for (int x = 0; x < 3; ++x) {
                         var input = r$craftingSlotGroup[j][x + y * 3];
                         input.xPos = input.getX();
+                        input.visible = true;
                     }
                     var output = r$outputSlotGroup[j][y];
                     output.xPos = this.isCraftingMode() ? -9000 : output.getX();
+                    output.visible = true;
                 }
             } else {
                 for (var slot : r$craftingSlotGroup[j]) {
                     slot.xPos = -9000;
+                    slot.visible = false;
                 }
                 for (var slot : r$outputSlotGroup[j]) {
                     slot.xPos = -9000;
+                    slot.visible = false;
                 }
             }
         }
