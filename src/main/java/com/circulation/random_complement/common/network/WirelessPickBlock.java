@@ -138,12 +138,9 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             if (gridNode == null) return false;
             IGrid grid = gridNode.getGrid();
             if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
-                IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-                var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                var aeItem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.SIMULATE, new PlayerSource(player, obj));
-                if (aeItem != null && aeItem.getStackSize() > 0) {
-                    var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, obj));
-
+                var items = grid.<IStorageGrid>getCache(IStorageGrid.class).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                var aeitem = items.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.MODULATE, new PlayerSource(player, obj));
+                if (aeitem != null) {
                     player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
                     return true;
                 }

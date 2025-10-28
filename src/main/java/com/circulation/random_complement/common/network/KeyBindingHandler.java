@@ -44,8 +44,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.Optional;
-
 public class KeyBindingHandler implements Packet<KeyBindingHandler> {
 
     ItemStack stack = ItemStack.EMPTY;
@@ -130,14 +128,11 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             IGrid grid = gridNode.getGrid();
             if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                 IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-                var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+                var items = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                 var host = c.getTarget();
                 if (host instanceof IActionHost h) {
-                    var aeItemO = Optional.ofNullable(iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(targetCount), Actionable.SIMULATE, new PlayerSource(player, h)));
-
-                    if (aeItemO.isPresent()) {
-                        var aeItem = aeItemO.get();
-                        var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(item).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, h));
+                    var aeitem = items.extractItems(AEItemStack.fromItemStack(item).setStackSize(targetCount), Actionable.MODULATE, new PlayerSource(player, h));
+                    if (aeitem != null) {
                         player.inventory.placeItemBackInInventory(player.world, aeitem.createItemStack());
                     }
                 }
@@ -148,18 +143,14 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     private long wirelessRetrieve(EntityPlayerMP player, ItemStack exItem, IGridNode gridNode, long targetCount, WirelessTerminalGuiObject obj) {
         IGrid grid = gridNode.getGrid();
         if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
-            IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-            var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-            var aeItemO = Optional.ofNullable(iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(targetCount), Actionable.SIMULATE, new PlayerSource(player, obj)));
+            var items = grid.<IStorageGrid>getCache(IStorageGrid.class).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+            var aeitem = items.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(targetCount), Actionable.MODULATE, new PlayerSource(player, obj));
 
-            if (aeItemO.isPresent()) {
-                var aeItem = aeItemO.get();
-                var aeitem = iItemStorageChannel.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(aeItem.getStackSize()), Actionable.MODULATE, new PlayerSource(player, obj));
+            if (aeitem == null) return targetCount;
 
-                targetCount -= aeitem.getStackSize();
+            targetCount -= aeitem.getStackSize();
 
-                player.inventory.placeItemBackInInventory(player.world, aeitem.createItemStack());
-            }
+            player.inventory.placeItemBackInInventory(player.world, aeitem.createItemStack());
         }
         return targetCount;
     }
@@ -200,7 +191,6 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             }
             IGrid grid = gridNode.getGrid();
             if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
-
                 RCCraftingGridCache cgc = grid.getCache(ICraftingGrid.class);
                 IAEItemStack aeItem = AEItemStack.fromItemStack(item).setStackSize(1);
                 boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);
@@ -229,9 +219,6 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     private void openWirelessCraft(ItemStack terminal, EntityPlayerMP player, ItemStack exItem, IGridNode gridNode, int i, boolean isBauble) {
         IGrid grid = gridNode.getGrid();
         if (securityCheck(player, grid, SecurityPermissions.CRAFT)) {
-            IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-            var iItemStorageChannel = storageGrid.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-
             RCCraftingGridCache cgc = gridNode.getGrid().getCache(ICraftingGrid.class);
             IAEItemStack aeItem = AEItemStack.fromItemStack(exItem).setStackSize(1);
             boolean isCraftable = cgc.rc$getCraftableItems().containsKey(aeItem);

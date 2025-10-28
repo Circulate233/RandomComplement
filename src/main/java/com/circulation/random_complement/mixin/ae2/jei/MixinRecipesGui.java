@@ -65,7 +65,7 @@ public class MixinRecipesGui extends GuiScreen {
         }
     }
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/recipes/RecipeGuiTabs;draw(Lnet/minecraft/client/Minecraft;II)V", shift = At.Shift.AFTER))
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/recipes/RecipeGuiTabs;draw(Lnet/minecraft/client/Minecraft;II)V", shift = At.Shift.AFTER, remap = false), remap = true)
     public void drawSlot(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (r$isCraftablesGui) {
             MEHandler.drawXYPluses(r$slots);

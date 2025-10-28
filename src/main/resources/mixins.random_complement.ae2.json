@@ -31,6 +31,7 @@
     "container.MixinContainerMEMonitorable",
     "container.MixinContainerPatternEncoder",
     "container.MixinContainerPatternTerm",
+    "new_patten_gui.MixinContainerWirelessCraftingTerminal",
     "container.MixinContainerWirelessPatternTerminal",
     "me.storage.MixinCreativeCellInventory",
     "part.MixinAbstractPartEncoder",

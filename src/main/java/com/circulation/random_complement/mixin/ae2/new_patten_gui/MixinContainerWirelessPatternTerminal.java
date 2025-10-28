@@ -10,6 +10,7 @@ import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.inv.IAEAppEngInventory;
 import com.circulation.random_complement.client.RCSlotFakeCraftingMatrix;
 import com.circulation.random_complement.client.RCSlotPatternOutputs;
+import com.circulation.random_complement.common.util.AppEngInternalFixedCapacityInventory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -31,20 +32,12 @@ public abstract class MixinContainerWirelessPatternTerminal extends MixinContain
 
     @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 0, remap = false))
     public AppEngInternalInventory newCrafting(IAEAppEngInventory inventory, int size) {
-        return new AppEngInternalInventory(inventory, 81) {
-            @Override
-            public void setSize(int size) {
-            }
-        };
+        return new AppEngInternalFixedCapacityInventory(inventory, 81);
     }
 
     @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lappeng/util/inv/IAEAppEngInventory;I)Lappeng/tile/inventory/AppEngInternalInventory;", ordinal = 1, remap = false))
     public AppEngInternalInventory newOutput(IAEAppEngInventory inventory, int size) {
-        return new AppEngInternalInventory(inventory, 27) {
-            @Override
-            public void setSize(int size) {
-            }
-        };
+        return new AppEngInternalFixedCapacityInventory(inventory, 27);
     }
 
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerWirelessPatternTerminal;addSlotToContainer(Lnet/minecraft/inventory/Slot;)Lnet/minecraft/inventory/Slot;"))
