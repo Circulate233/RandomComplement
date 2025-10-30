@@ -72,23 +72,22 @@ public class RCActionButton implements Packet<RCActionButton> {
                             }
                             for (NBTBase item : list) {
                                 if (!(item instanceof NBTTagCompound nbt) || !nbt.hasKey("Count")) continue;
-                                long oldSize = nbt.getLong("Count");
-                                long newSize = r$quantityProcessing(oldSize, action);
-                                if (!r$correctQuantity(oldSize, newSize, action)) {
+                                int oldSize = nbt.getInteger("Count");
+                                if (!r$correctQuantity(oldSize, action)) {
                                     success = false;
                                     break;
                                 }
                                 if (success) {
-                                    nbt.setInteger("Count", (int) newSize);
+                                    int newSize = r$quantityProcessing(oldSize, action);
+                                    nbt.setInteger("Count", newSize);
                                     if (nbt.hasKey("Cnt")) {
-                                        oldSize = nbt.getLong("Cnt");
-                                        newSize = r$quantityProcessing(oldSize, action);
-                                        if (!r$correctQuantity(oldSize, newSize, action)) {
+                                        oldSize = nbt.getInteger("Cnt");
+                                        if (!r$correctQuantity(oldSize, action)) {
                                             success = false;
                                             break;
                                         }
                                         if (success)
-                                            nbt.setInteger("Cnt", (int) newSize);
+                                            nbt.setInteger("Cnt", r$quantityProcessing(oldSize, action));
                                     }
                                 }
                             }
@@ -107,23 +106,23 @@ public class RCActionButton implements Packet<RCActionButton> {
     }
 
     @Unique
-    private long r$quantityProcessing(long size, Action action) {
+    private int r$quantityProcessing(int size, Action action) {
         return switch (action) {
-            case MULTIPLY_2 -> size << 1;
+            case MULTIPLY_2 -> size * 2;
             case MULTIPLY_3 -> size * 3;
-            case DIVIDE_2 -> size >> 1;
+            case DIVIDE_2 -> size / 2;
             case DIVIDE_3 -> size / 3;
             default -> throw new RuntimeException("Unreasonable calls");
         };
     }
 
     @Unique
-    private boolean r$correctQuantity(long oldSize, long newSize, Action action) {
+    private boolean r$correctQuantity(int oldSize, Action action) {
         return switch (action) {
-            case MULTIPLY_2 -> newSize >> 1 == oldSize && newSize <= Integer.MAX_VALUE;
-            case MULTIPLY_3 -> newSize / 3 == oldSize && newSize <= Integer.MAX_VALUE;
-            case DIVIDE_2 -> newSize != 0 && newSize << 1 == oldSize;
-            case DIVIDE_3 -> newSize != 0 && newSize * 3 == oldSize;
+            case MULTIPLY_2 -> oldSize <= (Integer.MAX_VALUE / 2);
+            case MULTIPLY_3 -> oldSize <= (Integer.MAX_VALUE / 3);
+            case DIVIDE_2 -> oldSize % 2 == 0;
+            case DIVIDE_3 -> oldSize % 3 == 0;
             default -> throw new RuntimeException("Unreasonable calls");
         };
     }
