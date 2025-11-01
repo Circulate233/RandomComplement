@@ -235,7 +235,7 @@ dependencies {
     implementation(rfg.deobf("curse.maven:nae2-884359:5380800"))
     implementation(rfg.deobf('curse.maven:ftb-library-237167:2985811'))
     implementation(rfg.deobf('curse.maven:ftb-utilities-237102:3157548'))
-    compileOnly(rfg.deobf("curse.maven:botania-225643:3330934"))
+    implementation(rfg.deobf("curse.maven:botania-225643:3330934"))
     compileOnly rfg.deobf("curse.maven:Shulker-Tooltip-292899:3321356")
     implementation(rfg.deobf("curse.maven:ex-pattern-provider-892005:4773929"))
     compileOnly(rfg.deobf("curse.maven:Flux-Networks-248020:3178199"))
@@ -247,8 +247,7 @@ dependencies {
     implementation(rfg.deobf("curse.maven:packagedauto-308380:6932932"))
     implementation(rfg.deobf("curse.maven:ender-utilities-224320:2977010"))
 
-    runtimeOnly("org.zeith.HammerLib:HammerLib-1.12.2:12.2.58")
-    implementation(rfg.deobf("curse.maven:botaniverse-944656:4945200"))
+    compileOnly(rfg.deobf("curse.maven:botaniverse-944656:4945200"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

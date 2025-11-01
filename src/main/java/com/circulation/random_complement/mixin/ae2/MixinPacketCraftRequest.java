@@ -1,5 +1,7 @@
 package com.circulation.random_complement.mixin.ae2;
 
+import appeng.api.util.AEPartLocation;
+import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.core.sync.AppEngPacket;
@@ -60,6 +62,10 @@ public class MixinPacketCraftRequest {
                                 isBauble ? r$readBaubles(p, slot) : p.inventory.getStackInSlot(slot),
                                 p, slot, isBauble ? 1 : 0
                         ));
+                var context = new ContainerOpenContext(null);
+                context.setSide(AEPartLocation.INTERNAL);
+                newContainer.setOpenContext(context);
+
                 entityPlayerMP.openContainer = newContainer;
                 entityPlayerMP.openContainer.windowId = windowId;
 

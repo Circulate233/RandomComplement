@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.IManaCollector;
 
-@Mixin(value = TileMorePool.class, remap = false)
+@Mixin(TileMorePool.class)
 public abstract class MixinTileMorePool implements IManaCollector {
 
     @Shadow(remap = false)
