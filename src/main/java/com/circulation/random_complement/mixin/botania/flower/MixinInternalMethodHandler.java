@@ -7,11 +7,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vazkii.botania.api.mana.IManaPool;
+import vazkii.botania.api.mana.IManaSpreader;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.api.subtile.SubTileGenerating;
 import vazkii.botania.common.block.ModBlocks;
-import vazkii.botania.common.block.tile.mana.TilePool;
-import vazkii.botania.common.block.tile.mana.TileSpreader;
 import vazkii.botania.common.core.handler.InternalMethodHandler;
 
 @Mixin(value = InternalMethodHandler.class, remap = false)
@@ -26,9 +26,13 @@ public abstract class MixinInternalMethodHandler {
             var pos = e.getBinding();
             if (pos != null) {
                 TileEntity t = e.getWorld().getTileEntity(pos);
-                if (t instanceof TileSpreader) {
+                if (t instanceof IManaSpreader) {
                     cir.setReturnValue(new ItemStack(ModBlocks.spreader));
-                } else if (t instanceof TilePool) {
+                } else if (t instanceof IManaPool) {
+                    cir.setReturnValue(new ItemStack(ModBlocks.pool));
+                } else if (this.getWorldElapsedTicks() % 40 > 19) {
+                    cir.setReturnValue(new ItemStack(ModBlocks.spreader));
+                } else {
                     cir.setReturnValue(new ItemStack(ModBlocks.pool));
                 }
             } else {

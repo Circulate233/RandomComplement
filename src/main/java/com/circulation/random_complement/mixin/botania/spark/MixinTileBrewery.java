@@ -2,12 +2,13 @@ package com.circulation.random_complement.mixin.botania.spark;
 
 import com.circulation.random_complement.RCConfig;
 import com.google.common.base.Predicates;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,7 +19,6 @@ import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.api.mana.spark.SparkHelper;
 import vazkii.botania.common.block.tile.TileBrewery;
 import vazkii.botania.common.block.tile.TileSimpleInventory;
-import vazkii.botania.common.entity.EntitySpark;
 
 import java.util.List;
 
@@ -40,33 +40,33 @@ public abstract class MixinTileBrewery extends TileSimpleInventory implements IM
         }
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public boolean canAttachSpark(ItemStack var1) {
         return RCConfig.Botania.BrewerySparkSupport;
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public void attachSpark(ISparkEntity var1) {
 
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public int getAvailableSpaceForMana() {
         return Math.max(0, this.getManaCost() - getCurrentMana());
     }
 
-    @Unique
-    @Override
+    @Intrinsic
     public ISparkEntity getAttachedSpark() {
-        List<EntitySpark> sparks = world.getEntitiesWithinAABB(EntitySpark.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
-        if (sparks.size() == 1)
-            return sparks.get(0);
+        List<Entity> sparks = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
+        for (var spark : sparks) {
+            if (spark instanceof ISparkEntity s) {
+                return s;
+            }
+        }
         return null;
     }
 
+    @Intrinsic
     public boolean areIncomingTranfersDone() {
         return !canRecieveManaFromBursts();
     }

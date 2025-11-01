@@ -1,14 +1,14 @@
-package com.circulation.random_complement.mixin.botania.flower;
+package com.circulation.random_complement.mixin.botaniverse;
 
+import com.aeternal.botaniverse.blocks.tiles.TileMorePool;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.IManaCollector;
-import vazkii.botania.common.block.tile.mana.TilePool;
 
-@Mixin(TilePool.class)
-public abstract class MixinTilePool implements IManaCollector {
+@Mixin(value = TileMorePool.class, remap = false)
+public abstract class MixinTileMorePool implements IManaCollector {
 
     @Shadow(remap = false)
     public int manaCap;

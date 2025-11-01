@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vazkii.botania.api.mana.IManaPool;
+import vazkii.botania.api.mana.IManaCollector;
 import vazkii.botania.api.subtile.ISubTileContainer;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.common.core.helper.Vector3;
@@ -22,7 +22,7 @@ public class MixinItemObedienceStick {
     @Inject(method = "applyStick", at = @At("RETURN"))
     private static void applyStick(World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, @Local(name = "tileAt") TileEntity tileAt) {
         if (cir.getReturnValue()) {
-            if (tileAt instanceof IManaPool) {
+            if (tileAt instanceof IManaCollector) {
                 int range = 6;
                 for (BlockPos pos_ : BlockPos.getAllInBox(pos.add(-range, -range, -range), pos.add(range, range, range))) {
                     if (!(pos_.distanceSq(pos) > (range * range))) {

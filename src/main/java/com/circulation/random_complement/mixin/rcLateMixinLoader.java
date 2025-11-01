@@ -63,6 +63,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
                     });
             addMixinCFG("mixins.random_complement.botania.flower.json",
                     () -> RCConfig.Botania.FlowerLinkPool);
+            addMixinCFG("mixins.random_complement.botaniverse.json",
+                    () -> RCConfig.Botania.FlowerLinkPool && modLoaded("botaniverse"));
             addMixinCFG("mixins.random_complement.botania.spark.json",
                     () -> RCConfig.Botania.SparkSupport);
         }

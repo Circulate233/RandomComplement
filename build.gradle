@@ -163,6 +163,10 @@ repositories {
             excludeGroup("net.minecraftforge") // missing the `universal` artefact
         }
     }
+    maven {
+        name = "Zeitheron Maven"
+        url = "https://maven.zeith.org"
+    }
 }
 
 dependencies {
@@ -242,6 +246,9 @@ dependencies {
     implementation(rfg.deobf("curse.maven:draconic-evolution-223565:3431261"))
     implementation(rfg.deobf("curse.maven:packagedauto-308380:6932932"))
     implementation(rfg.deobf("curse.maven:ender-utilities-224320:2977010"))
+
+    runtimeOnly("org.zeith.HammerLib:HammerLib-1.12.2:12.2.58")
+    implementation(rfg.deobf("curse.maven:botaniverse-944656:4945200"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
