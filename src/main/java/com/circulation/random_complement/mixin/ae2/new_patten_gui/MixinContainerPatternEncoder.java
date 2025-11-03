@@ -11,7 +11,9 @@ import appeng.parts.reporting.AbstractPartEncoder;
 import com.circulation.random_complement.client.RCSlotFakeCraftingMatrix;
 import com.circulation.random_complement.client.RCSlotPatternOutputs;
 import com.circulation.random_complement.common.interfaces.RCPatternEncoder;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -110,11 +112,22 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         return o;
     }
 
+    @Redirect(method = "putStackInSlot", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerPatternEncoder;getAndUpdateOutput()Lnet/minecraft/item/ItemStack;", remap = false))
+    public ItemStack putStackInSlot(ContainerPatternEncoder instance, @Local(name = "slotID") int slotID) {
+        if (isCraftingMode() && (!isRCPatternEncoder() && r$craftingSlotGroup[0][8].slotNumber == slotID)) {
+            return getAndUpdateOutput();
+        }
+        return null;
+    }
+
     @Shadow(remap = false)
     public abstract AbstractPartEncoder getPart();
 
     @Shadow(remap = false)
     public abstract boolean isCraftingMode();
+
+    @Shadow(remap = false)
+    protected abstract ItemStack getAndUpdateOutput();
 
     @Intrinsic
     public final boolean isRCPatternEncoder() {
