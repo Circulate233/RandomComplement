@@ -114,7 +114,7 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
 
     @Redirect(method = "putStackInSlot", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerPatternEncoder;getAndUpdateOutput()Lnet/minecraft/item/ItemStack;", remap = false))
     public ItemStack putStackInSlot(ContainerPatternEncoder instance, @Local(name = "slotID") int slotID) {
-        if (isCraftingMode() && (!isRCPatternEncoder() && r$craftingSlotGroup[0][8].slotNumber == slotID)) {
+        if (isCraftingMode() && (!isRCPatternEncoder() || isCraftingSlot(slotID))) {
             return getAndUpdateOutput();
         }
         return null;
@@ -132,5 +132,13 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
     @Intrinsic
     public final boolean isRCPatternEncoder() {
         return r$craftingSlotGroup != null;
+    }
+
+    @Intrinsic
+    public final boolean isCraftingSlot(int slotID) {
+        for (var slot : r$craftingSlotGroup[0]) {
+            if (slot.slotNumber == slotID) return true;
+        }
+        return false;
     }
 }
