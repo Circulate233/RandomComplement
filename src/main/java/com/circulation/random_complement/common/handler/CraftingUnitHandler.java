@@ -17,8 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 
-import java.util.NoSuchElementException;
-
 public class CraftingUnitHandler {
 
     private static final Object2ReferenceMap<SimpleItem, BlockCraftingUnit> CraftingUnitItemMap = new Object2ReferenceOpenHashMap<>();
@@ -77,11 +75,16 @@ public class CraftingUnitHandler {
         var def = AEApi.instance().definitions();
         var materials = def.materials();
         var blocks = def.blocks();
-        addMatch(materials.cell1kPart().maybeStack(1).orElse(ItemStack.EMPTY), blocks.craftingStorage1k().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cell4kPart().maybeStack(1).orElse(ItemStack.EMPTY), blocks.craftingStorage4k().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cell16kPart().maybeStack(1).orElse(ItemStack.EMPTY), blocks.craftingStorage16k().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cell64kPart().maybeStack(1).orElse(ItemStack.EMPTY), blocks.craftingStorage64k().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.engProcessor().maybeStack(1).orElse(ItemStack.EMPTY), blocks.craftingAccelerator().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
+        blocks.craftingStorage1k().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cell1kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.craftingStorage4k().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cell4kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.craftingStorage16k().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cell16kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.craftingStorage64k().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cell64kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.craftingAccelerator().maybeBlock()
+                .ifPresent(b -> addMatch(materials.engProcessor().maybeStack(1).orElse(ItemStack.EMPTY), b));
     }
 
     @Optional.Method(modid = "nae2")
@@ -89,10 +92,14 @@ public class CraftingUnitHandler {
         var def = NAE2.definitions();
         var materials = def.materials();
         var blocks = def.blocks();
-        addMatch(materials.cellPart256K().maybeStack(1).orElse(ItemStack.EMPTY), blocks.storageCrafting256K().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cellPart1024K().maybeStack(1).orElse(ItemStack.EMPTY), blocks.storageCrafting1024K().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cellPart4096K().maybeStack(1).orElse(ItemStack.EMPTY), blocks.storageCrafting4096K().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-        addMatch(materials.cellPart16384K().maybeStack(1).orElse(ItemStack.EMPTY), blocks.storageCrafting16384K().maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
+        blocks.storageCrafting256K().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cellPart256K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.storageCrafting1024K().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cellPart1024K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.storageCrafting4096K().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cellPart4096K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+        blocks.storageCrafting16384K().maybeBlock()
+                .ifPresent(b -> addMatch(materials.cellPart16384K().maybeStack(1).orElse(ItemStack.EMPTY), b));
     }
 
     /*
@@ -101,20 +108,23 @@ public class CraftingUnitHandler {
      */
     @Optional.Method(modid = "extracpus")
     private static void registerEXCPU() {
+        final var block16384k = Block.getBlockFromName("extracpus:crafting_storage_16384k");
+        final Item item;
         if (Loader.isModLoaded("extracells")) {
-            Item item = Item.getByNameOrId("extracells:storage.component");
-            int i = 0;
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_256K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), Block.getBlockFromName("extracpus:crafting_storage_16384k"));
+            item = Item.getByNameOrId("extracells:storage.component");
         } else if (Loader.isModLoaded("aeadditions")) {
-            Item item = Item.getByNameOrId("aeadditions:storage.component");
-            int i = 0;
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_256K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock().orElseThrow(() -> new NoSuchElementException("Block not registered")));
-            addMatch(new ItemStack(item, 1, i++), Block.getBlockFromName("extracpus:crafting_storage_16384k"));
+            item = Item.getByNameOrId("aeadditions:storage.component");
+        } else {
+            item = null;
+        }
+        if (item != null) {
+            ModBlocks.CRAFTING_STORAGE_256K.maybeBlock()
+                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 0), b));
+            ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock()
+                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 1), b));
+            ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock()
+                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 2), b));
+            addMatch(new ItemStack(item, 1, 3), block16384k);
         }
     }
 }
