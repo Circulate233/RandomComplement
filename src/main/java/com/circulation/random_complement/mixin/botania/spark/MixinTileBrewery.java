@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
@@ -38,6 +39,11 @@ public abstract class MixinTileBrewery extends TileSimpleInventory implements IM
                 }
             }
         }
+    }
+
+    @Inject(method = "recieveMana", at = @At("TAIL"), remap = false)
+    public void recieveMana(int mana, CallbackInfo ci) {
+        VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
     }
 
     @Intrinsic
