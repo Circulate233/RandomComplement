@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.nee.new_patten_gui;
 
 import appeng.api.networking.IGridNode;
 import appeng.container.implementations.ContainerPatternTerm;
+import appeng.helpers.ItemStackHelper;
 import appeng.util.helpers.ItemHandlerUtil;
 import appeng.util.inv.WrapperInvItemHandler;
 import com.github.vfyjxf.nee.network.packet.PacketRecipeTransfer;
@@ -40,7 +41,7 @@ public abstract class MixinPacketRecipeTransfer {
 
                 for (int i = 0; i < recipeInputs.length; ++i) {
                     NBTTagCompound currentStack = message.getInput().getCompoundTag("#" + i);
-                    recipeInputs[i] = currentStack.isEmpty() ? ItemStack.EMPTY : new ItemStack(currentStack);
+                    recipeInputs[i] = currentStack.isEmpty() ? ItemStack.EMPTY : ItemStackHelper.stackFromNBT(currentStack);
                 }
 
                 if (!message.getOutput().isEmpty()) {
@@ -48,7 +49,7 @@ public abstract class MixinPacketRecipeTransfer {
 
                     for (int i = 0; i < recipeOutputs.length; ++i) {
                         NBTTagCompound currentStack = message.getOutput().getCompoundTag("O" + i);
-                        recipeOutputs[i] = currentStack.isEmpty() ? ItemStack.EMPTY : new ItemStack(currentStack);
+                        recipeOutputs[i] = currentStack.isEmpty() ? ItemStack.EMPTY : ItemStackHelper.stackFromNBT(currentStack);
                     }
                 }
 
