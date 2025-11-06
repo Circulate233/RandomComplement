@@ -15,6 +15,7 @@ import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
 import com.google.common.base.Joiner;
 import com.llamalad7.mixinextras.sugar.Local;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -33,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +55,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
     @Unique
     private static String randomComplement$getItemInformation(final Object o) {
         String dspToolTip = "";
-        List<String> lineList = new ArrayList<>();
+        List<String> lineList = new ObjectArrayList<>();
         if (o == null) {
             return "** Null";
         }

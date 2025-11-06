@@ -68,7 +68,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
             if (slot instanceof SlotFake slotFake) {
                 var item = slotFake.getDisplayStack();
                 if (!item.isEmpty()) {
-                    if (r$getCraftablesCache().contains(MEHandler.packItem(item))) {
+                    if (r$getCraftablesCache().contains(MEHandler.packAEItem(item))) {
                         r$plusSlot.add(slotFake);
                     }
                 }

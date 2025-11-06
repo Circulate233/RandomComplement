@@ -128,7 +128,7 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
         if (slot instanceof SlotGhost slotG) {
             var aeStack = slotG.getStack();
             if (!aeStack.isEmpty()) {
-                if (r$getCraftablesCache().contains(MEHandler.packItem(aeStack))) {
+                if (r$getCraftablesCache().contains(MEHandler.packAEItem(aeStack))) {
                     r$getPlusSlot().add(slotG);
                 }
             }

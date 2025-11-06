@@ -24,7 +24,7 @@ public abstract class MixinGuiWirelessFluidPatternTerminal extends MixinGuiMEMon
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();
-                if (r$getCraftablesCache().contains(MEHandler.packItem(item))) {
+                if (r$getCraftablesCache().contains(MEHandler.packAEItem(item))) {
                     r$getPlusSlot().add(slotFake);
                 }
 

@@ -11,12 +11,9 @@ import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
-import com.circulation.random_complement.common.util.Functions;
-import com.glodblock.github.common.item.fake.FakeFluids;
-import com.glodblock.github.integration.mek.FakeGases;
+import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import lombok.val;
-import mekanism.api.gas.GasStack;
 import mezz.jei.bookmarks.BookmarkItem;
 import mezz.jei.bookmarks.BookmarkList;
 import mezz.jei.gui.GuiScreenHelper;
@@ -32,8 +29,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
@@ -124,15 +119,11 @@ public abstract class MixinInputHandler {
                     if (isMouse && !Mouse.isButtonDown(m)) {
                         return true;
                     }
-                    ItemStack item = ItemStack.EMPTY;
+                    final ItemStack item;
                     if (ing.getValue() instanceof BookmarkItem<?> book) {
-                        if (book.ingredient instanceof ItemStack i) {
-                            item = i;
-                        }
-                    } else if (ing.getValue() instanceof ItemStack i) {
-                        item = i;
-                    } else if (Functions.modLoaded("ae2fc")) {
-                        item = r$ae2fcWork(ing);
+                        item = MEHandler.packItem(book.ingredient);
+                    } else {
+                        item = MEHandler.packItem(ing);
                     }
                     if (item.isEmpty()) return false;
                     final var oldGui = Minecraft.getMinecraft().currentScreen;
@@ -150,45 +141,5 @@ public abstract class MixinInputHandler {
             }
         }
         return false;
-    }
-
-    @Unique
-    @Optional.Method(modid = "ae2fc")
-    public ItemStack r$ae2fcWork(IClickedIngredient<?> ing) {
-        if (ing.getValue() instanceof BookmarkItem<?> book) {
-            if (book.ingredient instanceof FluidStack i) {
-                var ii = FakeFluids.packFluid2Drops(i);
-                if (ii != null) {
-                    return ii;
-                }
-            }
-        } else if (ing.getValue() instanceof FluidStack i) {
-            var ii = FakeFluids.packFluid2Drops(i);
-            if (ii != null) {
-                return ii;
-            }
-        } else if (Functions.modLoaded("mekeng")) {
-            return r$mekengWork(ing);
-        }
-        return ItemStack.EMPTY;
-    }
-
-    @Unique
-    @Optional.Method(modid = "mekeng")
-    private ItemStack r$mekengWork(IClickedIngredient<?> ing) {
-        if (ing.getValue() instanceof BookmarkItem<?> book) {
-            if (book.ingredient instanceof GasStack i) {
-                var ii = FakeGases.packGas2Drops(i);
-                if (ii != null) {
-                    return ii;
-                }
-            }
-        } else if (ing.getValue() instanceof GasStack i) {
-            var ii = FakeGases.packGas2Drops(i);
-            if (ii != null) {
-                return ii;
-            }
-        }
-        return ItemStack.EMPTY;
     }
 }

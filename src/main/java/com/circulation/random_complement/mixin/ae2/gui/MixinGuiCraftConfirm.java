@@ -15,6 +15,7 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.circulation.random_complement.common.util.AEBookmarkGroup;
 import com.google.common.base.Joiner;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.Internal;
 import mezz.jei.bookmarks.BookmarkGroup;
 import mezz.jei.bookmarks.BookmarkList;
@@ -36,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(value = GuiCraftConfirm.class, priority = 999)
@@ -56,7 +56,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     @Unique
     private static String randomComplement$getItemInformation(final Object o) {
         String dspToolTip = "";
-        List<String> lineList = new ArrayList<>();
+        List<String> lineList = new ObjectArrayList<>();
         if (o == null) {
             return "** Null";
         }

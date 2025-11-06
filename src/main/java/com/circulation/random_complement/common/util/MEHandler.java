@@ -41,6 +41,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -195,37 +196,43 @@ public class MEHandler {
     }
 
     @Optional.Method(modid = "appliedenergistics2")
-    public static IAEItemStack packItem(Object obj) {
+    @NotNull
+    public static ItemStack packItem(Object obj) {
         if (obj instanceof ItemStack i) {
             if (loadAE2FC && i.getItem() instanceof ItemFluidPacket) {
-                return AEItemStack.fromItemStack(FakeFluids.packFluid2Drops(FakeItemRegister.getStack(i)));
+                return FakeFluids.packFluid2Drops(FakeItemRegister.getStack(i));
             } else if (loadMEKEng && i.getItem() instanceof ItemGasPacket) {
-                return AEItemStack.fromItemStack(FakeGases.packGas2Drops(FakeItemRegister.getStack(i)));
+                return FakeGases.packGas2Drops(FakeItemRegister.getStack(i));
             } else {
-                return AEItemStack.fromItemStack(i);
+                return i;
             }
         } else if (loadAE2FC) {
             return packAE2FCItem(obj);
         }
-        return null;
+        return ItemStack.EMPTY;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public static IAEItemStack packAEItem(Object obj) {
+        return AEItemStack.fromItemStack(packItem(obj));
     }
 
     @Optional.Method(modid = "ae2fc")
-    private static IAEItemStack packAE2FCItem(Object obj) {
+    private static ItemStack packAE2FCItem(Object obj) {
         if (obj instanceof FluidStack i) {
-            return FakeFluids.packFluid2AEDrops(i);
+            return FakeFluids.packFluid2Drops(i);
         } else if (loadMEKEng) {
             return packMEKEngItem(obj);
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Optional.Method(modid = "mekeng")
-    private static IAEItemStack packMEKEngItem(Object obj) {
+    private static ItemStack packMEKEngItem(Object obj) {
         if (obj instanceof GasStack i) {
-            return FakeGases.packGas2AEDrops(i);
+            return FakeGases.packGas2Drops(i);
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @SideOnly(Side.CLIENT)

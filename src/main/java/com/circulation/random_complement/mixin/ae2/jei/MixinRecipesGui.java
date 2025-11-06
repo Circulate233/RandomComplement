@@ -46,7 +46,7 @@ public class MixinRecipesGui extends GuiScreen {
                 for (var group : l.getGuiIngredientGroups().values()) {
                     for (var ingredient : group.getGuiIngredients().values()) {
                         for (var o : ingredient.getAllIngredients()) {
-                            if (gui.r$getCraftablesCache().contains(MEHandler.packItem(o))) {
+                            if (gui.r$getCraftablesCache().contains(MEHandler.packAEItem(o))) {
                                 final var i = (AccessorGuiIngredient) ingredient;
                                 r$slots.add(
                                         XYPair.of(
