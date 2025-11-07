@@ -57,10 +57,8 @@ public abstract class MixinEnergyGridCache {
 
     @Unique
     private boolean r$hasCreativeEnergyCell() {
-        if (((AccessorGrid) this.myGrid).r$getMachines().containsKey(TileCreativeEnergyCell.class)) {
-            return !this.myGrid.getMachines(TileCreativeEnergyCell.class).isEmpty();
-        }
-        return false;
+        final var m = ((AccessorGrid) this.myGrid).r$getMachines().get(TileCreativeEnergyCell.class);
+        return m != null && !m.isEmpty();
     }
 
     @Inject(method = "extractAEPower", at = @At("HEAD"), cancellable = true)

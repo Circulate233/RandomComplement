@@ -20,10 +20,8 @@ public abstract class MixinGridPowerStorage implements RCGridPowerStorage {
     @Unique
     private boolean r$hasCreativeEnergyCell() {
         if (r$grid == null) return false;
-        if (((AccessorGrid) this.r$grid).r$getMachines().containsKey(TileCreativeEnergyCell.class)) {
-            return !this.r$grid.getMachines(TileCreativeEnergyCell.class).isEmpty();
-        }
-        return false;
+        final var m = ((AccessorGrid) this.r$grid).r$getMachines().get(TileCreativeEnergyCell.class);
+        return m != null && !m.isEmpty();
     }
 
     @Inject(method = "extractAEPower", at = @At("HEAD"), cancellable = true)
