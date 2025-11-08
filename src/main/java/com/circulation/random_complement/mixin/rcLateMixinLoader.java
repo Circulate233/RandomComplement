@@ -30,15 +30,15 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
             addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json",
-                    () -> RCConfig.AE2.newPattenGui);
+                () -> RCConfig.AE2.newPattenGui);
             addMixinCFG("mixins.random_complement.ae2fc.new_patten_gui.json",
-                    () -> modLoaded("ae2fc") && RCConfig.AE2.newPattenGui);
+                () -> modLoaded("ae2fc") && RCConfig.AE2.newPattenGui);
             addModdedMixinCFG("mixins.random_complement.ae2.jei.json", "jei");
             addModdedMixinCFG("mixins.random_complement.ae2e.json", "ae2exttable");
             addModdedMixinCFG("mixins.random_complement.nae2.json", "nae2");
             if (modLoaded("neenergistics")) {
                 addMixinCFG("mixins.random_complement.nee.new_patten_gui.json",
-                        () -> RCConfig.AE2.newPattenGui);
+                    () -> RCConfig.AE2.newPattenGui);
                 addMixinCFG("mixins.random_complement.nee.json");
                 addModdedMixinCFG("mixins.random_complement.nee.baubles.json", "baubles");
                 addModdedMixinCFG("mixins.random_complement.nee.ae2e.json", "ae2exttable");
@@ -51,26 +51,27 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         }
         if (modLoaded("botania")) {
             addMixinCFG("mixins.random_complement.botania.json",
-                    () -> RCConfig.Botania.BugFix);
+                () -> RCConfig.Botania.BugFix);
             addMixinCFG("mixins.random_complement.botania.ce.json",
-                    () -> {
-                        try {
-                            String v = Loader.instance().getIndexedModList().get("botania").getMetadata().version;
-                            return v.equals("r1.10-364.4");
-                        } catch (Exception e) {
-                            return false;
-                        }
-                    });
+                () -> {
+                    try {
+                        String v = Loader.instance().getIndexedModList().get("botania").getMetadata().version;
+                        return v.equals("r1.10-364.4");
+                    } catch (Exception e) {
+                        return false;
+                    }
+                });
             addMixinCFG("mixins.random_complement.botania.flower.json",
-                    () -> RCConfig.Botania.FlowerLinkPool);
+                () -> RCConfig.Botania.FlowerLinkPool);
             addMixinCFG("mixins.random_complement.botaniverse.json",
-                    () -> RCConfig.Botania.FlowerLinkPool && modLoaded("botaniverse"));
+                () -> RCConfig.Botania.FlowerLinkPool && modLoaded("botaniverse"));
             addMixinCFG("mixins.random_complement.botania.spark.json",
-                    () -> RCConfig.Botania.SparkSupport);
+                () -> RCConfig.Botania.SparkSupport);
         }
         addMixinCFG("mixins.random_complement.threng.json",
-                () -> modLoaded("threng") && RCConfig.LazyAE.EnableRepair);
+            () -> modLoaded("threng") && RCConfig.LazyAE.EnableRepair);
         addModdedMixinCFG("mixins.random_complement.ae2fc.json", "ae2fc");
+        addModdedMixinCFG("mixins.random_complement.ae2fc.jei.json", "ae2fc", "jei");
         addModdedMixinCFG("mixins.random_complement.ic2.json", "ic2");
         addModdedMixinCFG("mixins.random_complement.te5.json", "thermalexpansion");
         addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json", "thaumicenergistics");

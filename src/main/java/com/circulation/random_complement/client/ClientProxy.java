@@ -5,12 +5,18 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Functions;
+import com.circulation.random_complement.mixin.jei.AccessorGhostIngredientDragManager;
+import com.circulation.random_complement.mixin.jei.AccessorInputHandler;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
+import mezz.jei.Internal;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -72,4 +78,25 @@ public class ClientProxy extends CommonProxy {
 
     }
 
+    public static ItemStack getMouseItem() {
+        var i = Minecraft.getMinecraft().player.inventory.getItemStack();
+        if (!i.isEmpty()) return i;
+
+        if (Loader.isModLoaded("jei")) return getJEIMouseItem();
+
+        return ItemStack.EMPTY;
+    }
+
+    @Optional.Method(modid = "jei")
+    public static ItemStack getJEIMouseItem() {
+        var ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+        if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    @Optional.Method(modid = "jei")
+    public boolean isMouseHasItem() {
+        return !Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() || ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag() != null;
+    }
 }

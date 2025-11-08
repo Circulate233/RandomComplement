@@ -10,8 +10,6 @@
     "MixinCPacketLoadPattern",
     "MixinItemOrPartGuiFactory",
     "MixinPartDualInterface",
-    "container.AccessorContainerWirelessPatternTerminal",
-    "container.MixinContainerExpandedProcessingPatternTerm",
     "container.MixinContainerExtendedFluidPatternTerminal",
     "container.MixinContainerFluidPatternTerminal",
     "container.MixinContainerUltimateEncoder",
@@ -21,6 +19,7 @@
   ],
   "server": [],
   "client": [
+    "gui.MixinAEBaseGui",
     "gui.MixinGuiExtendedFluidPatternTerminal",
     "gui.MixinGuiFCCraftConfirm",
     "gui.MixinGuiFluidPatternTerminal",

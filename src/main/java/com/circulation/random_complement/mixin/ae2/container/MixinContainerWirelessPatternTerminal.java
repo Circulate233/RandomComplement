@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.ae2.container;
 
 import appeng.api.storage.ITerminalHost;
-import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.implementations.ContainerWirelessPatternTerminal;
 import appeng.helpers.WirelessTerminalGuiObject;
 import com.circulation.random_complement.common.util.MEHandler;
@@ -12,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ContainerWirelessPatternTerminal.class, remap = false)
-public abstract class MixinContainerWirelessPatternTerminal extends ContainerPatternEncoder {
+public abstract class MixinContainerWirelessPatternTerminal extends MixinContainerPatternEncoder {
 
-    protected MixinContainerWirelessPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable, boolean bindInventory) {
-        super(ip, monitorable, bindInventory);
+    public MixinContainerWirelessPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
+        super(ip, monitorable);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

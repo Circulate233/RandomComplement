@@ -9,6 +9,7 @@ import com.circulation.random_complement.common.network.SyncConfig;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
 import com.circulation.random_complement.common.util.Functions;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 
 import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
@@ -40,6 +41,11 @@ public class CommonProxy {
 
     public void postInit() {
         if (Loader.isModLoaded("appliedenergistics2")) CraftingUnitHandler.register();
+    }
+
+    @Optional.Method(modid = "jei")
+    public boolean isMouseHasItem() {
+        return false;
     }
 
 }

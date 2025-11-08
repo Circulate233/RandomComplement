@@ -11,6 +11,7 @@
   "server": [],
   "client": [
     "JEIPluginMixin",
+    "MixinAEBaseGui",
     "MixinInputHandler",
     "MixinRecipesGui"
   ]

@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.ae2.container;
 
 import appeng.api.storage.ITerminalHost;
-import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.implementations.ContainerPatternTerm;
 import com.circulation.random_complement.common.util.MEHandler;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ContainerPatternTerm.class, remap = false)
-public abstract class MixinContainerPatternTerm extends ContainerPatternEncoder {
+public abstract class MixinContainerPatternTerm extends MixinContainerPatternEncoder {
 
-    protected MixinContainerPatternTerm(InventoryPlayer ip, ITerminalHost monitorable, boolean bindInventory) {
-        super(ip, monitorable, bindInventory);
+    public MixinContainerPatternTerm(InventoryPlayer ip, ITerminalHost monitorable) {
+        super(ip, monitorable);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

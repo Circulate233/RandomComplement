@@ -21,9 +21,12 @@ import com.glodblock.github.common.item.ItemGasPacket;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
+import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.Util;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -94,8 +97,8 @@ public class MEHandler {
      * https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/c3cd45df5db9db256b9fb4774b2cb57fdf11e389/src/main/java/appeng/container/implementations/ContainerMEMonitorable.java#L397
      */
     public static void refillBlankPatterns(ContainerMEMonitorable container, SlotRestrictedInput slot) {
-        if (container instanceof PatternTermConfigs) {
-            if (((PatternTermConfigs) container).r$getAutoFillPattern() == PatternTermAutoFillPattern.CLOSE) return;
+        if (container instanceof PatternTermConfigs p) {
+            if (p.r$getAutoFillPattern() == PatternTermAutoFillPattern.CLOSE) return;
             if (Platform.isServer()) {
                 ItemStack blanks = slot.getStack();
                 int blanksToRefill = 64;
@@ -233,6 +236,37 @@ public class MEHandler {
             return FakeGases.packGas2Drops(i);
         }
         return ItemStack.EMPTY;
+    }
+
+    @Optional.Method(modid = "ae2fc")
+    public static FluidStack covertFluid(Object ingredient) {
+        if (ingredient instanceof FluidStack) {
+            return (FluidStack) ingredient;
+        } else {
+            return ingredient instanceof ItemStack ? Util.getFluidFromItem((ItemStack) ingredient) : null;
+        }
+    }
+
+    @Optional.Method(modid = "mekeng")
+    public static String getGasName(Object gas) {
+        if (gas instanceof GasStack g) return g.getGas().getLocalizedName();
+        if (gas instanceof Gas g) return g.getLocalizedName();
+        return "";
+    }
+
+    @Optional.Method(modid = "ae2fc")
+    public static Object covertGas(Object ingredient) {
+        if (ModAndClassUtil.GAS) {
+            if (ingredient instanceof GasStack) {
+                return ingredient;
+            }
+
+            if (ingredient instanceof ItemStack) {
+                return Util.getGasFromItem((ItemStack) ingredient);
+            }
+        }
+
+        return null;
     }
 
     @SideOnly(Side.CLIENT)

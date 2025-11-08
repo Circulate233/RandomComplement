@@ -66,6 +66,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         if (slot.xPos < 0 || slot.yPos < 0) return;
         if (this instanceof RCAECraftablesGui) {
             if (slot instanceof SlotFake slotFake) {
+                if (!slotFake.shouldDisplay()) return;
                 var item = slotFake.getDisplayStack();
                 if (!item.isEmpty()) {
                     if (r$getCraftablesCache().contains(MEHandler.packAEItem(item))) {
