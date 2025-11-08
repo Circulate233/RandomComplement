@@ -47,8 +47,8 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
             if (f != null) {
                 this.drawHoveringText(
                     Functions.asList(
-                        I18n.format("text.re.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-100), f.getLocalizedName()),
-                        I18n.format("text.re.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-99), item.getDisplayName())
+                        I18n.format("text.rc.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-100), f.getLocalizedName()),
+                        I18n.format("text.rc.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-99), item.getDisplayName())
                     ),
                     mouseX - offsetX,
                     mouseY - offsetY
@@ -59,8 +59,8 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
             if (g != null) {
                 this.drawHoveringText(
                     Functions.asList(
-                        I18n.format("text.re.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-100), MEHandler.getGasName(g)),
-                        I18n.format("text.re.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-99), item.getDisplayName())
+                        I18n.format("text.rc.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-100), MEHandler.getGasName(g)),
+                        I18n.format("text.rc.fluid_pattern.tooltip", GameSettings.getKeyDisplayString(-99), item.getDisplayName())
                     ),
                     mouseX - offsetX,
                     mouseY - offsetY
