@@ -200,7 +200,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
         } else {
             IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
             IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-            return Platform.poweredInsert(energyGrid, storageGrid, stack, this.actionSource, appeng.api.config.Actionable.MODULATE);
+            return Platform.poweredInsert(energyGrid, storageGrid, stack, this.actionSource, Actionable.MODULATE);
         }
     }
 

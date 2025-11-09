@@ -37,6 +37,7 @@ gui.action.DIVIDE_2.name=样板数量÷2
 gui.pattern_term.auto_fill_pattern.DIVIDE_2.text=尝试将样板输入/输出÷2\n可能需要重新打开GUI才会刷新数据
 gui.action.DIVIDE_3.name=样板数量÷3
 gui.pattern_term.auto_fill_pattern.DIVIDE_3.text=尝试将样板输入/输出÷3\n可能需要重新打开GUI才会刷新数据
+gui.rc.miss_craft.text=强制开始
 
 commands.ftbnbtedit.usage=/ftbnbtedit
 commands.ftbnbtedit.too_large=NBT size too large!

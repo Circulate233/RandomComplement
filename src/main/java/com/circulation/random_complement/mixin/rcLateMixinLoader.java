@@ -29,6 +29,7 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
         if (modLoaded("appliedenergistics2")) {
             addMixinCFG("mixins.random_complement.ae2.json");
+            addMixinCFG("mixins.random_complement.ae2.miss_craft.json");
             addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json",
                 () -> RCConfig.AE2.newPattenGui);
             addMixinCFG("mixins.random_complement.ae2fc.new_patten_gui.json",
