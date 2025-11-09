@@ -9,6 +9,7 @@ import appeng.crafting.CraftingTreeProcess;
 import appeng.crafting.MECraftingInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.item.ItemStack;
@@ -71,6 +72,8 @@ public class MixinCraftingTreeNode {
     @WrapOperation(method = "setJob", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;howManyEmitted:J"))
     public long setJobHowManyEmitted(CraftingTreeNode instance, Operation<Long> original) {
         if (canEmit) return original.call(instance);
+        if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency())
+            return original.call(instance);
         if (this.what.equals(this.job.getOutput())) return 0;
         if (this.nodes.isEmpty()) return original.call(instance);
         return 0;
@@ -79,6 +82,7 @@ public class MixinCraftingTreeNode {
     @WrapOperation(method = "getPlan", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;missing:J"))
     public long getPlanMissing(CraftingTreeNode instance, Operation<Long> original) {
         if (canEmit) return original.call(instance);
+        if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency()) return howManyEmitted;
         if (this.what.equals(this.job.getOutput())) return original.call(instance);
         return this.howManyEmitted;
     }
@@ -86,6 +90,8 @@ public class MixinCraftingTreeNode {
     @WrapOperation(method = "getPlan", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;howManyEmitted:J"))
     public long getPlanHowManyEmitted(CraftingTreeNode instance, Operation<Long> original) {
         if (canEmit) return original.call(instance);
+        if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency())
+            return original.call(instance);
         if (this.what.equals(this.job.getOutput())) return 0;
         if (this.nodes.isEmpty()) return original.call(instance);
         return 0;

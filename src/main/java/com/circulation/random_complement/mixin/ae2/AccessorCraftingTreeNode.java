@@ -10,4 +10,13 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AccessorCraftingTreeNode {
     @Accessor
     IItemList<IAEItemStack> getUsed();
+
+    @Accessor
+    long getHowManyEmitted();
+
+    @Accessor
+    void setHowManyEmitted(long howManyEmitted);
+
+    @Accessor
+    boolean isCanEmit();
 }

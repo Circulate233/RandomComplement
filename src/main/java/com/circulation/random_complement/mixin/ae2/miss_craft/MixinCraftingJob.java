@@ -2,7 +2,6 @@ package com.circulation.random_complement.mixin.ae2.miss_craft;
 
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.crafting.CraftBranchFailure;
 import appeng.crafting.CraftingJob;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.MECraftingInventory;
@@ -53,30 +52,42 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
         original.call(instance, what);
     }
 
+    @Unique
+    private boolean r$specialDeficiency;
+
+    @Intrinsic
+    public IAEItemStack getWaitingItem() {
+        return r$wait;
+    }
+
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
-    public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) throws CraftBranchFailure {
+    public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {
+        var tree = (AccessorCraftingTreeNode) this.tree;
+        if (tree.isCanEmit()) return;
         final long out = stackLocalRef.get();
         if (out > 0) {
             for (var details : this.cc.getCraftingFor(this.output, null, 0, this.world)) {
+                IAEItemStack repeatInput = this.output.copy().setStackSize(0);
+                for (var input : details.getCondensedInputs()) {
+                    if (this.output.equals(input)) {
+                        repeatInput.incStackSize(input.getStackSize());
+                    }
+                }
+                if (repeatInput.getStackSize() == 0) return;
+
                 IAEItemStack repeatOutput = this.output.copy().setStackSize(0);
                 for (var input : details.getCondensedOutputs()) {
                     if (this.output.equals(input)) {
-                        repeatOutput.setStackSize(repeatOutput.getStackSize() + input.getStackSize());
+                        repeatOutput.incStackSize(input.getStackSize());
                     }
                 }
                 if (repeatOutput.getStackSize() == 0) return;
 
                 long outputQuantity = this.output.getStackSize() / repeatOutput.getStackSize();
                 if (this.output.getStackSize() % repeatOutput.getStackSize() != 0) ++outputQuantity;
+                repeatInput.setStackSize(repeatInput.getStackSize() * outputQuantity);
 
-                IAEItemStack repeatInput = this.output.copy().setStackSize(0);
-                for (var input : details.getCondensedInputs()) {
-                    if (this.output.equals(input)) {
-                        repeatInput.setStackSize(repeatInput.getStackSize() + (input.getStackSize() * outputQuantity));
-                    }
-                }
                 if (repeatInput.getStackSize() > 0) {
-                    var tree = (AccessorCraftingTreeNode) this.tree;
                     var size = Math.min(out, repeatInput.getStackSize());
                     tree.getUsed().add(this.output.copy().setStackSize(size));
                     r$wait = this.output.copy().setStackSize(repeatInput.getStackSize() - size);
@@ -85,17 +96,41 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
             }
         } else {
             for (var details : this.cc.getCraftingFor(this.output, null, 0, this.world)) {
+                IAEItemStack repeatInput = this.output.copy().setStackSize(0);
                 for (var input : details.getCondensedInputs()) {
                     if (this.output.equals(input)) {
-                        throw new CraftBranchFailure(this.output, this.output.getStackSize());
+                        repeatInput.incStackSize(input.getStackSize());
                     }
                 }
+                final var inputSize = repeatInput.getStackSize();
+                if (inputSize == 0) return;
+
+                IAEItemStack repeatOutput = this.output.copy().setStackSize(0);
+                for (var input : details.getCondensedOutputs()) {
+                    if (this.output.equals(input)) {
+                        repeatOutput.incStackSize(input.getStackSize());
+                    }
+                }
+                if (repeatOutput.getStackSize() == 0) return;
+
+                long outputQuantity = this.output.getStackSize() / repeatOutput.getStackSize();
+                if (this.output.getStackSize() % repeatOutput.getStackSize() != 0) ++outputQuantity;
+                repeatInput.setStackSize(repeatInput.getStackSize() * outputQuantity + inputSize);
+
+                tree.setHowManyEmitted(inputSize);
+                r$wait = this.output.copy().setStackSize(repeatInput.getStackSize());
+                setSpecialDeficiency(true);
             }
         }
     }
 
     @Intrinsic
-    public IAEItemStack getWaitingItem() {
-        return r$wait;
+    public boolean isSpecialDeficiency() {
+        return r$specialDeficiency;
+    }
+
+    @Intrinsic
+    public void setSpecialDeficiency(boolean b) {
+        r$specialDeficiency = b;
     }
 }
