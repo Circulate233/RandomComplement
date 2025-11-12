@@ -111,8 +111,7 @@ public abstract class MixinInputHandler {
         }
         for (KeyBindings kb : KeyBindings.values()) {
             var k = kb.getKeyBinding();
-            if (k.isActiveAndMatches(eventKey)
-                    && k.getKeyModifier().isActive(k.getKeyConflictContext())) {
+            if (k.isActiveAndMatches(eventKey)) {
                 if (kb.isNeedItem()) {
                     var ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
                     if (ing == null) return false;

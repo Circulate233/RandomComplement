@@ -89,8 +89,9 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
                 if (repeatInput.getStackSize() > 0) {
                     var size = Math.min(out, repeatInput.getStackSize());
-                    tree.getUsed().add(this.output.copy().setStackSize(size));
-                    r$wait = this.output.copy().setStackSize(repeatInput.getStackSize() - size);
+                    tree.getUsed().add(repeatOutput.setStackSize(size));
+                    repeatInput.decStackSize(size);
+                    r$wait = repeatInput;
                 }
                 break;
             }
@@ -102,8 +103,7 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
                         repeatInput.incStackSize(input.getStackSize());
                     }
                 }
-                final var inputSize = repeatInput.getStackSize();
-                if (inputSize == 0) return;
+                if (repeatInput.getStackSize() == 0) return;
 
                 IAEItemStack repeatOutput = this.output.copy().setStackSize(0);
                 for (var input : details.getCondensedOutputs()) {
@@ -115,10 +115,9 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
                 long outputQuantity = this.output.getStackSize() / repeatOutput.getStackSize();
                 if (this.output.getStackSize() % repeatOutput.getStackSize() != 0) ++outputQuantity;
-                repeatInput.setStackSize(repeatInput.getStackSize() * outputQuantity + inputSize);
 
-                tree.setHowManyEmitted(inputSize);
-                r$wait = this.output.copy().setStackSize(repeatInput.getStackSize());
+                tree.setHowManyEmitted(repeatInput.getStackSize());
+                r$wait = repeatInput.setStackSize(repeatInput.getStackSize() * ++outputQuantity);
                 setSpecialDeficiency(true);
             }
         }
