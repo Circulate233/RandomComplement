@@ -7,7 +7,7 @@ public interface RCQuantumCluster {
 
     TileQuantumBridge getCenter();
 
-    void r$setIdlePowerUsage(Object obj, double power);
+    void r$setIdlePowerUsage(RCQuantumCluster qc, double power);
 
     boolean r$noWork();
 }

@@ -42,15 +42,23 @@ public abstract class MixinTileQuantumBridge extends AENetworkInvTile {
 
     @Inject(method = "onChangeInventory", at = @At("HEAD"))
     public void onChangeInventoryI(IItemHandler inv, int slot, InvOperation mc, ItemStack removed, ItemStack added, CallbackInfo ci) {
+        if (this.cluster == null) return;
         if (r$card == null) {
             r$card = AEApi.instance().definitions().materials().cardQuantumLink();
         }
-        if (this.getProxy().getIdlePowerUsage() == 0) {
-            if (r$card.isSameAs(added)) {
-                ((RCQuantumCluster) this.cluster).r$setIdlePowerUsage(this.cluster, 22);
+        switch (mc) {
+            case INSERT -> {
+                if (r$card.isSameAs(added)) {
+                    var c = (RCQuantumCluster) this.cluster;
+                    c.r$setIdlePowerUsage(c, 22);
+                }
             }
-        } else if (r$card.isSameAs(removed)) {
-            ((RCQuantumCluster) this.cluster).r$setIdlePowerUsage(this.cluster, 0);
+            case EXTRACT -> {
+                if (r$card.isSameAs(removed)) {
+                    var c = (RCQuantumCluster) this.cluster;
+                    c.r$setIdlePowerUsage(c, 0);
+                }
+            }
         }
     }
 }

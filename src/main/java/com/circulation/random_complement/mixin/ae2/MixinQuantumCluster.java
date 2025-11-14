@@ -66,14 +66,17 @@ public abstract class MixinQuantumCluster implements RCQuantumCluster {
     }
 
     @Unique
+    private void r$setIdlePowerUsage(Object o, double power) {
+        if (o instanceof RCQuantumCluster qc) r$setIdlePowerUsage(qc, power);
+    }
+
+    @Unique
     @Override
-    public void r$setIdlePowerUsage(Object obj, double power) {
-        if (obj instanceof RCQuantumCluster qc) {
-            for (TileQuantumBridge q : qc.r$getRing()) {
-                q.getProxy().setIdlePowerUsage(power);
-            }
-            if (qc.getCenter() != null) qc.getCenter().getProxy().setIdlePowerUsage(power);
+    public void r$setIdlePowerUsage(RCQuantumCluster qc, double power) {
+        for (TileQuantumBridge q : qc.r$getRing()) {
+            q.getProxy().setIdlePowerUsage(power);
         }
+        if (qc.getCenter() != null) qc.getCenter().getProxy().setIdlePowerUsage(power);
     }
 
 }
