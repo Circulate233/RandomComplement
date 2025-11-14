@@ -10,7 +10,6 @@ import appeng.core.sync.packets.PacketValueConfig;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.RCGuiCraftConfirm;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.circulation.random_complement.common.util.AEBookmarkGroup;
@@ -40,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(value = GuiCraftConfirm.class, priority = 999)
-public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCraftConfirm {
+public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     @Shadow(remap = false)
     private GuiButton cancel;
     @Shadow(remap = false)
@@ -130,7 +129,6 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui implements RCGuiCra
     }
 
     @Unique
-    @Override
     @Optional.Method(modid = "jei")
     public void rc$addMissBookmark() {
         BookmarkList bookmarkList = Internal.getBookmarkList();

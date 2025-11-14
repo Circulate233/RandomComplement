@@ -7,14 +7,15 @@ import appeng.container.AEBaseContainer;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerCraftingCPU;
 import appeng.helpers.ICustomNameObject;
-import appeng.me.cluster.implementations.CraftingCPUCluster;
 import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ContainerCraftingCPU.class, remap = false)
 public abstract class MixinContainerCraftingCPU extends AEBaseContainer implements IMEMonitorHandlerReceiver<IAEItemStack>, ICustomNameObject, getCraftingCPUCluster {
@@ -31,16 +32,14 @@ public abstract class MixinContainerCraftingCPU extends AEBaseContainer implemen
      * @author sddsd2332
      * @reason 添加合成已经耗时时间
      */
-    @Redirect(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/me/cluster/implementations/CraftingCPUCluster;getElapsedTime()J"))
-    public long getElapsedTime(CraftingCPUCluster instance) {
-        randomComplement$eta2 = instance.getElapsedTime();
-        return randomComplement$eta2;
+    @Inject(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/me/cluster/implementations/CraftingCPUCluster;getRemainingItemCount()J"))
+    public void getElapsedTime(CallbackInfo ci, @Local(name = "elapsedTime") long elapsedTime) {
+        randomComplement$eta2 = elapsedTime;
     }
 
     @Override
     public long randomComplement$elapsedTime() {
         return randomComplement$eta2;
     }
-
 
 }

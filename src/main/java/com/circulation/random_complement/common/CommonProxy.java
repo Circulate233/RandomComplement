@@ -1,6 +1,7 @@
 package com.circulation.random_complement.common;
 
 import com.circulation.random_complement.common.handler.CraftingUnitHandler;
+import com.circulation.random_complement.common.interfaces.Packet;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.network.RCActionButton;
@@ -17,21 +18,22 @@ import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
 @SuppressWarnings("MethodMayBeStatic")
 public class CommonProxy {
 
+    private int id = 0;
+
     public void construction() {
     }
 
     public void preInit() {
-        int start = 0;
         if (Functions.modLoaded("appliedenergistics2")) {
-            NET_CHANNEL.registerMessage(ContainerRollBACK.class, ContainerRollBACK.class, start++, Side.CLIENT);
-            NET_CHANNEL.registerMessage(SyncConfig.class, SyncConfig.class, start++, Side.CLIENT);
+            registerMessage(ContainerRollBACK.class, Side.CLIENT);
+            registerMessage(SyncConfig.class, Side.CLIENT);
 
-            NET_CHANNEL.registerMessage(ContainerRollBACK.class, ContainerRollBACK.class, start++, Side.SERVER);
-            NET_CHANNEL.registerMessage(WirelessPickBlock.class, WirelessPickBlock.class, start++, Side.SERVER);
-            NET_CHANNEL.registerMessage(RCConfigButton.class, RCConfigButton.class, start++, Side.SERVER);
-            NET_CHANNEL.registerMessage(RCActionButton.class, RCActionButton.class, start++, Side.SERVER);
+            registerMessage(ContainerRollBACK.class, Side.SERVER);
+            registerMessage(WirelessPickBlock.class, Side.SERVER);
+            registerMessage(RCConfigButton.class, Side.SERVER);
+            registerMessage(RCActionButton.class, Side.SERVER);
             if (Functions.modLoaded("jei")) {
-                NET_CHANNEL.registerMessage(KeyBindingHandler.class, KeyBindingHandler.class, start++, Side.SERVER);
+                registerMessage(KeyBindingHandler.class, Side.SERVER);
             }
         }
     }
@@ -46,6 +48,10 @@ public class CommonProxy {
     @Optional.Method(modid = "jei")
     public boolean isMouseHasItem() {
         return false;
+    }
+
+    public <T extends Packet<T>> void registerMessage(Class<T> aClass, Side side) {
+        NET_CHANNEL.registerMessage(aClass, aClass, id++, side);
     }
 
 }

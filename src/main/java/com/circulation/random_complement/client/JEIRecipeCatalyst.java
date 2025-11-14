@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,45 +36,53 @@ public class JEIRecipeCatalyst implements IModPlugin {
     @Override
     public void register(final @NotNull IModRegistry registry) {
         JEIRecipeCatalyst.registration = registry;
-        if (Loader.isModLoaded("packagedexcrafting")) {
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "combination_crafter"), "extendedcrafting:combination_crafting");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "marked_pedestal"), "extendedcrafting:combination_crafting");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "ender_crafter"), "extendedcrafting:ender_crafting");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "advanced_crafter"), "extendedcrafting:table_crafting_5x5");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "elite_crafter"), "extendedcrafting:table_crafting_7x7");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedexcrafting", "ultimate_crafter"), "extendedcrafting:table_crafting_9x9");
+        final var exc = "packagedexcrafting";
+        if (Loader.isModLoaded(exc)) {
+            addRecipeCatalyst(exc, "combination_crafter", "extendedcrafting:combination_crafting");
+            addRecipeCatalyst(exc, "marked_pedestal", "extendedcrafting:combination_crafting");
+            addRecipeCatalyst(exc, "ender_crafter", "extendedcrafting:ender_crafting");
+            addRecipeCatalyst(exc, "advanced_crafter", "extendedcrafting:table_crafting_5x5");
+            addRecipeCatalyst(exc, "elite_crafter", "extendedcrafting:table_crafting_7x7");
+            addRecipeCatalyst(exc, "ultimate_crafter", "extendedcrafting:table_crafting_9x9");
         }
         if (Loader.isModLoaded("packagedavaritia")) {
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedavaritia", "extreme_crafter"), "Avatitia.Extreme");
+            addRecipeCatalyst("packagedavaritia", "extreme_crafter", "Avatitia.Extreme");
         }
-        if (Loader.isModLoaded("packagedastral")) {
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedastral", "trait_crafter"), "astralsorcery.altar.trait");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedastral", "constellation_crafter"), "astralsorcery.altar.constellation");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedastral", "attunement_crafter"), "astralsorcery.altar.attunement");
-            registration.addRecipeCatalyst(getOtherModsItemStack("packagedastral", "discovery_crafter"), "astralsorcery.altar.discovery");
+        final var a = "packagedastral";
+        if (Loader.isModLoaded(a)) {
+            addRecipeCatalyst(a, "trait_crafter", "astralsorcery.altar.trait");
+            addRecipeCatalyst(a, "constellation_crafter", "astralsorcery.altar.constellation");
+            addRecipeCatalyst(a, "attunement_crafter", "astralsorcery.altar.attunement");
+            addRecipeCatalyst(a, "discovery_crafter", "astralsorcery.altar.discovery");
         }
-        if (Loader.isModLoaded("packageddraconic")) {
-            registration.addRecipeCatalyst(getOtherModsItemStack("packageddraconic", "fusion_crafter"), "DraconicEvolution.Fusion");
-        }
-        if (Loader.isModLoaded("ae2exttable")) {
-            addExtended();
-        }
+        if (Loader.isModLoaded("packageddraconic"))
+            addRecipeCatalyst("packageddraconic", "fusion_crafter", "DraconicEvolution.Fusion");
+        if (Loader.isModLoaded("ae2exttable")) addExtended();
     }
 
+    @Optional.Method(modid = "ae2exttable")
     public void addExtended() {
-        registration.addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
-        registration.addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
+        addRecipeCatalyst(ItemRegistry.BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), VanillaRecipeCategoryUid.CRAFTING);
+        addRecipeCatalyst(ItemRegistry.WIRELESS_BASIC_TERMINAL.getDefaultInstance(), BasicTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.WIRELESS_ADVANCED_TERMINAL.getDefaultInstance(), AdvancedTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.WIRELESS_ELITE_TERMINAL.getDefaultInstance(), EliteTableCategory.UID);
 
-        registration.addRecipeCatalyst(ItemRegistry.ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
-        registration.addRecipeCatalyst(ItemRegistry.WIRELESS_ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
+        addRecipeCatalyst(ItemRegistry.WIRELESS_ULTIMATE_TERMINAL.getDefaultInstance(), UltimateTableCategory.UID);
+    }
+
+    private void addRecipeCatalyst(String modid, String id, String... jei) {
+        addRecipeCatalyst(getOtherModsItemStack(modid, id), jei);
+    }
+
+    private void addRecipeCatalyst(ItemStack stack, String... jei) {
+        registration.addRecipeCatalyst(stack, jei);
     }
 
 }

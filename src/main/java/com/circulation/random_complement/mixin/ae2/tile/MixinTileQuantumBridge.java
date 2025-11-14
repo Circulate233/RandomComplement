@@ -40,9 +40,8 @@ public abstract class MixinTileQuantumBridge extends AENetworkInvTile {
         }
     }
 
-    @Inject(method = "onChangeInventory", at = @At("HEAD"))
+    @Inject(method = "onChangeInventory", at = @At(value = "INVOKE", target = "Lappeng/me/cluster/implementations/QuantumCluster;updateStatus(Z)V"))
     public void onChangeInventoryI(IItemHandler inv, int slot, InvOperation mc, ItemStack removed, ItemStack added, CallbackInfo ci) {
-        if (this.cluster == null) return;
         if (r$card == null) {
             r$card = AEApi.instance().definitions().materials().cardQuantumLink();
         }

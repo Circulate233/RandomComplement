@@ -43,13 +43,13 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
                 }
                 RandomComplement.NET_CHANNEL.sendTo(message, entityPlayerMP);
             }
-            case CLIENT -> ClientRun();
+            case CLIENT -> clientRun();
         }
         return null;
     }
 
     @SideOnly(Side.CLIENT)
-    public void ClientRun() {
+    public void clientRun() {
         if (RCInputHandler.getDelayMethod() != null) {
             RCInputHandler.getDelayMethod().run();
             RCInputHandler.setDelayMethod(null);

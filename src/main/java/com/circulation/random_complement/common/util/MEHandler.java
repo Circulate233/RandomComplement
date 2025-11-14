@@ -23,7 +23,8 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import mekanism.api.gas.Gas;
@@ -48,14 +49,13 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MEHandler {
 
     @Getter
     private static final Set<IAEItemStack> craftableCacheS = new ObjectOpenHashSet<>();
-    private static final Map<Integer, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<ResourceLocation> textures = new Int2ObjectOpenHashMap<>();
     public static final boolean loadAE2FC = Loader.isModLoaded("ae2fc");
     public static final boolean loadMEKEng = Loader.isModLoaded("mekeng");
 

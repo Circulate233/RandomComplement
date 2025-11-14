@@ -108,15 +108,13 @@ public class CraftingUnitHandler {
      */
     @Optional.Method(modid = "extracpus")
     private static void registerEXCPU() {
-        final var block16384k = Block.getBlockFromName("extracpus:crafting_storage_16384k");
         final Item item;
         if (Loader.isModLoaded("extracells")) {
             item = Item.getByNameOrId("extracells:storage.component");
         } else if (Loader.isModLoaded("aeadditions")) {
             item = Item.getByNameOrId("aeadditions:storage.component");
-        } else {
-            item = null;
-        }
+        } else return;
+        final var block16384k = Block.getBlockFromName("extracpus:crafting_storage_16384k");
         if (item != null) {
             ModBlocks.CRAFTING_STORAGE_256K.maybeBlock()
                     .ifPresent(b -> addMatch(new ItemStack(item, 1, 0), b));

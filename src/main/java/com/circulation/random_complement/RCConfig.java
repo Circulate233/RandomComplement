@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
 
@@ -47,8 +48,8 @@ public class RCConfig {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(RandomComplement.MOD_ID)) {
             ConfigManager.sync(RandomComplement.MOD_ID, Config.Type.INSTANCE);
-            if (RandomComplement.server != null && FMLCommonHandler.instance().getSide().isServer()) {
-                for (EntityPlayerMP player : RandomComplement.server.getPlayerList().getPlayers()) {
+            if (FMLCommonHandler.instance().getSide().isServer()) {
+                for (EntityPlayerMP player : FMLServerHandler.instance().getServer().getPlayerList().getPlayers()) {
                     RandomComplement.NET_CHANNEL.sendTo(new SyncConfig(), player);
                 }
             }

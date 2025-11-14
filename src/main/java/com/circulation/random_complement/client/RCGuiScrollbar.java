@@ -32,8 +32,10 @@ public class RCGuiScrollbar extends GuiScrollbar {
     }
 
     public void drawBG() {
-        if (drawBG != null) {
-            drawBG.run();
+        if (visible) {
+            if (drawBG != null) {
+                drawBG.run();
+            }
         }
     }
 

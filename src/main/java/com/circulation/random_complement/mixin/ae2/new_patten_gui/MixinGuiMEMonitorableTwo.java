@@ -116,9 +116,7 @@ public abstract class MixinGuiMEMonitorableTwo extends AEBaseGui implements ISor
         if (r$getScrollBars().isEmpty()) return;
         this.bindTexture(this.getBackground());
         for (var scrollbar : r$guiScrollbars) {
-            if (scrollbar.isVisible()) {
-                scrollbar.drawBG();
-            }
+            scrollbar.drawBG();
         }
     }
 }

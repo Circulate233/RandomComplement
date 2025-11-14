@@ -10,10 +10,11 @@ import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
-import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
 import com.google.common.base.Joiner;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
@@ -73,9 +73,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
             }
         } else if (o instanceof ItemStack stack) {
             itemStack = stack;
-        } else {
-            return "";
-        }
+        } else return "";
         try {
             itemStack.getItem().addInformation(itemStack, null, lineList, tooltipFlag);
         } catch (Exception ignored) {
@@ -91,8 +89,8 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
      * @author sddsd2332
      * @reason 额外添加制作耗时
      */
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I", ordinal = 0), remap = false)
-    public int getCumulativeTime(FontRenderer instance, String text, int x, int y, int color) {
+    @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I", ordinal = 0), remap = false)
+    public int getCumulativeTime(FontRenderer instance, String text, int x, int y, int color, Operation<Integer> original) {
         if (craftingCpu instanceof getCraftingCPUCluster craftingCPU) {
             long getTime = craftingCPU.randomComplement$elapsedTime();
             if (getTime > 0L && !this.visual.isEmpty()) {
@@ -101,7 +99,7 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
                 text = text + " " + I18n.format("gui.appliedenergistics2.CraftingStatusCumulativeTime") + " - " + etaTimeText;
             }
         }
-        return instance.drawString(text, x, y, color);
+        return original.call(instance, text, x, y, color);
     }
 
     /**
@@ -115,13 +113,13 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         randomComplement$hoveredAEStack = stack;
     }
 
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
-    public String addItemInformation(Object n) {
+    @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
+    public String addItemInformation(Object n, Operation<String> original) {
         String out;
         if (!(out = randomComplement$getItemInformation(n)).isEmpty()) {
-            return randomComplement$getItemDisplayName(n) + out;
+            return original.call(n) + out;
         } else {
-            return randomComplement$getItemDisplayName(n);
+            return original.call(n);
         }
     }
 
@@ -137,11 +135,6 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         }
         super.mouseClicked(xCord, yCord, btn);
         //   this.searchField.mouseClicked(xCord, yCord, btn);
-    }
-
-    @Unique
-    private String randomComplement$getItemDisplayName(Object n) {
-        return Platform.getItemDisplayName(n);
     }
 
 }
