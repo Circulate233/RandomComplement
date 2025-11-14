@@ -45,7 +45,7 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
     private Set<IAEItemStack> randomComplement$mergedCache = new ObjectOpenHashSet<>();
 
     @Unique
-    private Set<IAEItemStack> randomComplement$craftableCache;
+    private Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();
 
     public MixinGuiArcaneTerminal(Container inventorySlotsIn) {
         super(inventorySlotsIn);
