@@ -93,7 +93,7 @@ public class RCInputHandler {
                 if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
                     te = world.getTileEntity(target.getBlockPos());
 
-                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player);
+                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player).copy();
             }
 
             if (result.isEmpty()) {
@@ -152,7 +152,7 @@ public class RCInputHandler {
                 if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
                     te = world.getTileEntity(target.getBlockPos());
 
-                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player);
+                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player).copy();
             }
 
             if (result.isEmpty()) {
