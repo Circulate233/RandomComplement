@@ -29,9 +29,12 @@ public abstract class MixinGuiCraftConfirm {
     @Final
     private ContainerCraftConfirm ccc;
 
+    @Shadow
+    protected abstract boolean isSimulation();
+
     @Inject(method = "postUpdate", at = @At("TAIL"))
     public void postUpdate(List<IAEItemStack> list, byte ref, CallbackInfo ci) {
-        if (ref == 2 && !this.missing.isEmpty() && !this.ccc.noCPU) {
+        if (ref == 2 && !this.isSimulation() && !this.missing.isEmpty() && !this.ccc.noCPU) {
             this.start.x -= 20;
             this.start.width += 20;
             this.start.displayString = I18n.format("gui.rc.miss_craft.text");

@@ -53,7 +53,7 @@ public abstract class MixinCraftingCPUCluster {
 
     @Inject(method = "injectItems", at = @At("RETURN"))
     public void onStop(IAEItemStack input, Actionable type, IActionSource src, CallbackInfoReturnable<IAEItemStack> cir) {
-        if (this.finalOutput != null && this.finalOutput.getStackSize() <= 0) {
+        if (r$waitInput != null && this.finalOutput != null && this.finalOutput.getStackSize() <= 0) {
             this.completeJob();
             this.updateCPU();
         }
@@ -61,7 +61,9 @@ public abstract class MixinCraftingCPUCluster {
 
     @Inject(method = "submitJob", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;setJob(Lappeng/crafting/MECraftingInventory;Lappeng/me/cluster/implementations/CraftingCPUCluster;Lappeng/api/networking/security/IActionSource;)V"))
     public void submitJob(IGrid g, ICraftingJob job, IActionSource src, ICraftingRequester requestingMachine, CallbackInfoReturnable<ICraftingLink> cir) {
-        var s = ((RCCraftingJob) job).getWaitingItem();
+        var j = (RCCraftingJob) job;
+        if (!j.isPlayer()) return;
+        var s = j.getWaitingItem();
         if (s != null && s.getStackSize() > 0) {
             r$waitInput = s.copy();
             s.reset();

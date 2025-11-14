@@ -9,4 +9,6 @@ public interface RCCraftingJob {
     boolean isSpecialDeficiency();
 
     void setSpecialDeficiency(boolean b);
+
+    boolean isPlayer();
 }

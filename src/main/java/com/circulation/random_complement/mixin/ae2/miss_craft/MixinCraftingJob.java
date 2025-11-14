@@ -1,6 +1,7 @@
 package com.circulation.random_complement.mixin.ae2.miss_craft;
 
 import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.crafting.CraftingJob;
 import appeng.crafting.CraftingTreeNode;
@@ -39,11 +40,15 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     @Final
     private World world;
 
+    @Shadow
+    @Final
+    private IActionSource actionSrc;
     @Unique
     private IAEItemStack r$wait;
 
     @WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0))
     public void record(MECraftingInventory instance, IAEItemStack what, Operation<Void> original, @Share("rcOutput") LocalLongRef stackLocalRef) {
+        if (!isPlayer()) return;
         var stack = instance.getItemList().findPrecise(what);
         if (stack != null) {
             var size = stack.getStackSize();
@@ -60,8 +65,14 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
         return r$wait;
     }
 
+    @Intrinsic
+    public boolean isPlayer() {
+        return this.actionSrc.player().isPresent();
+    }
+
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
     public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {
+        if (!isPlayer()) return;
         var tree = (AccessorCraftingTreeNode) this.tree;
         if (tree.isCanEmit()) return;
         final long out = stackLocalRef.get();
@@ -132,4 +143,5 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     public void setSpecialDeficiency(boolean b) {
         r$specialDeficiency = b;
     }
+
 }
