@@ -75,8 +75,8 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         } else {
             map.put(playUUID, worldTime);
         }
-        ItemStack handItem = player.inventory.getStackInSlot(message.slot);
-        ItemStack needItem = message.stack.copy();
+        final ItemStack handItem = player.inventory.getStackInSlot(message.slot);
+        final ItemStack needItem = message.stack;
         if (!handItem.isEmpty()) {
             if (handItem.getCount() >= handItem.getItem().getItemStackLimit(handItem)) return null;
             else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
