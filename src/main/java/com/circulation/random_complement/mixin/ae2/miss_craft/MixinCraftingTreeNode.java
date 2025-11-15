@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 
-//TODO:允许开关而不是总是开启
 @Mixin(value = CraftingTreeNode.class, remap = false)
 public class MixinCraftingTreeNode {
 

@@ -15,25 +15,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-@Mixin(value = ContainerCraftConfirm.class, remap = false)
+@Mixin(ContainerCraftConfirm.class)
 public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
 
     @Unique
     private boolean r$isPlayer = false;
 
-    @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 1))
+    @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 1, remap = false))
     public boolean isSimulation1(ICraftingJob instance, Operation<Boolean> original) {
         if (!r$isPlayer) return original.call(instance);
         return true;
     }
 
-    @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 2))
+    @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 2, remap = false))
     public boolean isSimulation2(ICraftingJob instance, Operation<Boolean> original) {
         if (!r$isPlayer) return original.call(instance);
         return true;
     }
 
-    @Inject(method = "setJob",at = @At("HEAD"))
+    @Inject(method = "setJob", at = @At("HEAD"), remap = false)
     public void setJob(Future<ICraftingJob> job, CallbackInfo ci) {
         if (job == null) return;
         try {
