@@ -35,6 +35,7 @@ public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
 
     @Inject(method = "setJob",at = @At("HEAD"))
     public void setJob(Future<ICraftingJob> job, CallbackInfo ci) {
+        if (job == null) return;
         try {
             if (job.get() instanceof RCCraftingJob j) {
                 this.r$isPlayer = j.isPlayer();
