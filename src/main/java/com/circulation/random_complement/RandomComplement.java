@@ -12,12 +12,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "random_complement", name = Tags.MOD_NAME, version = Tags.VERSION,
-        dependencies = "required-after:mixinbooter@[8.0,);" +
-                "after:appliedenergistics2@[v0.56.7,);" +
-                "after:jei@[4.29.8,);" +
-                "after:thaumicenergistics@[2.3.5,);" +
-                "after:botania;" +
-                "before:shulkertooltip@[1.9.2,);"
+    dependencies = "required-after:mixinbooter@[8.0,);" +
+        "after:appliedenergistics2@[v0.56.7,);" +
+        "after:jei@[4.29.8,);" +
+        "after:thaumicenergistics@[2.3.5,);" +
+        "after:botania;" +
+        "before:shulkertooltip@[1.9.2,);"
 )
 public class RandomComplement {
 

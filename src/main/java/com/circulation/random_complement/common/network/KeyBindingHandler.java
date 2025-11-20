@@ -86,7 +86,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         switch (message.key) {
             case "RetrieveItem" -> retrieveItem(player, container, item, message.isAE);
             case "StartCraft" ->
-                    player.getServer().addScheduledTask(() -> startCraft(player, container, item, message.isAE));
+                player.getServer().addScheduledTask(() -> startCraft(player, container, item, message.isAE));
         }
         return null;
     }
@@ -159,7 +159,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         item.setCount(1);
         if (!isAE) {
             if (player.openContainer instanceof ContainerCraftAmount
-                    || player.openContainer instanceof ContainerCraftConfirm) return;
+                || player.openContainer instanceof ContainerCraftConfirm) return;
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
                 WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii, player, i, 0);
@@ -248,9 +248,9 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     @Method(modid = "ae2fc")
     private void ae2fcCraft(IActionHost host, EntityPlayerMP player, ContainerMEMonitorable c) {
         if (host instanceof PartExtendedFluidPatternTerminal
-                || host instanceof PartFluidPatternTerminal
-                || (host instanceof WirelessTerminalGuiObject w &&
-                (w.getItemStack().getItem() instanceof ItemWirelessFluidPatternTerminal || (w.getItemStack().hasTagCompound() && w.getItemStack().getTagCompound().getByte("mode") == 4)))) {
+            || host instanceof PartFluidPatternTerminal
+            || (host instanceof WirelessTerminalGuiObject w &&
+            (w.getItemStack().getItem() instanceof ItemWirelessFluidPatternTerminal || (w.getItemStack().hasTagCompound() && w.getItemStack().getTagCompound().getByte("mode") == 4)))) {
             var context = c.getOpenContext();
             player.getServerWorld().addScheduledTask(() -> InventoryHandler.openGui(player, Ae2Reflect.getContextWorld(context), new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)), context.getSide().getFacing(), GuiType.FLUID_CRAFT_AMOUNT));
             return;

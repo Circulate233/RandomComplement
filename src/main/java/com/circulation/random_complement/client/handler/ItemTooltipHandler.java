@@ -22,7 +22,7 @@ public class ItemTooltipHandler {
     public static void regItemTooltip(Class<? extends GuiScreen> aClass, ItemTooltipAdd tooltip) {
         synchronized (map) {
             map.computeIfAbsent(aClass, c -> new ObjectArrayList<>())
-                    .add(tooltip);
+               .add(tooltip);
         }
     }
 

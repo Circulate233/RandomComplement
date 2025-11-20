@@ -128,9 +128,9 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         if (randomComplement$hoveredAEStack != null && btn == 2) {
             ((AEBaseContainer) inventorySlots).setTargetStack(randomComplement$hoveredAEStack);
             final PacketInventoryAction p = new PacketInventoryAction(
-                    InventoryAction.AUTO_CRAFT,
-                    inventorySlots.inventorySlots.size(),
-                    0);
+                InventoryAction.AUTO_CRAFT,
+                inventorySlots.inventorySlots.size(),
+                0);
             NetworkHandler.instance.sendToServer(p);
         }
         super.mouseClicked(xCord, yCord, btn);

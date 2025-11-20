@@ -77,7 +77,7 @@ public abstract class MixinInputHandler {
                     var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
                     if (ing == null) return;
                     RCJEIInputHandler.setShiftClickCache(() ->
-                            JEIPlugin.aeGuiHandler.getTargets(gui, ing.getValue(), true));
+                        JEIPlugin.aeGuiHandler.getTargets(gui, ing.getValue(), true));
                 }
             }
         }
@@ -132,7 +132,7 @@ public abstract class MixinInputHandler {
                     if (kb == KeyBindings.StartCraft) {
                         var player = Minecraft.getMinecraft().player;
                         if (player.openContainer instanceof ContainerCraftAmount
-                                || player.openContainer instanceof ContainerCraftConfirm) return false;
+                            || player.openContainer instanceof ContainerCraftConfirm) return false;
                         RCInputHandler.setOldGui(oldGui);
                     }
                     return true;

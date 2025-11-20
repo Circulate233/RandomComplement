@@ -53,11 +53,11 @@ import java.util.Set;
 
 public class MEHandler {
 
+    public static final boolean loadAE2FC = Loader.isModLoaded("ae2fc");
+    public static final boolean loadMEKEng = Loader.isModLoaded("mekeng");
     @Getter
     private static final Set<IAEItemStack> craftableCacheS = new ObjectOpenHashSet<>();
     private static final Int2ObjectMap<ResourceLocation> textures = new Int2ObjectOpenHashMap<>();
-    public static final boolean loadAE2FC = Loader.isModLoaded("ae2fc");
-    public static final boolean loadMEKEng = Loader.isModLoaded("mekeng");
 
     static {
         textures.put(0, new ResourceLocation(RandomComplement.MOD_ID + ":textures/gui/pinned0.png"));
@@ -107,9 +107,9 @@ public class MEHandler {
                 var blankPattern = AEApi.instance().definitions().materials().blankPattern().maybeStack(blanksToRefill);
                 if (blankPattern.isPresent()) {
                     final AEItemStack request = AEItemStack
-                            .fromItemStack(blankPattern.get());
+                        .fromItemStack(blankPattern.get());
                     final IAEItemStack extracted = Platform
-                            .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
+                        .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
                     if (extracted != null) {
                         if (blanks.isEmpty()) {
                             blanks = request.getDefinition().copy();

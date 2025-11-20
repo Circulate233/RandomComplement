@@ -24,6 +24,22 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientProxy extends CommonProxy {
     public static final String categoryJEI = "RandomComplement(JEI)";
 
+    public static ItemStack getMouseItem() {
+        var i = Minecraft.getMinecraft().player.inventory.getItemStack();
+        if (!i.isEmpty()) return i;
+
+        if (Loader.isModLoaded("jei")) return getJEIMouseItem();
+
+        return ItemStack.EMPTY;
+    }
+
+    @Optional.Method(modid = "jei")
+    public static ItemStack getJEIMouseItem() {
+        var ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+        if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
+        return ItemStack.EMPTY;
+    }
+
     @Override
     public void construction() {
         super.construction();
@@ -76,22 +92,6 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onRegisterModels(ModelRegistryEvent event) {
 
-    }
-
-    public static ItemStack getMouseItem() {
-        var i = Minecraft.getMinecraft().player.inventory.getItemStack();
-        if (!i.isEmpty()) return i;
-
-        if (Loader.isModLoaded("jei")) return getJEIMouseItem();
-
-        return ItemStack.EMPTY;
-    }
-
-    @Optional.Method(modid = "jei")
-    public static ItemStack getJEIMouseItem() {
-        var ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
-        if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
-        return ItemStack.EMPTY;
     }
 
     @Override

@@ -58,10 +58,10 @@ public class MixinPacketCraftRequest {
                 entityPlayerMP.closeContainer();
                 int windowId = entityPlayerMP.currentWindowId;
                 var newContainer = new ContainerCraftConfirm(p.inventory,
-                        MEHandler.getTerminalGuiObject(
-                                isBauble ? r$readBaubles(p, slot) : p.inventory.getStackInSlot(slot),
-                                p, slot, isBauble ? 1 : 0
-                        ));
+                    MEHandler.getTerminalGuiObject(
+                        isBauble ? r$readBaubles(p, slot) : p.inventory.getStackInSlot(slot),
+                        p, slot, isBauble ? 1 : 0
+                    ));
                 var context = new ContainerOpenContext(null);
                 context.setSide(AEPartLocation.INTERNAL);
                 newContainer.setOpenContext(context);

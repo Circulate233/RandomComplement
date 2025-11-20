@@ -58,9 +58,9 @@ public class RCActionButton implements Packet<RCActionButton> {
                         val pattern = oldPattern.copy();
                         NBTTagCompound pNbt;
                         if (!pattern.isEmpty()
-                                && pattern.getItem() instanceof ItemEncodedPattern ep
-                                && pattern.hasTagCompound()
-                                && !(pNbt = pattern.getTagCompound()).getBoolean("crafting")
+                            && pattern.getItem() instanceof ItemEncodedPattern ep
+                            && pattern.hasTagCompound()
+                            && !(pNbt = pattern.getTagCompound()).getBoolean("crafting")
                         ) {
                             val in = pNbt.getTagList("in", 10);
                             boolean success = true;

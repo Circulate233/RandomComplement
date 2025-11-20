@@ -15,7 +15,7 @@ public record SimpleItem(@NotNull String str) {
     public static final SimpleItem empty = new SimpleItem("e");
 
     private static final LoadingCache<String, SimpleItem> CRAFTABLE_ITEM_POOL =
-            CacheBuilder.newBuilder()
+        CacheBuilder.newBuilder()
                     .maximumSize(10000)
                     .weakValues()
                     .build(new CacheLoader<>() {

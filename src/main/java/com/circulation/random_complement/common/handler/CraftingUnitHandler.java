@@ -48,7 +48,7 @@ public class CraftingUnitHandler {
 
     public static boolean isReplaceable(ItemStack item, Block block) {
         return (CraftingUnitBaseSet.contains(block) || CraftingUnitBlockMap.containsKey(block))
-                && (item == null || CraftingUnitItemMap.containsKey(SimpleItem.getInstance(item)));
+            && (item == null || CraftingUnitItemMap.containsKey(SimpleItem.getInstance(item)));
     }
 
     public static BlockCraftingUnit getCraftingUnitBase(Block block) {
@@ -76,15 +76,15 @@ public class CraftingUnitHandler {
         var materials = def.materials();
         var blocks = def.blocks();
         blocks.craftingStorage1k().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cell1kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cell1kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.craftingStorage4k().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cell4kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cell4kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.craftingStorage16k().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cell16kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cell16kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.craftingStorage64k().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cell64kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cell64kPart().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.craftingAccelerator().maybeBlock()
-                .ifPresent(b -> addMatch(materials.engProcessor().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.engProcessor().maybeStack(1).orElse(ItemStack.EMPTY), b));
     }
 
     @Optional.Method(modid = "nae2")
@@ -93,13 +93,13 @@ public class CraftingUnitHandler {
         var materials = def.materials();
         var blocks = def.blocks();
         blocks.storageCrafting256K().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cellPart256K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cellPart256K().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.storageCrafting1024K().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cellPart1024K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cellPart1024K().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.storageCrafting4096K().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cellPart4096K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cellPart4096K().maybeStack(1).orElse(ItemStack.EMPTY), b));
         blocks.storageCrafting16384K().maybeBlock()
-                .ifPresent(b -> addMatch(materials.cellPart16384K().maybeStack(1).orElse(ItemStack.EMPTY), b));
+              .ifPresent(b -> addMatch(materials.cellPart16384K().maybeStack(1).orElse(ItemStack.EMPTY), b));
     }
 
     /*
@@ -117,11 +117,11 @@ public class CraftingUnitHandler {
         final var block16384k = Block.getBlockFromName("extracpus:crafting_storage_16384k");
         if (item != null) {
             ModBlocks.CRAFTING_STORAGE_256K.maybeBlock()
-                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 0), b));
+                                           .ifPresent(b -> addMatch(new ItemStack(item, 1, 0), b));
             ModBlocks.CRAFTING_STORAGE_1024K.maybeBlock()
-                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 1), b));
+                                            .ifPresent(b -> addMatch(new ItemStack(item, 1, 1), b));
             ModBlocks.CRAFTING_STORAGE_4096K.maybeBlock()
-                    .ifPresent(b -> addMatch(new ItemStack(item, 1, 2), b));
+                                            .ifPresent(b -> addMatch(new ItemStack(item, 1, 2), b));
             addMatch(new ItemStack(item, 1, 3), block16384k);
         }
     }

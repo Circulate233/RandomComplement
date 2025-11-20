@@ -49,10 +49,10 @@ public class MixinRecipesGui extends GuiScreen {
                             if (gui.r$getCraftablesCache().contains(MEHandler.packAEItem(o))) {
                                 final var i = (AccessorGuiIngredient) ingredient;
                                 r$slots.add(
-                                        XYPair.of(
-                                                ingredient.getRect().x + r.getPosX() + i.getXPadding(),
-                                                ingredient.getRect().y + r.getPosY() + i.getXPadding()
-                                        )
+                                    XYPair.of(
+                                        ingredient.getRect().x + r.getPosX() + i.getXPadding(),
+                                        ingredient.getRect().y + r.getPosY() + i.getXPadding()
+                                    )
                                 );
                                 break;
                             }

@@ -74,8 +74,8 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
             var s = this.randomComplement$getStorage();
             if (s.isEmpty()) return ObjectSets.emptySet();
             s.stream()
-                    .filter(IAEStack::isCraftable)
-                    .forEach(randomComplement$craftableCache::add);
+             .filter(IAEStack::isCraftable)
+             .forEach(randomComplement$craftableCache::add);
         }
 
         return randomComplement$craftableCache;
@@ -102,15 +102,15 @@ public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IA
             for (int i = 0; i < cycle; i++) {
                 int amount = Math.min(slots.size() - i * 9, 9);
                 int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
-                        ? RCInputHandler.getCounter() * 18
-                        : (randomComplement$textureIndex - 3) * 18;
+                    ? RCInputHandler.getCounter() * 18
+                    : (randomComplement$textureIndex - 3) * 18;
 
                 this.drawTexturedModalRect(
-                        this.getGuiLeft() + 7,
-                        this.getGuiTop() + 17 + 18 * i,
-                        0,
-                        yOffset,
-                        18 * amount, 18
+                    this.getGuiLeft() + 7,
+                    this.getGuiTop() + 17 + 18 * i,
+                    0,
+                    yOffset,
+                    18 * amount, 18
                 );
             }
         }

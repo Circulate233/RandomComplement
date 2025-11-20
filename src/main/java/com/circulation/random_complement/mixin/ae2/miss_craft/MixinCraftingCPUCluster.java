@@ -48,7 +48,7 @@ public abstract class MixinCraftingCPUCluster {
             }
             return false;
         }
-        return original.call(instance,o);
+        return original.call(instance, o);
     }
 
     @Inject(method = "injectItems", at = @At("RETURN"))

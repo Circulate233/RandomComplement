@@ -76,8 +76,8 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RC
             var s = this.randomComplement$getStorage();
             if (s.isEmpty()) return ObjectSets.emptySet();
             s.stream()
-                    .filter(IAEStack::isCraftable)
-                    .forEach(randomComplement$craftableCache::add);
+             .filter(IAEStack::isCraftable)
+             .forEach(randomComplement$craftableCache::add);
         }
 
         return randomComplement$craftableCache;

@@ -55,7 +55,7 @@ public class VersionParser {
 
     public static boolean rangeVersion(String modid, String min, String max) {
         return VersionParser.minVersion(modid, min)
-                && VersionParser.maxVersion(modid, max);
+            && VersionParser.maxVersion(modid, max);
     }
 
     public static String getModVersion(String modid) {

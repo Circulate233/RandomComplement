@@ -169,9 +169,9 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
             var blankPattern = AEApi.instance().definitions().materials().blankPattern().maybeStack(blanksToRefill);
             if (blankPattern.isPresent()) {
                 final AEItemStack request = AEItemStack
-                        .fromItemStack(blankPattern.get());
+                    .fromItemStack(blankPattern.get());
                 final IAEItemStack extracted = Platform
-                        .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
+                    .poweredExtraction(container.getPowerSource(), container.getCellInventory(), request, container.getActionSource());
                 if (extracted != null) {
                     if (blanks.isEmpty()) {
                         blanks = request.getDefinition().copy();

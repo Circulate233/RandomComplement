@@ -45,6 +45,8 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     private IActionSource actionSrc;
     @Unique
     private IAEItemStack r$wait;
+    @Unique
+    private boolean r$specialDeficiency;
 
     @WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0))
     public void record(MECraftingInventory instance, IAEItemStack what, Operation<Void> original, @Share("rcOutput") LocalLongRef stackLocalRef) {
@@ -56,9 +58,6 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
         } else stackLocalRef.set(0);
         original.call(instance, what);
     }
-
-    @Unique
-    private boolean r$specialDeficiency;
 
     @Intrinsic
     public IAEItemStack getWaitingItem() {

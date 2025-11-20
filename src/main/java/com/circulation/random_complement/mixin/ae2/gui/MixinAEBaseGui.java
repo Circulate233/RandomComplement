@@ -107,15 +107,15 @@ public abstract class MixinAEBaseGui extends GuiContainer {
                 for (int i = 0; i < cycle; i++) {
                     int amount = Math.min(slots.size() - i * 9, 9);
                     int yOffset = (randomComplement$textureIndex < 3 || randomComplement$textureIndex == 6)
-                            ? RCInputHandler.getCounter() * 18
-                            : (randomComplement$textureIndex - 3) * 18;
+                        ? RCInputHandler.getCounter() * 18
+                        : (randomComplement$textureIndex - 3) * 18;
 
                     this.drawTexturedModalRect(
-                            this.getGuiLeft() + 8,
-                            this.getGuiTop() + 17 + 18 * i,
-                            0,
-                            yOffset,
-                            18 * amount, 18
+                        this.getGuiLeft() + 8,
+                        this.getGuiTop() + 17 + 18 * i,
+                        0,
+                        yOffset,
+                        18 * amount, 18
                     );
                 }
             }

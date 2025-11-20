@@ -98,8 +98,8 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
         boolean b = original.call(instance);
         if (b) {
             return this.randomComplement$rcSettings
-                    .getSetting(RCSettings.IntelligentBlocking) != IntelligentBlocking.OPEN
-                    || this.r$lastInputHash != patternDetails.hashCode();
+                .getSetting(RCSettings.IntelligentBlocking) != IntelligentBlocking.OPEN
+                || this.r$lastInputHash != patternDetails.hashCode();
         }
         return b;
     }
