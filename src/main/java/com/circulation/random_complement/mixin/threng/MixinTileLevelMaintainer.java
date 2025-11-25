@@ -18,6 +18,7 @@ import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
@@ -46,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 @Mixin(value = TileLevelMaintainer.class, remap = false)
-public abstract class MixinTileLevelMaintainer extends TileNetworkDevice implements IStackWatcherHost, ICraftingRequester {
+public abstract class MixinTileLevelMaintainer extends TileNetworkDevice implements IStackWatcherHost, ICraftingRequester, AEIgnoredInputMachine {
 
     @Shadow
     @AutoSerialize
@@ -67,6 +68,9 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
     @Shadow
     private int sleepIncrement;
+
+    @Unique
+    private boolean r$isIgnored = false;
 
     /**
      * @author circulation
@@ -244,4 +248,13 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
         return !t.getRequestStacks()[index].isEmpty() && t.getRequestQtys()[index] - existing > 0L ? t.getRequestBatches()[index] : 0L;
     }
 
+    @Override
+    public boolean r$isIgnored() {
+        return r$isIgnored;
+    }
+
+    @Override
+    public void r$setIgnored(boolean b) {
+        r$isIgnored = b;
+    }
 }

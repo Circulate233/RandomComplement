@@ -117,6 +117,6 @@ public class MixinCraftingTreeNode {
 
     @Intrinsic
     private boolean isPlayer() {
-        return ((RCCraftingJob) job).isPlayer();
+        return ((RCCraftingJob) job).canIgnoredInput();
     }
 }

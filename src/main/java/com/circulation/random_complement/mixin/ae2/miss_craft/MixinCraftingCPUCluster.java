@@ -62,7 +62,7 @@ public abstract class MixinCraftingCPUCluster {
     @Inject(method = "submitJob", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;setJob(Lappeng/crafting/MECraftingInventory;Lappeng/me/cluster/implementations/CraftingCPUCluster;Lappeng/api/networking/security/IActionSource;)V"))
     public void submitJob(IGrid g, ICraftingJob job, IActionSource src, ICraftingRequester requestingMachine, CallbackInfoReturnable<ICraftingLink> cir) {
         var j = (RCCraftingJob) job;
-        if (!j.isPlayer()) return;
+        if (!j.canIgnoredInput()) return;
         var s = j.getWaitingItem();
         if (s != null && s.getStackSize() > 0) {
             r$waitInput = s.copy();

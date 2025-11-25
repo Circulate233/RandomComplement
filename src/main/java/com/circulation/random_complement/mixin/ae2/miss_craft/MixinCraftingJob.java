@@ -6,6 +6,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.crafting.CraftingJob;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.MECraftingInventory;
+import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
 import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.circulation.random_complement.mixin.ae2.AccessorCraftingTreeNode;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -50,7 +51,7 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
     @WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0))
     public void record(MECraftingInventory instance, IAEItemStack what, Operation<Void> original, @Share("rcOutput") LocalLongRef stackLocalRef) {
-        if (!isPlayer()) return;
+        if (!canIgnoredInput()) return;
         var stack = instance.getItemList().findPrecise(what);
         if (stack != null) {
             var size = stack.getStackSize();
@@ -65,13 +66,16 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     }
 
     @Intrinsic
-    public boolean isPlayer() {
-        return this.actionSrc.player().isPresent();
+    public boolean canIgnoredInput() {
+        if (this.actionSrc.player().isPresent()) return true;
+        if (this.actionSrc.machine().orElse(null) instanceof AEIgnoredInputMachine a)
+            return a.r$isIgnored();
+        return false;
     }
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
     public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {
-        if (!isPlayer()) return;
+        if (!canIgnoredInput()) return;
         var tree = (AccessorCraftingTreeNode) this.tree;
         if (tree.isCanEmit()) return;
         final long out = stackLocalRef.get();

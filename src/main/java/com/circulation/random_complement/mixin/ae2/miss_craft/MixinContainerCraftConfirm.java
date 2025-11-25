@@ -19,17 +19,17 @@ import java.util.concurrent.Future;
 public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
 
     @Unique
-    private boolean r$isPlayer = false;
+    private boolean r$canIgnoredInput = false;
 
     @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 1, remap = false))
     public boolean isSimulation1(ICraftingJob instance, Operation<Boolean> original) {
-        if (!r$isPlayer) return original.call(instance);
+        if (!r$canIgnoredInput) return original.call(instance);
         return true;
     }
 
     @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/api/networking/crafting/ICraftingJob;isSimulation()Z", ordinal = 2, remap = false))
     public boolean isSimulation2(ICraftingJob instance, Operation<Boolean> original) {
-        if (!r$isPlayer) return original.call(instance);
+        if (!r$canIgnoredInput) return original.call(instance);
         return true;
     }
 
@@ -38,7 +38,7 @@ public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
         if (job == null) return;
         try {
             if (job.get() instanceof RCCraftingJob j) {
-                this.r$isPlayer = j.isPlayer();
+                this.r$canIgnoredInput = j.canIgnoredInput();
             }
         } catch (InterruptedException | ExecutionException ignored) {
         }

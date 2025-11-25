@@ -10,5 +10,5 @@ public interface RCCraftingJob {
 
     void setSpecialDeficiency(boolean b);
 
-    boolean isPlayer();
+    boolean canIgnoredInput();
 }
