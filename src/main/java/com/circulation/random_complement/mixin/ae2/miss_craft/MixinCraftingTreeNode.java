@@ -54,7 +54,7 @@ public class MixinCraftingTreeNode {
 
     @Inject(method = "request", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingJob;isSimulation()Z", shift = At.Shift.BEFORE), cancellable = true)
     public void request(MECraftingInventory inv, long l, IActionSource src, CallbackInfoReturnable<IAEItemStack> cir) {
-        if (!isPlayer()) return;
+        if (!canIgnoredInput()) return;
         if (canEmit) return;
         this.bytes = (int) ((long) this.bytes + l);
         if (this.parent != null && this.what.getItem().hasContainerItem(this.what.getDefinition())) {
@@ -72,7 +72,7 @@ public class MixinCraftingTreeNode {
 
     @WrapOperation(method = "setJob", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;howManyEmitted:J"))
     public long setJobHowManyEmitted(CraftingTreeNode instance, Operation<Long> original) {
-        if (!isPlayer()) return original.call(instance);
+        if (!canIgnoredInput()) return original.call(instance);
         if (canEmit) return original.call(instance);
         if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency())
             return original.call(instance);
@@ -83,7 +83,7 @@ public class MixinCraftingTreeNode {
 
     @WrapOperation(method = "getPlan", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;missing:J"))
     public long getPlanMissing(CraftingTreeNode instance, Operation<Long> original) {
-        if (!isPlayer()) return original.call(instance);
+        if (!canIgnoredInput()) return original.call(instance);
         if (canEmit) return original.call(instance);
         if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency()) return howManyEmitted;
         if (this.what.equals(this.job.getOutput())) return original.call(instance);
@@ -92,7 +92,7 @@ public class MixinCraftingTreeNode {
 
     @WrapOperation(method = "getPlan", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;howManyEmitted:J"))
     public long getPlanHowManyEmitted(CraftingTreeNode instance, Operation<Long> original) {
-        if (!isPlayer()) return original.call(instance);
+        if (!canIgnoredInput()) return original.call(instance);
         if (canEmit) return original.call(instance);
         if (this.parent == null && ((RCCraftingJob) job).isSpecialDeficiency())
             return original.call(instance);
@@ -103,7 +103,7 @@ public class MixinCraftingTreeNode {
 
     @Inject(method = "notRecursive", at = @At("RETURN"), cancellable = true)
     public void notRecursive(ICraftingPatternDetails details, CallbackInfoReturnable<Boolean> cir) {
-        if (!isPlayer()) return;
+        if (!canIgnoredInput()) return;
         if (canEmit) return;
         if (cir.getReturnValueZ()) {
             for (var input : details.getCondensedInputs()) {
@@ -116,7 +116,7 @@ public class MixinCraftingTreeNode {
     }
 
     @Intrinsic
-    private boolean isPlayer() {
+    private boolean canIgnoredInput() {
         return ((RCCraftingJob) job).canIgnoredInput();
     }
 }

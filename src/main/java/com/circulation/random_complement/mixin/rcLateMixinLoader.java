@@ -47,7 +47,6 @@ public class rcLateMixinLoader implements ILateMixinLoader {
 
             if (isClassPresent("github.kasuminova.mmce.common.tile.MEPatternProvider")) {
                 addMixinCFG("mixins.random_complement.mmce.json");
-                addModdedMixinCFG("mixins.random_complement.mmce.mekeng.json", "mekeng");
             }
         }
         if (modLoaded("botania")) {
