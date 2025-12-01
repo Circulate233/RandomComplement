@@ -1,11 +1,16 @@
 package com.circulation.random_complement.mixin.ae2;
 
+import appeng.api.config.Actionable;
 import appeng.api.config.Settings;
 import appeng.api.config.Upgrades;
 import appeng.api.config.YesNo;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
+import appeng.helpers.MultiCraftingTracker;
 import appeng.parts.automation.UpgradeInventory;
 import appeng.util.ConfigManager;
 import com.circulation.random_complement.client.RCSettings;
@@ -48,6 +53,13 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
 
     @Shadow
     protected abstract void cancelCrafting();
+
+    @Shadow
+    private IMEInventory<IAEItemStack> destination;
+
+    @Shadow
+    @Final
+    private IActionSource mySource;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(CallbackInfo ci) {
@@ -102,5 +114,10 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
                 || this.r$lastInputHash != patternDetails.hashCode();
         }
         return b;
+    }
+
+    @WrapOperation(method = "usePlan", at = @At(value = "INVOKE", target = "Lappeng/helpers/MultiCraftingTracker;isBusy(I)Z"))
+    private boolean usePlan(MultiCraftingTracker instance, int slot, Operation<Boolean> original, @Local(name = "itemStack") IAEItemStack itemStack) {
+        return original.call(instance, slot) && (itemStack.getStackSize() > 0 && destination.extractItems(itemStack, Actionable.SIMULATE, mySource) == null);
     }
 }
