@@ -11,6 +11,7 @@
   ],
   "mixins": [
     "AccessorGhostIngredientDragManager",
+    "AccessorIngredientListBatchRenderer",
     "AccessorInputHandler",
     "AccessorRecipeLayout",
     "MixinGhostIngredientDrag"
