@@ -51,12 +51,13 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
     @WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0))
     public void record(MECraftingInventory instance, IAEItemStack what, Operation<Void> original, @Share("rcOutput") LocalLongRef stackLocalRef) {
-        if (!canIgnoredInput()) return;
-        var stack = instance.getItemList().findPrecise(what);
-        if (stack != null) {
-            var size = stack.getStackSize();
-            stackLocalRef.set(size);
-        } else stackLocalRef.set(0);
+        if (canIgnoredInput()) {
+            var stack = instance.getItemList().findPrecise(what);
+            if (stack != null) {
+                var size = stack.getStackSize();
+                stackLocalRef.set(size);
+            } else stackLocalRef.set(0);
+        }
         original.call(instance, what);
     }
 
@@ -67,10 +68,9 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
     @Intrinsic
     public boolean canIgnoredInput() {
-        if (this.actionSrc.player().isPresent()) return true;
         if (this.actionSrc.machine().orElse(null) instanceof AEIgnoredInputMachine a)
             return a.r$isIgnored();
-        return false;
+        else return this.actionSrc.player().isPresent();
     }
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))

@@ -28,6 +28,9 @@ public abstract class MixinCraftingCPUCluster {
     @Unique
     private IAEItemStack r$waitInput;
 
+    @Unique
+    private boolean r$canIgnoredInput = false;
+
     @Shadow
     protected abstract void completeJob();
 
@@ -36,7 +39,7 @@ public abstract class MixinCraftingCPUCluster {
 
     @WrapOperation(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/lang/Object;equals(Ljava/lang/Object;)Z"))
     public boolean injectItems(Object instance, Object o, Operation<Boolean> original, @Local(name = "type") Actionable type) {
-        if (r$waitInput != null && r$waitInput.equals(o)) {
+        if (r$canIgnoredInput && r$waitInput != null && r$waitInput.equals(o)) {
             if (type == Actionable.MODULATE) {
                 var size = ((IAEItemStack) o).getStackSize();
                 if (r$waitInput.getStackSize() <= size) {
@@ -53,7 +56,7 @@ public abstract class MixinCraftingCPUCluster {
 
     @Inject(method = "injectItems", at = @At("RETURN"))
     public void onStop(IAEItemStack input, Actionable type, IActionSource src, CallbackInfoReturnable<IAEItemStack> cir) {
-        if (r$waitInput != null && this.finalOutput != null && this.finalOutput.getStackSize() <= 0) {
+        if (r$canIgnoredInput && r$waitInput != null && this.finalOutput != null && this.finalOutput.getStackSize() <= 0) {
             this.completeJob();
             this.updateCPU();
         }
@@ -62,7 +65,7 @@ public abstract class MixinCraftingCPUCluster {
     @Inject(method = "submitJob", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;setJob(Lappeng/crafting/MECraftingInventory;Lappeng/me/cluster/implementations/CraftingCPUCluster;Lappeng/api/networking/security/IActionSource;)V"))
     public void submitJob(IGrid g, ICraftingJob job, IActionSource src, ICraftingRequester requestingMachine, CallbackInfoReturnable<ICraftingLink> cir) {
         var j = (RCCraftingJob) job;
-        if (!j.canIgnoredInput()) return;
+        if (!(r$canIgnoredInput = j.canIgnoredInput())) return;
         var s = j.getWaitingItem();
         if (s != null && s.getStackSize() > 0) {
             r$waitInput = s.copy();
