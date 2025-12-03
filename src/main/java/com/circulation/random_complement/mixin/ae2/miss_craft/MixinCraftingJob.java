@@ -9,8 +9,7 @@ import appeng.crafting.MECraftingInventory;
 import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
 import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.circulation.random_complement.mixin.ae2.AccessorCraftingTreeNode;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
 import net.minecraft.world.World;
@@ -49,16 +48,15 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     @Unique
     private boolean r$specialDeficiency;
 
-    @WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0))
-    public void record(MECraftingInventory instance, IAEItemStack what, Operation<Void> original, @Share("rcOutput") LocalLongRef stackLocalRef) {
+    @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0, shift = At.Shift.BEFORE))
+    public void record(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef, @Local(name = "craftingInventory") MECraftingInventory craftingInventory) {
         if (canIgnoredInput()) {
-            var stack = instance.getItemList().findPrecise(what);
+            var stack = craftingInventory.getItemList().findPrecise(this.output);
             if (stack != null) {
                 var size = stack.getStackSize();
                 stackLocalRef.set(size);
             } else stackLocalRef.set(0);
         }
-        original.call(instance, what);
     }
 
     @Intrinsic

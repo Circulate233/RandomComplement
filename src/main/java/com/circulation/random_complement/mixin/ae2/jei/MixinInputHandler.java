@@ -33,7 +33,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,21 +46,13 @@ import javax.annotation.Nullable;
 public abstract class MixinInputHandler {
 
     @Shadow
-    @Final
-    private LeftAreaDispatcher leftAreaDispatcher;
-
-    @Shadow
-    @Final
-    private GhostIngredientDragManager ghostIngredientDragManager;
-
-    @Shadow
     @Nullable
     protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci) {
         ItemTooltipHandler.regItemTooltip(GuiScreen.class, () -> {
-            val ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
+            val ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
             if (ing == null) return ObjectLists.emptyList();
             return KeyBindings.getTooltipList();
         });
@@ -113,7 +104,7 @@ public abstract class MixinInputHandler {
             var k = kb.getKeyBinding();
             if (k.isActiveAndMatches(eventKey)) {
                 if (kb.isNeedItem()) {
-                    var ing = leftAreaDispatcher.getIngredientUnderMouse(MouseHelper.getX(), MouseHelper.getY());
+                    var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
                     if (ing == null) return false;
                     if (isMouse && !Mouse.isButtonDown(m)) {
                         return true;
@@ -122,7 +113,7 @@ public abstract class MixinInputHandler {
                     if (ing.getValue() instanceof BookmarkItem<?> book) {
                         item = MEHandler.packItem(book.ingredient);
                     } else {
-                        item = MEHandler.packItem(ing);
+                        item = MEHandler.packItem(ing.getValue());
                     }
                     if (item.isEmpty()) return false;
                     final var oldGui = Minecraft.getMinecraft().currentScreen;
