@@ -9,7 +9,6 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import com.glodblock.github.common.tile.TileDualInterface;
 import com.google.common.collect.ImmutableSet;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import github.kasuminova.mmce.common.tile.base.MEMachineComponent;
@@ -37,7 +36,7 @@ public abstract class MixinMEPatternProvider extends MEMachineComponent implemen
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(CallbackInfo ci) {
         if (soft$getInterfaceDuality() == null) {
-            r$d = new DualityInterface(this.proxy, new TileDualInterface());
+            r$d = new DualityInterface(this.proxy, this);
         }
     }
 
