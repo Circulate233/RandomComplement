@@ -37,16 +37,11 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
-
-@Mixin(value = TileLevelMaintainer.class, remap = false)
+@Mixin(value = TileLevelMaintainer.class, remap = false, priority = 999)
 public abstract class MixinTileLevelMaintainer extends TileNetworkDevice implements IStackWatcherHost, ICraftingRequester, AEIgnoredInputMachine {
 
     @Shadow
@@ -76,8 +71,8 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
      * @author circulation
      * @reason 删除多余的检测
      */
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    protected void tick(CallbackInfo ci) {
+    @Overwrite
+    protected void tick() {
         if (!this.world.isRemote) {
             this.aeGrid().ifPresent((grid) -> {
                 if (this.sleepTicks <= 0) {
@@ -122,37 +117,20 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
             });
         }
-        ci.cancel();
     }
 
     /**
      * @author circulation
      * @reason 修复插入物品逻辑，防止出现意外地吞物品
      */
-    @Inject(method = "injectCraftedItems", at = @At("HEAD"), cancellable = true)
-    public void injectCraftedItems(ICraftingLink link, IAEItemStack stack, Actionable mode, CallbackInfoReturnable<IAEItemStack> cir) {
+    @Overwrite
+    public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack stack, Actionable mode) {
         if (stack == null) {
-            cir.setReturnValue(null);
+            return null;
         } else {
             int slot = this.crafter.getSlotForJob(link);
             if (slot == -1) {
-                cir.setReturnValue(stack);
-            } else if (mode == Actionable.SIMULATE) {
-                if (this.aeGrid().isPresent()) {
-                    var grid = this.aeGrid().get();
-                    IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
-                    var gridCache = ((IStorageGrid) grid.getCache(IStorageGrid.class));
-                    IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                    if (Loader.isModLoaded("ae2fc")) {
-                        var i = ae2fc$work(grid, mode, gridCache, stack);
-                        cir.setReturnValue(i);
-                        return;
-                    } else {
-                        cir.setReturnValue(Platform.poweredInsert(energyGrid, storageGrid, stack, this.actionSource, Actionable.MODULATE));
-                    }
-                    return;
-                }
-                cir.setReturnValue(null);
+                return stack;
             } else {
                 if (this.aeGrid().isPresent()) {
                     var grid = this.aeGrid().get();
@@ -160,15 +138,12 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
                     var gridCache = ((IStorageGrid) grid.getCache(IStorageGrid.class));
                     IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                     if (Loader.isModLoaded("ae2fc")) {
-                        var i = ae2fc$work(grid, mode, gridCache, stack);
-                        cir.setReturnValue(i);
-                        return;
+                        return ae2fc$work(grid, mode, gridCache, stack);
                     } else {
-                        cir.setReturnValue(Platform.poweredInsert(energyGrid, storageGrid, stack, this.actionSource, Actionable.MODULATE));
+                        return storageGrid.injectItems(stack, mode, this.actionSource);
                     }
-                    return;
                 }
-                cir.setReturnValue(null);
+                return null;
             }
         }
     }
@@ -181,13 +156,10 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
             ItemStack inputStack = stack.getCachedItemStack(stack.getStackSize());
             FluidStack inputFluid = FakeItemRegister.getStack(inputStack);
-            IAEFluidStack remaining;
-
-            if (mode == appeng.api.config.Actionable.SIMULATE) {
-                remaining = fluidGrid.injectItems(AEFluidStack.fromFluidStack(inputFluid), Actionable.SIMULATE, this.actionSource);
+            final IAEFluidStack remaining = fluidGrid.injectItems(AEFluidStack.fromFluidStack(inputFluid), mode, this.actionSource);
+            if (mode == Actionable.SIMULATE) {
                 stack.setCachedItemStack(inputStack);
             } else {
-                remaining = fluidGrid.injectItems(AEFluidStack.fromFluidStack(inputFluid), Actionable.MODULATE, this.actionSource);
                 if (remaining == null || remaining.getStackSize() <= 0L) {
                     ItemStack tmp = FakeFluids.packFluid2AEDrops(remaining) != null ? FakeFluids.packFluid2AEDrops(remaining).getDefinition() : null;
                     stack.setCachedItemStack(tmp);
@@ -215,13 +187,12 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
 
         ItemStack inputStack = stack.getCachedItemStack(stack.getStackSize());
         GasStack inputGas = FakeItemRegister.getStack(inputStack);
-        IAEGasStack remaining;
+
+        final IAEGasStack remaining = gasGrid.injectItems(AEGasStack.of(inputGas), mode, this.actionSource);
 
         if (mode == Actionable.SIMULATE) {
-            remaining = gasGrid.injectItems(AEGasStack.of(inputGas), Actionable.SIMULATE, this.actionSource);
             stack.setCachedItemStack(inputStack);
         } else {
-            remaining = gasGrid.injectItems(AEGasStack.of(inputGas), Actionable.MODULATE, this.actionSource);
             if (remaining == null || remaining.getStackSize() <= 0L) {
                 ItemStack tmp = FakeGases.packGas2AEDrops(remaining) != null ? FakeGases.packGas2AEDrops(remaining).getDefinition() : null;
                 stack.setCachedItemStack(tmp);
@@ -233,13 +204,6 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
         }
 
         return FakeGases.packGas2AEDrops(remaining);
-    }
-
-    @Unique
-    private IAEItemStack r$request(int index, long count) {
-        AEItemStack stack = Objects.requireNonNull(AEItemStack.fromItemStack(((AccessorInventoryRequest) this.requests).getRequestStacks()[index]));
-        stack.setStackSize(count);
-        return stack;
     }
 
     @Unique

@@ -13,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.ExecutionException;
@@ -42,16 +42,19 @@ public abstract class MixinThrEngCraftingTracker {
     @Shadow
     public abstract boolean isSlotOpen(int slot);
 
-    @Inject(method = "requestCrafting", at = @At("HEAD"), cancellable = true)
-    public void requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc, CallbackInfoReturnable<Boolean> cir) {
+    /**
+     * @author circulation
+     * @reason 重写
+     */
+    @Overwrite
+    public boolean requestCrafting(int slot, IAEItemStack item, World world, IGrid grid, ICraftingGrid crafting, IActionSource actionSrc) {
         if (item != null) {
             ItemStack inputStack = item.getCachedItemStack(item.getStackSize());
             ItemStack remaining = ItemStack.EMPTY;
             item.setCachedItemStack(inputStack);
             Future<ICraftingJob> jobCalculation = this.jobs[slot];
             if (!this.isSlotOpen(slot)) {
-                cir.setReturnValue(false);
-                return;
+                return false;
             }
 
             if (jobCalculation == null && this.links[slot] == null) {
@@ -61,8 +64,7 @@ public abstract class MixinThrEngCraftingTracker {
             }
 
             if (jobCalculation == null) {
-                cir.setReturnValue(false);
-                return;
+                return false;
             }
 
             try {
@@ -74,8 +76,7 @@ public abstract class MixinThrEngCraftingTracker {
                         if (link != null) {
                             this.randomComplement$setLink(slot, link);
                             this.linksInv.put(link, slot);
-                            cir.setReturnValue(true);
-                            return;
+                            return true;
                         }
                     }
                 }
@@ -83,8 +84,7 @@ public abstract class MixinThrEngCraftingTracker {
 
             }
         }
-        cir.setReturnValue(false);
-        cir.cancel();
+        return false;
     }
 
     @Unique
@@ -114,9 +114,8 @@ public abstract class MixinThrEngCraftingTracker {
      * @author circulation
      * @reason 和见鬼毫无区别的导致崩溃
      */
-    @Inject(method = "updateLinks", at = @At("HEAD"), cancellable = true)
-    private void updateLinks(CallbackInfo ci) {
-        ci.cancel();
-        //这东西究竟是怎么无限循环的？？？
+    @Overwrite
+    private void updateLinks() {
+
     }
 }
