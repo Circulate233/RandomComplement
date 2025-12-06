@@ -16,7 +16,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
-import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
 import com.glodblock.github.common.item.fake.FakeFluids;
@@ -135,7 +134,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
                 if (this.aeGrid().isPresent()) {
                     var grid = this.aeGrid().get();
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
-                    var gridCache = ((IStorageGrid) grid.getCache(IStorageGrid.class));
+                    IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
                     if (Loader.isModLoaded("ae2fc")) {
                         return ae2fc$work(grid, mode, gridCache, stack);
@@ -176,7 +175,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
         } else {
             IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
             IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-            return Platform.poweredInsert(energyGrid, storageGrid, stack, this.actionSource, Actionable.MODULATE);
+            return storageGrid.injectItems(stack, mode, this.actionSource);
         }
     }
 
