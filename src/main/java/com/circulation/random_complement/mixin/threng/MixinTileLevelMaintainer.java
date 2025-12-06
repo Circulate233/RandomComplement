@@ -18,6 +18,7 @@ import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
+import com.circulation.random_complement.common.util.MEHandler;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
@@ -32,7 +33,6 @@ import io.github.phantamanta44.threng.util.ThrEngCraftingTracker;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -136,7 +136,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
                     IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                     IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
                     IMEMonitor<IAEItemStack> storageGrid = gridCache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                    if (Loader.isModLoaded("ae2fc")) {
+                    if (MEHandler.loadAE2FC) {
                         return ae2fc$work(grid, mode, gridCache, stack);
                     } else {
                         return storageGrid.injectItems(stack, mode, this.actionSource);
@@ -170,7 +170,7 @@ public abstract class MixinTileLevelMaintainer extends TileNetworkDevice impleme
             }
 
             return FakeFluids.packFluid2AEDrops(remaining);
-        } else if (Loader.isModLoaded("mekeng") && FakeGases.isGasFakeItem(stack.getDefinition())) {
+        } else if (MEHandler.loadMEKEng && FakeGases.isGasFakeItem(stack.getDefinition())) {
             return mekeng$work(mode, gridCache, stack);
         } else {
             IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);

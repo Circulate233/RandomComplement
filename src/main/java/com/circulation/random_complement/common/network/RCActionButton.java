@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.val;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.spongepowered.asm.mixin.Unique;
@@ -62,17 +63,17 @@ public class RCActionButton implements Packet<RCActionButton> {
                             && pattern.hasTagCompound()
                             && !(pNbt = pattern.getTagCompound()).getBoolean("crafting")
                         ) {
-                            val in = pNbt.getTagList("in", 10);
+                            val in = pNbt.getTagList("in", Constants.NBT.TAG_COMPOUND);
                             boolean success = true;
                             List<NBTBase> list = new ObjectArrayList<>(in.tagList);
-                            list.addAll(pNbt.getTagList("out", 10).tagList);
+                            list.addAll(pNbt.getTagList("out", Constants.NBT.TAG_COMPOUND).tagList);
                             if (pNbt.hasKey("Inputs")) {
-                                list.addAll(pNbt.getTagList("Inputs", 10).tagList);
-                                list.addAll(pNbt.getTagList("Outputs", 10).tagList);
+                                list.addAll(pNbt.getTagList("Inputs", Constants.NBT.TAG_COMPOUND).tagList);
+                                list.addAll(pNbt.getTagList("Outputs", Constants.NBT.TAG_COMPOUND).tagList);
                             }
                             for (NBTBase item : list) {
                                 if (!(item instanceof NBTTagCompound nbt) || !nbt.hasKey("Count")) continue;
-                                int oldSize = nbt.getInteger("Count");
+                                int oldSize = nbt.hasKey("stackSize") ? nbt.getInteger("stackSize") : nbt.getInteger("Count");
                                 if (!r$correctQuantity(oldSize, action)) {
                                     success = false;
                                     break;
@@ -89,6 +90,8 @@ public class RCActionButton implements Packet<RCActionButton> {
                                         if (success)
                                             nbt.setInteger("Cnt", r$quantityProcessing(oldSize, action));
                                     }
+                                    if (newSize > 127) nbt.setInteger("stackSize", newSize);
+                                    else nbt.removeTag("stackSize");
                                 }
                             }
                             if (success) {
