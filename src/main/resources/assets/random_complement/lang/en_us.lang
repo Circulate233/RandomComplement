@@ -55,8 +55,6 @@ key.ae2fc.pattern.tooltip.0=§rPress §6%s§r to modify the quantity of items
 
 text.rc.tooltip.press_alt=§rPress §fALT§r to see Tooltips
 
-text.rc.fluid_pattern.tooltip=§9%s§r mark §6%s§r
-
 text.rc.craft=This item has no corresponding crafting
 text.rc.warn=You shouldn't have tried so quickly
 

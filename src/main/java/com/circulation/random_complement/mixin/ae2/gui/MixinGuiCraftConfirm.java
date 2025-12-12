@@ -14,6 +14,8 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.circulation.random_complement.common.util.AEBookmarkGroup;
 import com.google.common.base.Joiner;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.Internal;
 import mezz.jei.bookmarks.BookmarkGroup;
@@ -33,7 +35,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -136,13 +137,13 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         bookmarkList.add(group);
     }
 
-    @Redirect(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
-    public String addItemInformation(Object n) {
+    @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
+    public String addItemInformation(Object n, Operation<String> original) {
         String out;
         if (!(out = randomComplement$getItemInformation(n)).isEmpty()) {
-            return randomComplement$getItemDisplayName(n) + out;
+            return original.call(n) + out;
         } else {
-            return randomComplement$getItemDisplayName(n);
+            return original.call(n);
         }
     }
 

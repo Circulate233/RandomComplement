@@ -11,7 +11,6 @@ import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
-import appeng.helpers.InventoryAction;
 import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -182,14 +181,6 @@ public abstract class MixinContainerUltimateEncoder extends AEBaseContainer impl
                     slot.putStack(blanks);
                 }
             }
-        }
-    }
-
-    @Inject(method = "doAction", at = @At("HEAD"), cancellable = true)
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id, CallbackInfo ci) {
-        if (id != 0) {
-            super.doAction(player, action, slotId, 0);
-            ci.cancel();
         }
     }
 

@@ -6,20 +6,13 @@
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinAllGuiFactory",
-    "MixinCPacketLoadPattern",
-    "MixinItemOrPartGuiFactory",
     "MixinPartDualInterface",
-    "container.MixinContainerExtendedFluidPatternTerminal",
-    "container.MixinContainerFluidPatternTerminal",
     "container.MixinContainerUltimateEncoder",
-    "container.MixinContainerWirelessFluidPatternTerminal",
     "tile.MixinTileDualInterface",
     "tile.MixinTileUltimateEncoder"
   ],
   "server": [],
   "client": [
-    "gui.MixinAEBaseGui",
     "gui.MixinGuiExtendedFluidPatternTerminal",
     "gui.MixinGuiFCCraftConfirm",
     "gui.MixinGuiFluidPatternTerminal",
