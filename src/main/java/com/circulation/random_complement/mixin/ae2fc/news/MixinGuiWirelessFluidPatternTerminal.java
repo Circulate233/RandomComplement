@@ -1,9 +1,9 @@
-package com.circulation.random_complement.mixin.ae2fc.gui;
+package com.circulation.random_complement.mixin.ae2fc.news;
 
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.common.util.MEHandler;
 import com.circulation.random_complement.mixin.ae2.gui.MixinGuiMEMonitorable;
-import com.glodblock.github.client.GuiFluidPatternTerminal;
+import com.glodblock.github.client.client.gui.GuiWirelessFluidPatternTerminal;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = GuiFluidPatternTerminal.class)
-public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable {
+@Mixin(value = GuiWirelessFluidPatternTerminal.class)
+public abstract class MixinGuiWirelessFluidPatternTerminal extends MixinGuiMEMonitorable {
 
-    public MixinGuiFluidPatternTerminal(Container container) {
+    public MixinGuiWirelessFluidPatternTerminal(Container container) {
         super(container);
     }
 
@@ -26,7 +26,7 @@ public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable
             if (!slotFake.getDisplayStack().isEmpty()) {
                 var item = slotFake.getDisplayStack();
                 if (r$getCraftablesCache().contains(MEHandler.packAEItem(item))) {
-                    r$getPlusSlot().add(slot);
+                    r$getPlusSlot().add(slotFake);
                 }
             }
         }

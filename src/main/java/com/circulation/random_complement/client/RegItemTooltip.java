@@ -3,10 +3,8 @@ package com.circulation.random_complement.client;
 import appeng.client.gui.AEBaseGui;
 import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.handler.ItemTooltipHandler;
-import com.glodblock.github.client.GuiExtendedFluidPatternTerminal;
-import com.glodblock.github.client.GuiFluidPatternTerminal;
+import com.circulation.random_complement.mixin.util.FCClassUtil;
 import com.glodblock.github.client.GuiUltimateEncoder;
-import com.glodblock.github.client.GuiWirelessFluidPatternTerminal;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -32,9 +30,11 @@ public class RegItemTooltip {
             return ObjectLists.emptyList();
         };
 
-        ItemTooltipHandler.regItemTooltip(GuiFluidPatternTerminal.class, t);
-        ItemTooltipHandler.regItemTooltip(GuiExtendedFluidPatternTerminal.class, t);
-        ItemTooltipHandler.regItemTooltip(GuiWirelessFluidPatternTerminal.class, t);
+        ItemTooltipHandler.regItemTooltip(FCClassUtil.extendedFluidPatternTerminal, t);
+        ItemTooltipHandler.regItemTooltip(FCClassUtil.fluidPatternTerminal, t);
+        ItemTooltipHandler.regItemTooltip(FCClassUtil.wirelessFluidPatternTerminal, t);
+
+
         ItemTooltipHandler.regItemTooltip(GuiUltimateEncoder.class, t);
     }
 }

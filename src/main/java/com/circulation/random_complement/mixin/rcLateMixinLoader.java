@@ -70,7 +70,11 @@ public class rcLateMixinLoader implements ILateMixinLoader {
         }
         addMixinCFG("mixins.random_complement.threng.json",
             () -> modLoaded("threng") && RCConfig.LazyAE.EnableRepair);
-        addModdedMixinCFG("mixins.random_complement.ae2fc.json", "ae2fc");
+        if (modLoaded("ae2fc")) {
+            addMixinCFG("mixins.random_complement.ae2fc.json");
+            addMixinCFG("mixins.random_complement.ae2fc.old.json", () -> isClassPresent("com.glodblock.github.common.tile.TileFluidLevelMaintainer"));
+            addMixinCFG("mixins.random_complement.ae2fc.new.json", () -> !isClassPresent("com.glodblock.github.common.tile.TileFluidLevelMaintainer"));
+        }
         addModdedMixinCFG("mixins.random_complement.ic2.json", "ic2");
         addModdedMixinCFG("mixins.random_complement.te5.json", "thermalexpansion");
         addModdedMixinCFG("mixins.random_complement.thaumicenergistics.json", "thaumicenergistics");
