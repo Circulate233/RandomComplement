@@ -17,10 +17,10 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     @Intrinsic
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         if (!RandomComplement.proxy.isMouseHasItem()
-            && this.hoveredSlot != null
-            && this.hoveredSlot.getHasStack()
+            && this.getSlotUnderMouse() != null
+            && this.getSlotUnderMouse().getHasStack()
         ) {
-            this.renderToolTip(this.hoveredSlot.getStack(), mouseX, mouseY);
+            this.renderToolTip(this.getSlotUnderMouse().getStack(), mouseX, mouseY);
         }
     }
 
