@@ -6,10 +6,8 @@ import com.circulation.random_complement.mixin.ae2.gui.MixinGuiMEMonitorable;
 import com.glodblock.github.client.client.gui.GuiExtendedFluidPatternTerminal;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = GuiExtendedFluidPatternTerminal.class)
 public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMonitorable {
@@ -18,18 +16,19 @@ public abstract class MixinGuiExtendedFluidPatternTerminal extends MixinGuiMEMon
         super(container);
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "HEAD"))
-    private void drawSlotFake(Slot slot, CallbackInfo ci) {
+    @Intrinsic
+    public void drawSlot(Slot slot) {
         if (slot.xPos < 0 || slot.yPos < 0) return;
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.shouldDisplay()) return;
-            var item = slotFake.getDisplayStack();
-            if (!item.isEmpty()) {
+            if (!slotFake.getDisplayStack().isEmpty()) {
+                var item = slotFake.getDisplayStack();
                 if (r$getCraftablesCache().contains(MEHandler.packAEItem(item))) {
                     r$getPlusSlot().add(slotFake);
                 }
             }
         }
+        super.drawSlot(slot);
     }
 
 }
