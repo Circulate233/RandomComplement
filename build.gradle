@@ -214,7 +214,7 @@ dependencies {
     runtimeOnly(rfg.deobf("curse.maven:Cucumber-1.12.2-1.1.3-272335:2645867"))
     implementation(rfg.deobf("curse.maven:CodeChickenLib-1.12.2-3.2.4.1-universal-242818:2779848"))
     implementation(rfg.deobf("curse.maven:ae2-extended-life-570458:6302098"))
-    implementation("lib:ae2fc-2.7.0-unofficial:dev")
+    implementation(rfg.deobf("curse.maven:ae2fluidcraft-rework-unofficial-1404390:7332070"))
     compileOnly(rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5504001"))
     implementation(rfg.deobf("curse.maven:baubles-227083:2518667"))
     implementation(rfg.deobf("curse.maven:not-enough-energistics-515565:5234732"))

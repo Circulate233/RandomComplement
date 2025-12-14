@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,12 +30,18 @@ public abstract class MixinGuiCraftConfirm {
     @Final
     private ContainerCraftConfirm ccc;
 
+    @Unique
+    private boolean rc$init;
+
     @Inject(method = "postUpdate", at = @At("TAIL"))
     public void postUpdate(List<IAEItemStack> list, byte ref, CallbackInfo ci) {
         if (ref == 2 && !this.missing.isEmpty() && !this.ccc.noCPU) {
-            this.start.x -= 20;
-            this.start.width += 20;
-            this.start.displayString = I18n.format("gui.rc.miss_craft.text");
+            if (!rc$init) {
+                this.start.x -= 20;
+                this.start.width += 20;
+                this.start.displayString = I18n.format("gui.rc.miss_craft.text");
+                rc$init = true;
+            }
         }
     }
 }
