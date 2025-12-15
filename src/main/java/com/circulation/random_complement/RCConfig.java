@@ -88,6 +88,10 @@ public class RCConfig {
         @Config.Comment({"Use the new Patten Terminal Gui"})
         @Config.Name("newPattenGui")
         public boolean newPattenGui = true;
+        
+        @Config.Comment({"Enable miss craft feature"})
+        @Config.Name("enableMissCraft")
+        public boolean enableMissCraft = true;
     }
 
     public static class IC2 {
