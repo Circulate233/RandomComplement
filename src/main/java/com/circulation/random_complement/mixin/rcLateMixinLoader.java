@@ -31,6 +31,8 @@ public class rcLateMixinLoader implements ILateMixinLoader {
             addMixinCFG("mixins.random_complement.ae2.json");
             addMixinCFG("mixins.random_complement.ae2.miss_craft.json", 
                 () -> RCConfig.AE2.enableMissCraft);
+            addMixinCFG("mixins.random_complement.ae2.miss_craft.ae2ctl.json",
+                () -> RCConfig.AE2.enableMissCraft && modLoaded("ae2ctl"));
             addMixinCFG("mixins.random_complement.ae2.new_patten_gui.json",
                 () -> RCConfig.AE2.newPattenGui);
             addMixinCFG("mixins.random_complement.ae2fc.new_patten_gui.json",

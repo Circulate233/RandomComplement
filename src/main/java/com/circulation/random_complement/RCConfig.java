@@ -85,7 +85,10 @@ public class RCConfig {
         @Config.Name("debugEnergy")
         public boolean debugEnergy = false;
 
-        @Config.Comment({"Use the new Patten Terminal Gui"})
+        @Config.Comment({
+            "Use the new Patten Terminal Gui",
+            "Closing will cause all patterns created while enabled to become invalid."
+        })
         @Config.Name("newPattenGui")
         public boolean newPattenGui = true;
         
