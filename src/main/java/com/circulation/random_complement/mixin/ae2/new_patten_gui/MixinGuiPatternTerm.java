@@ -6,6 +6,8 @@ import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.RCGuiScrollbar;
 import com.circulation.random_complement.client.RCScrollbarGui;
 import com.circulation.random_complement.common.interfaces.RCPatternEncoder;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import org.spongepowered.asm.mixin.Final;
@@ -41,7 +43,16 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
 
     @Override
     protected void r$addScrollBars() {
-        r$getScrollBars().add(r$scrollbar = new RCGuiScrollbar());
+        GuiContainer gui = this;
+        r$getScrollBars().add(r$scrollbar = new RCGuiScrollbar() {
+            @Override
+            public void wheel(int delta) {
+                if (gui.getSlotUnderMouse() != null && GuiScreen.isShiftKeyDown()) {
+                    return;
+                }
+                super.wheel(delta);
+            }
+        });
     }
 
     @Intrinsic
