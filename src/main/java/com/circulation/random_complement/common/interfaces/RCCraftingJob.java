@@ -11,4 +11,8 @@ public interface RCCraftingJob {
     void setSpecialDeficiency(boolean b);
 
     boolean canIgnoredInput();
+
+    boolean isMiss();
+
+    void setMiss(boolean miss);
 }

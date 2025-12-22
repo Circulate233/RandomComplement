@@ -65,6 +65,7 @@ public class MixinCraftingTreeNode {
             }
         }
         this.howManyEmitted += l;
+        ((RCCraftingJob) job).setMiss(true);
         IAEItemStack rv = this.what.copy();
         rv.setStackSize(l);
         cir.setReturnValue(rv);

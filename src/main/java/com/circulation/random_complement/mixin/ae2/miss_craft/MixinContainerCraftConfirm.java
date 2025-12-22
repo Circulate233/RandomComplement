@@ -7,6 +7,7 @@ import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,6 +19,8 @@ import java.util.concurrent.Future;
 @Mixin(ContainerCraftConfirm.class)
 public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
 
+    @Shadow(remap = false)
+    public boolean autoStart;
     @Unique
     private boolean r$canIgnoredInput = false;
 
@@ -39,6 +42,9 @@ public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
         try {
             if (job.get() instanceof RCCraftingJob j) {
                 this.r$canIgnoredInput = j.canIgnoredInput();
+                if (j.isMiss()) {
+                    this.autoStart = false;
+                }
             }
         } catch (InterruptedException | ExecutionException ignored) {
         }

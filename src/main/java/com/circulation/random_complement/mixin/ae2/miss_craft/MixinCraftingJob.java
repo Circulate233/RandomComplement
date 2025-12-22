@@ -71,6 +71,9 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
         else return this.actionSrc.player().isPresent();
     }
 
+    @Unique
+    private boolean rc$miss = false;
+
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
     public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {
         if (!canIgnoredInput()) return;
@@ -131,8 +134,19 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
                 tree.setHowManyEmitted(repeatInput.getStackSize());
                 r$wait = repeatInput.setStackSize(repeatInput.getStackSize() * ++outputQuantity);
                 setSpecialDeficiency(true);
+                rc$miss = true;
             }
         }
+    }
+
+    @Intrinsic
+    public boolean isMiss() {
+        return rc$miss;
+    }
+
+    @Intrinsic
+    public void setMiss(boolean miss) {
+        this.rc$miss = miss;
     }
 
     @Intrinsic
