@@ -1,12 +1,15 @@
 package com.circulation.random_complement.mixin.ae2.gui;
 
+import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiCraftConfirm;
 import appeng.core.AELog;
+import appeng.core.sync.GuiBridge;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketValueConfig;
+import appeng.tile.misc.TileSecurityStation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
@@ -25,6 +28,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
@@ -52,6 +56,9 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     public MixinGuiCraftConfirm(Container container) {
         super(container);
     }
+
+    @Shadow(remap = false)
+    private GuiBridge OriginalGui;
 
     @Unique
     private static String randomComplement$getItemInformation(final Object o) {
@@ -100,6 +107,14 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(InventoryPlayer inventoryPlayer, ITerminalHost te, CallbackInfo ci) {
+        if (te instanceof TileSecurityStation) {
+            this.OriginalGui = GuiBridge.GUI_SECURITY;
+        }
+
+    }
+
     @Inject(method = "drawFG", at = @At("TAIL"), remap = false)
     private void onDrawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
         if (r$getCancel().isMouseOver() && Loader.isModLoaded("jei")) {
@@ -108,7 +123,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     }
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
-    public void onActionPerformed1(GuiButton btn, CallbackInfo ci) {
+    public void onActionPerformed(GuiButton btn, CallbackInfo ci) {
         if (Loader.isModLoaded("jei") && btn == r$getCancel() && isShiftKeyDown()) rc$addMissBookmark();
         if (RCInputHandler.getOldGui() == null) return;
         if (btn == this.start || btn == r$getCancel()) {
@@ -123,7 +138,9 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
             GuiScreen oldGui;
             if ((oldGui = RCInputHandler.getOldGui()) != null) {
                 RCInputHandler.setDelayMethod(() -> Minecraft.getMinecraft().displayGuiScreen(oldGui));
-                RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
+                if (btn == r$getCancel()) {
+                    RandomComplement.NET_CHANNEL.sendToServer(new ContainerRollBACK());
+                }
             }
             ci.cancel();
         }
