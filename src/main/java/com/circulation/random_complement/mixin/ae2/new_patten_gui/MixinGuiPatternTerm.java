@@ -28,9 +28,9 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
     @Final
     private ContainerPatternEncoder container;
     @Unique
-    private int r$slotLeft = Integer.MAX_VALUE;
+    private int r$slotLeft;
     @Unique
-    private int r$slotTop = Integer.MAX_VALUE;
+    private int r$slotTop;
 
     public MixinGuiPatternTerm(Container container) {
         super(container);
@@ -62,6 +62,8 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
 
     @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
+        r$slotTop = Integer.MAX_VALUE;
+        r$slotLeft = Integer.MAX_VALUE;
         for (var inventorySlot : container.inventorySlots) {
             if (inventorySlot instanceof SlotFake slotFake) {
                 if (slotFake.xPos < r$slotLeft && slotFake.xPos > 0) r$slotLeft = slotFake.xPos;

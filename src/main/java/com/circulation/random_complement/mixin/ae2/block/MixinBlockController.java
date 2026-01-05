@@ -5,10 +5,10 @@ import appeng.block.AEBaseTileBlock;
 import appeng.block.networking.BlockController;
 import appeng.core.sync.GuiBridge;
 import appeng.util.Platform;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ public class MixinBlockController extends AEBaseTileBlock {
     @Intrinsic
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (Platform.isServer() && !player.isSneaking()) {
-            if (!(Block.getBlockFromItem(player.getHeldItem(hand).getItem()) instanceof BlockController)) {
+            if (!(player.getHeldItem(hand).getItem() instanceof ItemBlock)) {
                 Platform.openGUI(player, this.getTileEntity(world, pos), AEPartLocation.fromFacing(facing), GuiBridge.GUI_NETWORK_STATUS);
                 return true;
             }
