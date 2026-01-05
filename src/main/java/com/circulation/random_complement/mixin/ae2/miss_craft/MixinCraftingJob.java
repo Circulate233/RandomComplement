@@ -3,6 +3,7 @@ package com.circulation.random_complement.mixin.ae2.miss_craft;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.crafting.CraftBranchFailure;
 import appeng.crafting.CraftingJob;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.MECraftingInventory;
@@ -48,6 +49,7 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     @Unique
     private boolean r$specialDeficiency;
 
+    @SuppressWarnings("DiscouragedShift")
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0, shift = At.Shift.BEFORE))
     public void record(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef, @Local(name = "craftingInventory") MECraftingInventory craftingInventory) {
         if (canIgnoredInput()) {
@@ -75,15 +77,17 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     private boolean rc$miss = false;
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
-    public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {
+    public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) throws Exception {
         if (!canIgnoredInput()) return;
         var tree = (AccessorCraftingTreeNode) this.tree;
         if (tree.isCanEmit()) return;
         final long out = stackLocalRef.get();
+        var details = this.cc.getCraftingFor(this.output, null, 0, this.world);
+        if (details == null || details.isEmpty()) throw new CraftBranchFailure(this.output, 0);
         if (out > 0) {
-            for (var details : this.cc.getCraftingFor(this.output, null, 0, this.world)) {
+            for (var detail : details) {
                 IAEItemStack repeatInput = this.output.copy().setStackSize(0);
-                for (var input : details.getCondensedInputs()) {
+                for (var input : detail.getCondensedInputs()) {
                     if (this.output.equals(input)) {
                         repeatInput.incStackSize(input.getStackSize());
                     }
@@ -91,7 +95,7 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
                 if (repeatInput.getStackSize() == 0) return;
 
                 IAEItemStack repeatOutput = this.output.copy().setStackSize(0);
-                for (var input : details.getCondensedOutputs()) {
+                for (var input : detail.getCondensedOutputs()) {
                     if (this.output.equals(input)) {
                         repeatOutput.incStackSize(input.getStackSize());
                     }
@@ -111,9 +115,9 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
                 break;
             }
         } else {
-            for (var details : this.cc.getCraftingFor(this.output, null, 0, this.world)) {
+            for (var detail : details) {
                 IAEItemStack repeatInput = this.output.copy().setStackSize(0);
-                for (var input : details.getCondensedInputs()) {
+                for (var input : detail.getCondensedInputs()) {
                     if (this.output.equals(input)) {
                         repeatInput.incStackSize(input.getStackSize());
                     }
@@ -121,7 +125,7 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
                 if (repeatInput.getStackSize() == 0) return;
 
                 IAEItemStack repeatOutput = this.output.copy().setStackSize(0);
-                for (var input : details.getCondensedOutputs()) {
+                for (var input : detail.getCondensedOutputs()) {
                     if (this.output.equals(input)) {
                         repeatOutput.incStackSize(input.getStackSize());
                     }

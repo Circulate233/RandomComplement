@@ -7,6 +7,9 @@ import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.util.MEHandler;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -122,4 +125,8 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         }
     }
 
+    @WrapOperation(method = "handleMouseClick",at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;isAltKeyDown()Z"))
+    protected boolean fixNoCraftable(Operation<Boolean> original, @Local(name = "stack") IAEItemStack stack) {
+        return original.call() && stack.isCraftable();
+    }
 }
