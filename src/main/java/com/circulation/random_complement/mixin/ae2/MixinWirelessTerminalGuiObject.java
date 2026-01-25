@@ -1,6 +1,8 @@
 package com.circulation.random_complement.mixin.ae2;
 
 import appeng.helpers.WirelessTerminalGuiObject;
+import appeng.parts.automation.UpgradeInventory;
+import appeng.tile.inventory.AppEngInternalInventory;
 import com._0xc4de.ae2exttable.client.gui.WirelessTerminalGuiObjectTwo;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = WirelessTerminalGuiObject.class, remap = false)
@@ -65,6 +68,16 @@ public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableO
             return i;
         }
         return false;
+    }
+
+    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), allow = 1)
+    public void loadViewCell(AppEngInternalInventory instance, NBTTagCompound data) {
+        instance.readFromNBT(data, "viewCell");
+    }
+
+    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/parts/automation/UpgradeInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), allow = 1)
+    public void loadUpgrade(UpgradeInventory instance, NBTTagCompound data) {
+        instance.readFromNBT(data, "upgrades");
     }
 
     @Inject(method = "loadFromNBT", at = @At("TAIL"))
