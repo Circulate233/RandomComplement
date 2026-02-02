@@ -16,6 +16,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,6 +49,11 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Shadow(remap = false)
     protected abstract List<Slot> getInventorySlots();
+
+    @Shadow
+    public void drawSlot(@NotNull Slot s) {
+        super.drawSlot(s);
+    }
 
     @Unique
     public Set<IAEItemStack> r$getCraftablesCache() {

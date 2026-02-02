@@ -6,6 +6,7 @@ import com.circulation.random_complement.mixin.ae2.gui.MixinGuiMEMonitorable;
 import com.glodblock.github.client.client.gui.GuiFluidPatternTerminal;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -17,7 +18,7 @@ public abstract class MixinGuiFluidPatternTerminal extends MixinGuiMEMonitorable
     }
 
     @Intrinsic
-    public void drawSlot(Slot slot) {
+    public void drawSlot(@NotNull Slot slot) {
         if (slot.xPos < 0 || slot.yPos < 0) return;
         if (slot instanceof SlotFake slotFake) {
             if (!slotFake.shouldDisplay()) return;

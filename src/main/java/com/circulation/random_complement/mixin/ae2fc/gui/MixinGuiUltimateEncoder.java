@@ -19,8 +19,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -71,8 +73,8 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
         }
     }
 
-    @Inject(method = "drawSlot", at = @At(value = "HEAD"), remap = true)
-    private void drawSlotFake(Slot slot, CallbackInfo ci) {
+    @Intrinsic
+    public void drawSlot(@NotNull Slot slot) {
         if (!this.randomComplement$craftableCache.isEmpty() && slot instanceof SlotFake slotFake) {
             if (!slotFake.shouldDisplay()) return;
             var item = slotFake.getDisplayStack();
@@ -82,6 +84,7 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
                 }
             }
         }
+        super.drawSlot(slot);
     }
 
     @Unique
