@@ -1,5 +1,8 @@
 package com.circulation.random_complement.client;
 
+import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.handler.GuiMouseHelper;
+import com.circulation.random_complement.client.handler.HighlighterHandler;
 import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
@@ -9,23 +12,26 @@ import com.circulation.random_complement.mixin.jei.AccessorGhostIngredientDragMa
 import com.circulation.random_complement.mixin.jei.AccessorInputHandler;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
+import lombok.val;
 import mezz.jei.Internal;
+import mezz.jei.gui.ghost.GhostIngredientDrag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = RandomComplement.MOD_ID)
 public class ClientProxy extends CommonProxy {
     public static final String categoryJEI = "RandomComplement(JEI)";
+    public static final String categoryAE2 = "RandomComplement(AE2)";
 
     public static ItemStack getMouseItem() {
-        var i = Minecraft.getMinecraft().player.inventory.getItemStack();
+        val player = Minecraft.getMinecraft().player;
+        if (player == null) return ItemStack.EMPTY;
+        val i = player.inventory.getItemStack();
         if (!i.isEmpty()) return i;
 
         if (Loader.isModLoaded("jei")) return getJEIMouseItem();
@@ -35,7 +41,10 @@ public class ClientProxy extends CommonProxy {
 
     @Optional.Method(modid = "jei")
     public static ItemStack getJEIMouseItem() {
-        var ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+        GhostIngredientDrag<?> ii = null;
+        if (Internal.getInputHandler() != null) {
+            ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+        }
         if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
         return ItemStack.EMPTY;
     }
@@ -48,7 +57,22 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit() {
         super.preInit();
-        MinecraftForge.EVENT_BUS.register(new ItemTooltipHandler());
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if (Functions.modLoaded("appliedenergistics2")) {
+            KeyBindings.init();
+        }
+    }
+
+    @Override
+    public void postInit() {
+        super.postInit();
+        MinecraftForge.EVENT_BUS.register(GuiMouseHelper.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(ItemTooltipHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(HighlighterHandler.INSTANCE);
         if (Loader.isModLoaded("appliedenergistics2")) {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
         }
@@ -73,30 +97,12 @@ public class ClientProxy extends CommonProxy {
                 MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
             }
         }
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        if (Functions.modLoaded("appliedenergistics2")) {
-            KeyBindings.init();
-        }
-    }
-
-    @Override
-    public void postInit() {
-        super.postInit();
         RegItemTooltip.regAll();
-    }
-
-    @SubscribeEvent
-    public void onRegisterModels(ModelRegistryEvent event) {
-
     }
 
     @Override
     @Optional.Method(modid = "jei")
     public boolean isMouseHasItem() {
-        return !Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() || ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag() != null;
+        return !getMouseItem().isEmpty();
     }
 }

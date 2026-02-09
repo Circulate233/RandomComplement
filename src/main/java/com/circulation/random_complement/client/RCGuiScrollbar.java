@@ -2,7 +2,7 @@ package com.circulation.random_complement.client;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiScrollbar;
-import com.circulation.random_complement.client.handler.RCInputHandler;
+import com.circulation.random_complement.client.handler.GuiMouseHelper;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -82,7 +82,7 @@ public class RCGuiScrollbar extends GuiScrollbar {
 
     public void wheel(int delta) {
         if (visible) {
-            if (rectangle.contains(RCInputHandler.getMouseX() - ((AEBaseGui) Minecraft.getMinecraft().currentScreen).getGuiLeft(), RCInputHandler.getMouseY() - ((AEBaseGui) Minecraft.getMinecraft().currentScreen).getGuiTop())) {
+            if (rectangle.contains(GuiMouseHelper.getMouseX() - ((AEBaseGui) Minecraft.getMinecraft().currentScreen).getGuiLeft(), GuiMouseHelper.getMouseY() - ((AEBaseGui) Minecraft.getMinecraft().currentScreen).getGuiTop())) {
                 int old = getCurrentScroll();
                 super.wheel(delta);
                 if (old != getCurrentScroll() && rcScrollbarGui != null) {

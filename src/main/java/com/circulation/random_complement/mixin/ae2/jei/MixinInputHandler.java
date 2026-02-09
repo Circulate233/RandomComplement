@@ -11,8 +11,10 @@ import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
+import com.circulation.random_complement.common.util.Functions;
 import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
+import lombok.Getter;
 import lombok.val;
 import mezz.jei.bookmarks.BookmarkItem;
 import mezz.jei.bookmarks.BookmarkList;
@@ -41,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Mixin(value = InputHandler.class, remap = false)
 public abstract class MixinInputHandler {
@@ -49,14 +52,11 @@ public abstract class MixinInputHandler {
     @Nullable
     protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci) {
-        ItemTooltipHandler.regItemTooltip(GuiScreen.class, () -> {
-            val ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
-            if (ing == null) return ObjectLists.emptyList();
-            return KeyBindings.getTooltipList();
-        });
-    }
+    @Unique
+    private final KeyBindings[] rc$keys = new KeyBindings[]{KeyBindings.StartCraft, KeyBindings.RetrieveItem};
+    @Unique
+    @Getter(lazy = true)
+    private final List<String> rc$keyTooltips = Functions.asList(KeyBindings.RetrieveItem.getTooltip(), KeyBindings.StartCraft.getTooltip());
 
     @Unique
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -90,6 +90,15 @@ public abstract class MixinInputHandler {
         }
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(JeiRuntime runtime, IngredientRegistry ingredientRegistry, IngredientListOverlay ingredientListOverlay, GuiScreenHelper guiScreenHelper, LeftAreaDispatcher leftAreaDispatcher, BookmarkList bookmarkList, GhostIngredientDragManager ghostIngredientDragManager, CallbackInfo ci) {
+        ItemTooltipHandler.regItemTooltip(GuiScreen.class, () -> {
+            val ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
+            if (ing == null) return ObjectLists.emptyList();
+            return getRc$keyTooltips();
+        });
+    }
+
     @Unique
     private boolean r$work(boolean isMouse) {
         int eventKey;
@@ -100,15 +109,15 @@ public abstract class MixinInputHandler {
         } else {
             eventKey = Keyboard.getEventKey();
         }
-        for (KeyBindings kb : KeyBindings.values()) {
+        for (KeyBindings kb : rc$keys) {
             var k = kb.getKeyBinding();
             if (k.isActiveAndMatches(eventKey)) {
                 if (kb.isNeedItem()) {
-                    var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
-                    if (ing == null) return false;
                     if (isMouse && !Mouse.isButtonDown(m)) {
                         return true;
                     }
+                    var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
+                    if (ing == null) return false;
                     final ItemStack item;
                     if (ing.getValue() instanceof BookmarkItem<?> book) {
                         item = MEHandler.packItem(book.ingredient);

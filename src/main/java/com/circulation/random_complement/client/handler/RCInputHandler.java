@@ -1,13 +1,16 @@
 package com.circulation.random_complement.client.handler;
 
 import com.circulation.random_complement.RandomComplement;
+import com.circulation.random_complement.client.KeyBindings;
+import com.circulation.random_complement.common.network.InterfaceTracing;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
+import com.circulation.random_complement.mixin.ae2.gui.AccessorGuiCraftingCPU;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 @SideOnly(Side.CLIENT)
@@ -41,26 +45,9 @@ public class RCInputHandler {
     @Setter
     @Getter
     private static Runnable delayMethod = null;
-    @Getter
-    private static ScaledResolution resolution;
 
     private RCInputHandler() {
 
-    }
-
-    public static int getMouseX() {
-        int i = resolution.getScaledWidth();
-        return Mouse.getX() * i / mc.displayWidth;
-    }
-
-    public static int getMouseY() {
-        int j = resolution.getScaledHeight();
-        return j - Mouse.getY() * j / mc.displayHeight - 1;
-    }
-
-    @SubscribeEvent
-    public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        resolution = new ScaledResolution(mc);
     }
 
     @SubscribeEvent
@@ -72,8 +59,51 @@ public class RCInputHandler {
         counter = (counter + ((++counter1 & 1) == 0 ? 1 : 0)) % 14;
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    public static boolean work(boolean isMouse) {
+        if (mc.player == null) return false;
+        int eventKey;
+        int m = 0;
+        if (isMouse) {
+            m = Mouse.getEventButton();
+            eventKey = m - 100;
+        } else {
+            eventKey = Keyboard.getEventKey();
+        }
+        for (var kb : KeyBindings.values()) {
+            switch (kb) {
+                case QueryInterface -> {
+                    if (kb.getKeyBinding().isActiveAndMatches(eventKey)) {
+                        if (isMouse && !Mouse.isButtonDown(m)) {
+                            return true;
+                        }
+                        if (mc.currentScreen instanceof AccessorGuiCraftingCPU gui) {
+                            int viewStart = gui.invokerGetScrollBar().getCurrentScroll() * 3;
+                            int viewEnd = viewStart + 18;
+                            if (gui.getTooltip() + viewStart < Math.min(viewEnd, gui.getVisual().size())) {
+                                Minecraft.getMinecraft().addScheduledTask(() -> {
+                                    if (gui.getTooltip() + viewStart < Math.min(viewEnd, gui.getVisual().size())) {
+                                        val item = gui.getVisual().get(gui.getTooltip() + viewStart);
+                                        if (item != null)
+                                            RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
+                                    }
+                                });
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+                default -> {
+                }
+            }
+        }
+        return false;
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.KeyInputEvent event) {
+        if (mc.player == null) return;
         if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
             ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
 
@@ -133,6 +163,7 @@ public class RCInputHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.MouseInputEvent event) {
+        if (mc.player == null) return;
         if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
             ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
 
@@ -187,6 +218,20 @@ public class RCInputHandler {
 
             RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
             tick = 20;
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onGuiKeyboardEventPre(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        if (work(false)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onGuiMouseEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (work(true)) {
+            event.setCanceled(true);
         }
     }
 }

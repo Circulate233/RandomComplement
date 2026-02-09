@@ -2,6 +2,7 @@ package com.circulation.random_complement.common;
 
 import com.circulation.random_complement.common.handler.CraftingUnitHandler;
 import com.circulation.random_complement.common.interfaces.Packet;
+import com.circulation.random_complement.common.network.InterfaceTracing;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.network.RCActionButton;
@@ -27,11 +28,13 @@ public class CommonProxy {
         if (Functions.modLoaded("appliedenergistics2")) {
             registerMessage(ContainerRollBACK.class, Side.CLIENT);
             registerMessage(SyncConfig.class, Side.CLIENT);
+            registerMessage(InterfaceTracing.class, Side.CLIENT);
 
             registerMessage(ContainerRollBACK.class, Side.SERVER);
             registerMessage(WirelessPickBlock.class, Side.SERVER);
             registerMessage(RCConfigButton.class, Side.SERVER);
             registerMessage(RCActionButton.class, Side.SERVER);
+            registerMessage(InterfaceTracing.class, Side.SERVER);
             if (Functions.modLoaded("jei")) {
                 registerMessage(KeyBindingHandler.class, Side.SERVER);
             }

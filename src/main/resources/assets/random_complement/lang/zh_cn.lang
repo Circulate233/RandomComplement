@@ -48,9 +48,11 @@ commands.ftbnbtedit.item.usage=/ftbnbtedit 物品
 
 key.retrieve_item.desc=自AE取出物品
 key.start_craft.desc=向AE请求合成
+key.query_interface.desc=样板追踪
 
 key.retrieve_item.desc.tooltip=§r按下 §6%s§r 通过无线终端向自AE取出物品
 key.start_craft.desc.tooltip=§r按下 §6%s§r 通过无线终端向AE请求该物品合成
+key.query_interface.desc.tooltip=§r按下 §6%s§r 查询此合成所使用的样板所在的接口
 key.ae2fc.pattern.tooltip.0=§r按下 §6%s§r 修改物品数量
 
 text.rc.tooltip.press_alt=§r按下 §fALT§r 查看提示

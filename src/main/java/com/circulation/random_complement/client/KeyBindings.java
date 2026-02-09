@@ -1,8 +1,6 @@
 package com.circulation.random_complement.client;
 
-import com.circulation.random_complement.common.util.Functions;
 import lombok.Getter;
-import lombok.val;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -11,18 +9,16 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-
 @SideOnly(Side.CLIENT)
 public enum KeyBindings {
     RetrieveItem(new KeyBinding("key.retrieve_item.desc", KeyConflictContext.GUI, KeyModifier.CONTROL, -98, ClientProxy.categoryJEI), true),
-    StartCraft(new KeyBinding("key.start_craft.desc", KeyConflictContext.GUI, KeyModifier.ALT, -98, ClientProxy.categoryJEI), true);
+    StartCraft(new KeyBinding("key.start_craft.desc", KeyConflictContext.GUI, KeyModifier.ALT, -98, ClientProxy.categoryJEI), true),
+    QueryInterface(new KeyBinding("key.query_interface.desc", KeyConflictContext.GUI, KeyModifier.SHIFT, -100, ClientProxy.categoryAE2), true);
 
     @Getter
     private final KeyBinding keyBinding;
     @Getter
     private final boolean needItem;
-    @Getter
     private final String tooltip;
 
     KeyBindings(KeyBinding keyBinding, boolean needItem) {
@@ -35,15 +31,6 @@ public enum KeyBindings {
         return KeyBindings.values()[id];
     }
 
-    public static List<String> getTooltipList() {
-        val outs = new String[values().length];
-        for (int i = 0; i < values().length; i++) {
-            val key = values()[i].keyBinding;
-            outs[i] = I18n.format(values()[i].tooltip, key.getKeyModifier().getLocalizedComboName(key.getKeyCode()));
-        }
-        return Functions.asList(outs);
-    }
-
     public static void init() {
         for (KeyBindings k : KeyBindings.values()) {
             ClientRegistry.registerKeyBinding(k.keyBinding);
@@ -52,5 +39,9 @@ public enum KeyBindings {
 
     public int getID() {
         return this.ordinal();
+    }
+
+    public String getTooltip() {
+        return I18n.format(this.tooltip, this.keyBinding.getKeyModifier().getLocalizedComboName(this.keyBinding.getKeyCode()));
     }
 }

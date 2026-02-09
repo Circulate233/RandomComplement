@@ -11,6 +11,7 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
+import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.common.interfaces.getCraftingCPUCluster;
 import com.google.common.base.Joiner;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -137,4 +138,17 @@ public abstract class MixinGuiCraftingCPU extends AEBaseGui implements ISortSour
         //   this.searchField.mouseClicked(xCord, yCord, btn);
     }
 
+    /* 允许通过GUI追踪正在合成/计划合成的物品所在的样板的接口 的提示 */
+    @Inject(method = "drawFG", at = @At(value = "INVOKE", target = "Lcom/google/common/base/Joiner;on(Ljava/lang/String;)Lcom/google/common/base/Joiner;"), remap = false)
+    public void addTooltips(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci, @Local(name = "lineList") List<String> lineList, @Local(name = "activeStack") IAEItemStack activeStack, @Local(name = "pendingStack") IAEItemStack pendingStack) {
+        if (pendingStack != null || activeStack != null) {
+            if (isAltKeyDown()) {
+                lineList.add("");
+                lineList.add(KeyBindings.QueryInterface.getTooltip());
+            } else {
+                lineList.add("");
+                lineList.add(I18n.format("text.rc.tooltip.press_alt"));
+            }
+        }
+    }
 }
