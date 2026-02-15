@@ -26,6 +26,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = CraftingJob.class, remap = false)
 public abstract class MixinCraftingJob implements RCCraftingJob {
 
+    @Unique
+    private boolean rc$lock = false;
+
+    @Intrinsic
+    public boolean isLock() {
+        return rc$lock;
+    }
+
+    @Intrinsic
+    public void setLock(boolean lock) {
+        this.rc$lock = lock;
+    }
+
     @Shadow
     @Final
     private IAEItemStack output;

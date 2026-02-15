@@ -4,10 +4,15 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "com.circulation.random_complement.mixin.MixinConfigPlugin$AE2",
+  "injectors": {
+    "maxShiftBy": 4
+  },
   "mixins": [
     "AccessorAENetworkProxy",
     "AccessorCraftingCPUCluster",
     "AccessorCraftingTreeNode",
+    "AccessorCraftingTreeProcess",
     "AccessorGrid",
     "MixinAppEngClientPacketHandler",
     "MixinAppEngServerPacketHandler",
@@ -25,6 +30,8 @@
     "block.MixinBlockController",
     "block.MixinBlockCraftingUnit",
     "block.MixinBlockInscriber",
+    "branch_craft.MixinCraftingGridCache",
+    "branch_craft.MixinCraftingTreeNode",
     "container.AccessorContainerCraftingCPU",
     "container.MixinAEBaseContainer",
     "container.MixinContainerCraftConfirm",
@@ -37,7 +44,17 @@
     "container.MixinContainerPatternTerm",
     "container.MixinContainerWirelessPatternTerminal",
     "me.storage.MixinCreativeCellInventory",
+    "miss_craft.MixinContainerCraftConfirm",
+    "miss_craft.MixinCraftingCPUCluster",
+    "miss_craft.MixinCraftingJob",
+    "miss_craft.MixinCraftingTreeNode",
+    "new_patten_gui.MixinContainerPatternEncoder",
+    "new_patten_gui.MixinContainerPatternTerm",
     "new_patten_gui.MixinContainerWirelessCraftingTerminal",
+    "new_patten_gui.MixinContainerWirelessPatternTerminal",
+    "new_patten_gui.MixinCraftingCPUCluster",
+    "new_patten_gui.MixinPartPatternTerminal",
+    "new_patten_gui.MixinPatternHelper",
     "part.MixinAbstractPartEncoder",
     "part.MixinPartInterface",
     "tile.MixinTileInscriber",
@@ -56,6 +73,9 @@
     "gui.MixinGuiInscriber",
     "gui.MixinGuiInterface",
     "gui.MixinGuiMEMonitorable",
-    "gui.MixinItemRepo"
+    "gui.MixinItemRepo",
+    "miss_craft.MixinGuiCraftConfirm",
+    "new_patten_gui.MixinGuiMEMonitorableTwo",
+    "new_patten_gui.MixinGuiPatternTerm"
   ]
 }

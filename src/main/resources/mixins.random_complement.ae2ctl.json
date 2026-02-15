@@ -1,0 +1,12 @@
+{
+  "package": "com.circulation.random_complement.mixin.ae2ctl",
+  "refmap": "mixins.random_complement.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "com.circulation.random_complement.mixin.MixinConfigPlugin$AE2CTL",
+  "mixins": [
+    "branch_craft.MixinLiteCraftTreeNode",
+    "miss_craft.MixinLiteCraftTreeNode"
+  ]
+}

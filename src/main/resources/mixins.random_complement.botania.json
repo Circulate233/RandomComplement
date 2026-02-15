@@ -5,7 +5,15 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "com.circulation.random_complement.mixin.MixinConfigPlugin$Botania",
   "mixins": [
-    "MixinTileSpreader"
+    "MixinTileSpreader",
+    "flower.MixinInternalMethodHandler",
+    "flower.MixinItemObedienceStick",
+    "flower.MixinManaNetworkHandler",
+    "flower.MixinTilePool",
+    "official.MixinModelBrewery",
+    "spark.MixinTileBrewery",
+    "spark.MixinTileRuneAltar"
   ]
 }

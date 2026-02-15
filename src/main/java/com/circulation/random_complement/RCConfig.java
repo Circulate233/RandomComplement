@@ -95,6 +95,13 @@ public class RCConfig {
         @Config.Comment({"Enable miss craft feature"})
         @Config.Name("enableMissCraft")
         public boolean enableMissCraft = true;
+
+        @Config.Comment({
+            "Allow multiple pattern to synthesize the same product",
+            "May have potential performance implications; consider disabling if not needed."
+        })
+        @Config.Name("enableBranchCraft")
+        public boolean enableBranchCraft = true;
     }
 
     public static class IC2 {

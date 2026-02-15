@@ -74,7 +74,7 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:draconic-evolution-223565:3431261"))
     compileOnly(rfg.deobf("curse.maven:packagedauto-308380:6932932"))
     compileOnly(rfg.deobf("curse.maven:ender-utilities-224320:2977010"))
-    compileOnly(rfg.deobf("curse.maven:ae2-crafting-tree-legacy-1121489:5814089"))
+    implementation(rfg.deobf("curse.maven:ae2-crafting-tree-legacy-1121489:5814089"))
 
     compileOnly(rfg.deobf("curse.maven:botaniverse-944656:4945200"))
 }

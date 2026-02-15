@@ -15,4 +15,8 @@ public interface RCCraftingJob {
     boolean isMiss();
 
     void setMiss(boolean miss);
+
+    boolean isLock();
+
+    void setLock(boolean miss);
 }
