@@ -127,48 +127,6 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xdoclint:none"
 }
 
-repositories {
-    flatDir {
-        dirs("lib")
-    }
-    maven {
-        url = uri("https://maven.aliyun.com/nexus/content/groups/public/")
-    }
-    maven {
-        url = uri("https://maven.aliyun.com/nexus/content/repositories/jcenter")
-    }
-    maven {
-        url = uri("https://maven.cleanroommc.com")
-    }
-    maven {
-        url = uri("https://cfa2.cursemaven.com")
-    }
-    maven {
-        url = uri("https://cursemaven.com")
-    }
-    maven {
-        url = uri("https://maven.blamejared.com/")
-    }
-    maven {
-        url = uri("https://repo.spongepowered.org/maven")
-    }
-    maven {
-        name = "GeckoLib"
-        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
-    }
-    maven {
-        name = "OvermindDL1 Maven"
-        url = uri("https://gregtech.overminddl1.com/")
-        mavenContent {
-            excludeGroup("net.minecraftforge") // missing the `universal` artefact
-        }
-    }
-    maven {
-        name = "Zeitheron Maven"
-        url = "https://maven.zeith.org"
-    }
-}
-
 dependencies {
     if (propertyBool('use_modern_java_syntax')) {
         annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
@@ -210,7 +168,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.24")
 }
 
-apply from: 'gradle/scripts/dependencies.gradle'
+apply from: 'repositories.gradle'
+apply from: 'dependencies.gradle'
 
 // Adds Access Transformer files to tasks
 if (propertyBool('use_access_transformer')) {
