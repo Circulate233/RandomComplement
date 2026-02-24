@@ -70,14 +70,26 @@ public abstract class MixinWirelessTerminalGuiObject implements RCIConfigurableO
         return false;
     }
 
-    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), allow = 1)
-    public void loadViewCell(AppEngInternalInventory instance, NBTTagCompound data) {
-        instance.readFromNBT(data, "viewCell");
+    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/tile/inventory/AppEngInternalInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), require = 1, allow = 1)
+    private void loadViewCell(AppEngInternalInventory instance, NBTTagCompound data) {
+        if (data == null) return;
+
+        if (data.hasKey("viewCell")) {
+            instance.readFromNBT(data, "viewCell");
+        } else {
+            instance.readFromNBT(data);
+        }
     }
 
-    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/parts/automation/UpgradeInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), allow = 1)
-    public void loadUpgrade(UpgradeInventory instance, NBTTagCompound data) {
-        instance.readFromNBT(data, "upgrades");
+    @Redirect(method = "loadFromNBT", at = @At(value = "INVOKE", target = "Lappeng/parts/automation/UpgradeInventory;readFromNBT(Lnet/minecraft/nbt/NBTTagCompound;)V"), require = 1, allow = 1)
+    private void loadUpgrade(UpgradeInventory instance, NBTTagCompound data) {
+        if (data == null) return;
+
+        if (data.hasKey("upgrades")) {
+            instance.readFromNBT(data, "upgrades");
+        } else {
+            instance.readFromNBT(data);
+        }
     }
 
     @Inject(method = "loadFromNBT", at = @At("TAIL"))
