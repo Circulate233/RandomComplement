@@ -73,26 +73,38 @@ public class RCInputHandler {
         for (var kb : KeyBindings.values()) {
             switch (kb) {
                 case QueryInterface -> {
-                    if (kb.getKeyBinding().isActiveAndMatches(eventKey)) {
-                        if (isMouse && !Mouse.isButtonDown(m)) {
-                            return true;
-                        }
-                        if (mc.currentScreen instanceof AccessorGuiCraftingCPU gui) {
-                            int viewStart = gui.invokerGetScrollBar().getCurrentScroll() * 3;
-                            int viewEnd = viewStart + 18;
-                            if (gui.getTooltip() + viewStart < Math.min(viewEnd, gui.getVisual().size())) {
-                                Minecraft.getMinecraft().addScheduledTask(() -> {
-                                    if (gui.getTooltip() + viewStart < Math.min(viewEnd, gui.getVisual().size())) {
-                                        val item = gui.getVisual().get(gui.getTooltip() + viewStart);
-                                        if (item != null)
-                                            RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
-                                    }
-                                });
-                                return true;
-                            }
-                        }
+                    if (!kb.getKeyBinding().isActiveAndMatches(eventKey)) {
+                        break;
+                    }
+
+                    // IMPORTANT: don't cancel mouse releases (prevents stuck dragging)
+                    if (isMouse && !Mouse.getEventButtonState()) {
                         return false;
                     }
+
+                    // Only do anything inside the Crafting CPU GUI
+                    if (!(mc.currentScreen instanceof AccessorGuiCraftingCPU gui)) {
+                        return false;
+                    }
+
+                    int viewStart = gui.invokerGetScrollBar().getCurrentScroll() * 3;
+                    int viewEnd = viewStart + 18;
+
+                    int idx = gui.getTooltip() + viewStart;
+                    if (idx < Math.min(viewEnd, gui.getVisual().size())) {
+                        Minecraft.getMinecraft().addScheduledTask(() -> {
+                            int idx2 = gui.getTooltip() + gui.invokerGetScrollBar().getCurrentScroll() * 3;
+                            if (idx2 < gui.getVisual().size()) {
+                                val item = gui.getVisual().get(idx2);
+                                if (item != null) {
+                                    RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
+                                }
+                            }
+                        });
+                        return true;
+                    }
+
+                    return false;
                 }
                 default -> {
                 }
