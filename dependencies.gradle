@@ -23,6 +23,7 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:modularmachinery-community-edition-817377:7306619"))
     implementation(rfg.deobf("curse.maven:extended-crafting-terminals-for-applied-1157825:6895322"))
     compileOnly(rfg.deobf("curse.maven:cofh-core-69162:2920433"))
+    implementation(rfg.deobf("curse.maven:ae2-crafting-tree-legacy-1121489:5814089"))
     compileOnly(rfg.deobf("curse.maven:cofh-world-271384:2920434"))
     compileOnly(rfg.deobf("curse.maven:thermal-foundation-222880:2926428"))
     compileOnly(rfg.deobf("curse.maven:thermal-expansion-69163:2926431"))
@@ -46,7 +47,6 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:draconic-evolution-223565:3431261"))
     compileOnly(rfg.deobf("curse.maven:packagedauto-308380:6932932"))
     compileOnly(rfg.deobf("curse.maven:ender-utilities-224320:2977010"))
-    implementation(rfg.deobf("curse.maven:ae2-crafting-tree-legacy-1121489:5814089"))
 
     compileOnly(rfg.deobf("curse.maven:botaniverse-944656:4945200"))
 }

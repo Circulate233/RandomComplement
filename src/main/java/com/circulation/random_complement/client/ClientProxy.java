@@ -8,13 +8,14 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Functions;
-import com.circulation.random_complement.mixin.jei.AccessorGhostIngredientDragManager;
 import com.circulation.random_complement.mixin.jei.AccessorInputHandler;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
 import lombok.val;
 import mezz.jei.Internal;
-import mezz.jei.gui.ghost.GhostIngredientDrag;
+import mezz.jei.bookmarks.BookmarkItem;
+import mezz.jei.input.IClickedIngredient;
+import mezz.jei.input.MouseHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,11 +42,18 @@ public class ClientProxy extends CommonProxy {
 
     @Optional.Method(modid = "jei")
     public static ItemStack getJEIMouseItem() {
-        GhostIngredientDrag<?> ii = null;
+        IClickedIngredient<?> ii = null;
         if (Internal.getInputHandler() != null) {
-            ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+            ii = ((AccessorInputHandler) Internal.getInputHandler()).invokeGetIngredientUnderMouseForKey(MouseHelper.getX(), MouseHelper.getY());
         }
-        if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
+        if (ii != null) {
+            if (ii.getValue() instanceof ItemStack stack) {
+                return stack;
+            }
+            if (ii.getValue() instanceof BookmarkItem<?> book && book.ingredient instanceof ItemStack stack) {
+                return stack;
+            }
+        }
         return ItemStack.EMPTY;
     }
 
@@ -101,7 +109,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    @Optional.Method(modid = "jei")
     public boolean isMouseHasItem() {
         return !getMouseItem().isEmpty();
     }
