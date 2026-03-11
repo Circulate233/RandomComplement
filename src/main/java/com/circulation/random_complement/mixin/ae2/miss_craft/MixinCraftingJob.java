@@ -1,19 +1,25 @@
 package com.circulation.random_complement.mixin.ae2.miss_craft;
 
 import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.crafting.CraftBranchFailure;
 import appeng.crafting.CraftingJob;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.MECraftingInventory;
+import co.neeve.nae2.common.helpers.VirtualPatternDetails;
 import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
 import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.circulation.random_complement.mixin.ae2.AccessorCraftingTreeNode;
+import com.circulation.random_complement.mixin.ae2.AccessorCraftingTreeProcess;
+import com.google.common.collect.ImmutableCollection;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +28,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Collection;
 
 @Mixin(value = CraftingJob.class, remap = false)
 public abstract class MixinCraftingJob implements RCCraftingJob {
@@ -61,6 +69,10 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     private IAEItemStack r$wait;
     @Unique
     private boolean r$specialDeficiency;
+    @Unique
+    private static final boolean r$loadNae2 = Loader.isModLoaded("nae2");
+    @Unique
+    private static final boolean r$loadNee = Loader.isModLoaded("neenergistics");
 
     @SuppressWarnings("DiscouragedShift")
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0, shift = At.Shift.BEFORE))
@@ -95,8 +107,20 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
         var tree = (AccessorCraftingTreeNode) this.tree;
         if (tree.isCanEmit()) return;
         final long out = stackLocalRef.get();
-        var details = this.cc.getCraftingFor(this.output, null, 0, this.world);
-        if (details == null || details.isEmpty()) throw new CraftBranchFailure(this.output, 0);
+        Collection<ICraftingPatternDetails> details = this.cc.getCraftingFor(this.output, null, 0, this.world);
+        if (details == null) return;
+        if (r$loadNae2 && !r$loadNee) {
+            for (var node : tree.getNodes()) {
+                var d = ((AccessorCraftingTreeProcess) node).getDetails();
+                if (d instanceof VirtualPatternDetails) {
+                    if (details instanceof ImmutableCollection<?>) {
+                        details = new ObjectArrayList<>(details);
+                    }
+                    details.add(d);
+                }
+            }
+        }
+        if (details.isEmpty()) throw new CraftBranchFailure(this.output, 0);
         if (out > 0) {
             for (var detail : details) {
                 IAEItemStack repeatInput = this.output.copy().setStackSize(0);
