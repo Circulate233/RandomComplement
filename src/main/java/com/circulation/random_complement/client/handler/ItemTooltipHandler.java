@@ -1,19 +1,16 @@
 package com.circulation.random_complement.client.handler;
 
-import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.ItemTooltipAdd;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,31 +54,31 @@ public class ItemTooltipHandler {
             }
         }
     }
-
-    @SubscribeEvent
-    public void onClientTooltip(GuiScreenEvent.DrawScreenEvent.Pre event) {
-        if (RandomComplement.proxy.isMouseHasItem()) return;
-        final var gui = Minecraft.getMinecraft().currentScreen;
-        if (gui == null) return;
-        if (GuiScreen.isAltKeyDown()) {
-            for (var entry : map.entrySet()) {
-                if (entry.getKey().isInstance(gui)) {
-                    for (var tooltip : entry.getValue()) {
-                        gui.drawHoveringText(tooltip.get(), GuiMouseHelper.getMouseX(), GuiMouseHelper.getMouseY());
-                    }
-                }
-            }
-        } else {
-            for (var entry : map.entrySet()) {
-                if (entry.getKey().isInstance(gui)) {
-                    for (var tooltip : entry.getValue()) {
-                        if (tooltip.get().isEmpty()) continue;
-                        gui.drawHoveringText(Collections.singletonList(I18n.format("text.rc.tooltip.press_alt")), GuiMouseHelper.getMouseX(), GuiMouseHelper.getMouseY());
-                        break;
-                    }
-                }
-            }
-        }
-    }
+//
+//    @SubscribeEvent
+//    public void onClientTooltip(GuiScreenEvent.DrawScreenEvent.Pre event) {
+//        if (RandomComplement.proxy.isMouseHasItem()) return;
+//        final var gui = Minecraft.getMinecraft().currentScreen;
+//        if (gui == null) return;
+//        if (GuiScreen.isAltKeyDown()) {
+//            for (var entry : map.entrySet()) {
+//                if (entry.getKey().isInstance(gui)) {
+//                    for (var tooltip : entry.getValue()) {
+//                        gui.drawHoveringText(tooltip.get(), GuiMouseHelper.getMouseX(), GuiMouseHelper.getMouseY());
+//                    }
+//                }
+//            }
+//        } else {
+//            for (var entry : map.entrySet()) {
+//                if (entry.getKey().isInstance(gui)) {
+//                    for (var tooltip : entry.getValue()) {
+//                        if (tooltip.get().isEmpty()) continue;
+//                        gui.drawHoveringText(Collections.singletonList(I18n.format("text.rc.tooltip.press_alt")), GuiMouseHelper.getMouseX(), GuiMouseHelper.getMouseY());
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 }

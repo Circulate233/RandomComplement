@@ -8,6 +8,7 @@
   "client": [
     "MixinGuiExtendedFluidPatternTerminal",
     "MixinGuiFluidPatternTerminal",
+    "MixinGuiUltimateEncoder",
     "MixinGuiWirelessFluidPatternTerminal"
   ]
 }

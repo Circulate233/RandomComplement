@@ -52,7 +52,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Shadow
     public void drawSlot(@NotNull Slot s) {
-        super.drawSlot(s);
+
     }
 
     @Unique
