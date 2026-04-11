@@ -4,49 +4,23 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGrid;
 import appeng.me.cache.EnergyGridCache;
-import appeng.tile.networking.TileCreativeEnergyCell;
 import com.circulation.random_complement.RCConfig;
-import com.circulation.random_complement.common.interfaces.RCGridPowerStorage;
+import com.circulation.random_complement.common.interfaces.RCEnergyGridCache;
+import com.circulation.random_complement.common.interfaces.RCGrid;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.lang.reflect.Field;
-
 @Mixin(value = EnergyGridCache.class, remap = false)
-public abstract class MixinEnergyGridCache {
-
-    @Unique
-    private static Field r$localStorage;
-
-    static {
-        try {
-            r$localStorage = EnergyGridCache.class.getDeclaredField("localStorage");
-        } catch (NoSuchFieldException ignored) {
-
-        }
-    }
+public abstract class MixinEnergyGridCache implements RCEnergyGridCache {
 
     @Shadow
     @Final
     private IGrid myGrid;
-
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void onInit(IGrid g, CallbackInfo ci) {
-        if (r$localStorage != null) {
-            try {
-                RCGridPowerStorage rg = (RCGridPowerStorage) r$localStorage.get(this);
-                rg.r$setGrid(g);
-            } catch (IllegalAccessException ignored) {
-
-            }
-        }
-    }
 
     @Inject(method = "isNetworkPowered", at = @At("HEAD"), cancellable = true)
     public void isNetworkPowered(CallbackInfoReturnable<Boolean> cir) {
@@ -56,9 +30,8 @@ public abstract class MixinEnergyGridCache {
     }
 
     @Unique
-    private boolean r$hasCreativeEnergyCell() {
-        final var m = ((AccessorGrid) this.myGrid).r$getMachines().get(TileCreativeEnergyCell.class);
-        return m != null && !m.isEmpty();
+    public boolean r$hasCreativeEnergyCell() {
+        return ((RCGrid) this.myGrid).r$hasCreativeEnergyCell();
     }
 
     @Inject(method = "extractAEPower", at = @At("HEAD"), cancellable = true)

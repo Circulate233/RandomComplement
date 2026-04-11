@@ -12,7 +12,11 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:RedstoneFlux-270789:2920436"))
     runtimeOnly(rfg.deobf("curse.maven:Cucumber-1.12.2-1.1.3-272335:2645867"))
     compileOnly(rfg.deobf("curse.maven:CodeChickenLib-1.12.2-3.2.4.1-universal-242818:2779848"))
-    implementation(rfg.deobf("curse.maven:ae2-extended-life-570458:6302098"))
+    implementation(rfg.deobf("curse.maven:ae2-extended-life-570458:6302098")) {
+        accessTransformers.configure(it) {
+            config = project.file('accesstransformer.cfg')
+        }
+    }
     compileOnly(rfg.deobf("curse.maven:ae2fluidcraft-rework-unofficial-1404390:7403081"))
     implementation(rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5504001"))
     compileOnly(rfg.deobf("curse.maven:baubles-227083:2518667"))

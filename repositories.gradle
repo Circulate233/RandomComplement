@@ -64,4 +64,5 @@ repositories {
         name = "Zeitheron Maven"
         url = "https://maven.zeith.org"
     }
+    gradlePluginPortal()
 }
