@@ -17,6 +17,10 @@ import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
 @Mod.EventBusSubscriber(modid = RandomComplement.MOD_ID)
 public class RCConfig {
 
+    @Config.Comment({"Enable additional item information prompts"})
+    @Config.Name("ExTooltip")
+    public static boolean ExTooltip = true;
+
     @Config.Name("AE2")
     public static final ae2 AE2 = new ae2();
 

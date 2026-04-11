@@ -1,6 +1,6 @@
 package com.circulation.random_complement.client.handler;
 
-import com.circulation.random_complement.client.ItemTooltipAdd;
+import com.circulation.random_complement.RCConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -13,14 +13,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @SideOnly(Side.CLIENT)
 public class ItemTooltipHandler {
 
     public static final ItemTooltipHandler INSTANCE = new ItemTooltipHandler();
-    private static final Map<Class<? extends GuiScreen>, List<ItemTooltipAdd>> map = new Reference2ObjectLinkedOpenHashMap<>();
+    private static final Map<Class<? extends GuiScreen>, List<Supplier<List<String>>>> map = new Reference2ObjectLinkedOpenHashMap<>();
 
-    public static void regItemTooltip(Class<? extends GuiScreen> aClass, ItemTooltipAdd tooltip) {
+    public static void regItemTooltip(Class<? extends GuiScreen> aClass, Supplier<List<String>> tooltip) {
         synchronized (map) {
             map.computeIfAbsent(aClass, c -> new ObjectArrayList<>())
                .add(tooltip);
@@ -32,6 +33,7 @@ public class ItemTooltipHandler {
 
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent event) {
+        if (!RCConfig.ExTooltip) return;
         final var gui = Minecraft.getMinecraft().currentScreen;
         if (gui == null) return;
         if (GuiScreen.isAltKeyDown()) {

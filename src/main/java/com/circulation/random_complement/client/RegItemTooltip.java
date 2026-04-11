@@ -14,6 +14,9 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 @SideOnly(Side.CLIENT)
 public class RegItemTooltip {
 
@@ -23,7 +26,7 @@ public class RegItemTooltip {
 
     @Optional.Method(modid = "ae2fc")
     private static void regAE2FCTooltips() {
-        ItemTooltipAdd t = () -> {
+        Supplier<List<String>> t = () -> {
             if (((AEBaseGui) Minecraft.getMinecraft().currentScreen).getSlotUnderMouse() instanceof SlotFake) {
                 return ObjectLists.singleton(I18n.format("key.ae2fc.pattern.tooltip.0", GameSettings.getKeyDisplayString(-98)));
             }
