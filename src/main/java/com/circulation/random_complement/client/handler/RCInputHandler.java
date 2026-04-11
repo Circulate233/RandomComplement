@@ -63,7 +63,7 @@ public class RCInputHandler {
     public static boolean work(boolean isMouse) {
         if (mc.player == null) return false;
         int eventKey;
-        int m = 0;
+        int m;
         if (isMouse) {
             m = Mouse.getEventButton();
             eventKey = m - 100;
@@ -92,16 +92,14 @@ public class RCInputHandler {
 
                     int idx = gui.getTooltip() + viewStart;
                     if (idx < Math.min(viewEnd, gui.getVisual().size())) {
-                        Minecraft.getMinecraft().addScheduledTask(() -> {
-                            int idx2 = gui.getTooltip() + gui.invokerGetScrollBar().getCurrentScroll() * 3;
-                            if (idx2 < gui.getVisual().size()) {
-                                val item = gui.getVisual().get(idx2);
-                                if (item != null) {
-                                    RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
-                                }
+                        int idx2 = gui.getTooltip() + gui.invokerGetScrollBar().getCurrentScroll() * 3;
+                        if (idx2 >= 0 && idx2 < gui.getVisual().size()) {
+                            val item = gui.getVisual().get(idx2);
+                            if (item != null) {
+                                RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
+                                return true;
                             }
-                        });
-                        return true;
+                        }
                     }
 
                     return false;
