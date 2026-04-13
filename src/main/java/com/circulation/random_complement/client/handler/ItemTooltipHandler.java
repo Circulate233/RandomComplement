@@ -1,6 +1,7 @@
 package com.circulation.random_complement.client.handler;
 
 import com.circulation.random_complement.RCConfig;
+import com.circulation.random_complement.client.ItemTooltipAdd;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,13 @@ public class ItemTooltipHandler {
 
     public static final ItemTooltipHandler INSTANCE = new ItemTooltipHandler();
     private static final Map<Class<? extends GuiScreen>, List<Supplier<List<String>>>> map = new Reference2ObjectLinkedOpenHashMap<>();
+
+    public static void regItemTooltip(Class<? extends GuiScreen> aClass, ItemTooltipAdd tooltip) {
+        synchronized (map) {
+            map.computeIfAbsent(aClass, c -> new ObjectArrayList<>())
+               .add(tooltip);
+        }
+    }
 
     public static void regItemTooltip(Class<? extends GuiScreen> aClass, Supplier<List<String>> tooltip) {
         synchronized (map) {
