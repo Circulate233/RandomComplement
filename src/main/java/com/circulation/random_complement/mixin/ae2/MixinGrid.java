@@ -34,6 +34,6 @@ public class MixinGrid implements RCGrid {
 
     @Override
     public boolean r$hasCreativeEnergyCell() {
-        return rc$ce.isEmpty();
+        return !rc$ce.isEmpty();
     }
 }
