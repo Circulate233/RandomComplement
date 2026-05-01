@@ -36,6 +36,15 @@ public abstract class MixinContainerCraftConfirm implements RCAEBaseContainer {
         return true;
     }
 
+    @WrapOperation(method = "detectAndSendChanges", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerCraftConfirm;setSimulation(Z)V", ordinal = 1, remap = false))
+    public void setSimulationTrue(ContainerCraftConfirm instance, boolean simulation, Operation<Void> original) {
+        if (r$canIgnoredInput) {
+            original.call(instance, false);
+        } else {
+            original.call(instance, simulation);
+        }
+    }
+
     @Inject(method = "setJob", at = @At("HEAD"), remap = false)
     public void setJob(Future<ICraftingJob> job, CallbackInfo ci) {
         if (job == null) return;

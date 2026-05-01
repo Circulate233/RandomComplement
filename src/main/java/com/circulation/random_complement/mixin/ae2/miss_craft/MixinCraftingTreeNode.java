@@ -12,8 +12,6 @@ import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.RCCraftingJob;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import lombok.val;
 import net.minecraft.item.ItemStack;
 import org.objectweb.asm.Opcodes;
@@ -75,18 +73,16 @@ public class MixinCraftingTreeNode {
         cir.setReturnValue(rv);
     }
 
-    @Inject(method = "request", at = @At(value = "FIELD", target = "Lappeng/crafting/CraftingTreeProcess;possible:Z", ordinal = 1, opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = -4))
-    public void requestI(MECraftingInventory inv, long l, IActionSource src, CallbackInfoReturnable<IAEItemStack> cir, @Share("rc$i") LocalIntRef rcf) {
-        rcf.set(rcf.get() + 1);
-    }
-
     @WrapOperation(method = "request", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeProcess;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)V", ordinal = 1))
-    public void requestR(CraftingTreeProcess instance, MECraftingInventory iae, long o, IActionSource out, Operation<Void> original, @Share("rc$i") LocalIntRef rcf) {
+    public void requestR(CraftingTreeProcess instance, MECraftingInventory inv, long amountOfTimes, IActionSource src, Operation<Void> original) {
         val j = ((RCCraftingJob) job);
         val old = j.isLock();
-        j.setLock(rcf.get() != this.nodes.size());
-        original.call(instance, iae, o, out);
-        j.setLock(old);
+        j.setLock(this.nodes.isEmpty() || instance != this.nodes.get(this.nodes.size() - 1));
+        try {
+            original.call(instance, inv, amountOfTimes, src);
+        } finally {
+            j.setLock(old);
+        }
     }
 
     @WrapOperation(method = "setJob", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lappeng/crafting/CraftingTreeNode;howManyEmitted:J"))
