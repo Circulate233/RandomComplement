@@ -18,12 +18,9 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.val;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,62 +29,60 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class InterfaceTracing implements Packet<InterfaceTracing> {
 
     private IAEItemStack item;
-    private List<DimensionalCoord> positions;
-    private boolean server;
+    private int[] dims;
+    private BlockPos[] poss;
 
     public InterfaceTracing() {
-        item = null;
     }
 
     public InterfaceTracing(@NotNull IAEItemStack stack) {
-        item = stack;
-        server = true;
+        this.item = stack;
     }
 
     public InterfaceTracing(@NotNull List<DimensionalCoord> positions) {
-        this.positions = positions;
-        server = false;
+        int n = positions.size();
+        this.dims = new int[n];
+        this.poss = new BlockPos[n];
+        for (int i = 0; i < n; i++) {
+            DimensionalCoord coord = positions.get(i);
+            this.dims[i] = coord.getWorld().provider.getDimension();
+            this.poss[i] = coord.getPos();
+        }
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        if (buf.readBoolean())
+        if (buf.readBoolean()) {
             item = AEItemStack.fromPacket(buf);
-        else {
-            positions = new ObjectArrayList<>();
-            var nbt = Objects.requireNonNull(ByteBufUtils.readTag(buf)).getTagList("poss", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < nbt.tagCount(); i++) {
-                NBTTagCompound tag = nbt.getCompoundTagAt(i);
-                positions.add(new DimensionalCoord(
-                    DimensionManager.getWorld(tag.getInteger("dim")),
-                    BlockPos.fromLong(tag.getLong("pos"))
-                ));
+        } else {
+            int n = buf.readInt();
+            dims = new int[n];
+            poss = new BlockPos[n];
+            for (int i = 0; i < n; i++) {
+                dims[i] = buf.readInt();
+                poss[i] = BlockPos.fromLong(buf.readLong());
             }
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(server);
+        boolean carriesItem = item != null;
+        buf.writeBoolean(carriesItem);
         try {
-            if (server) {
+            if (carriesItem) {
                 item.writeToPacket(buf);
             } else {
-                var nbt = new NBTTagCompound();
-                var list = new NBTTagList();
-                for (DimensionalCoord coord : positions) {
-                    var p = new NBTTagCompound();
-                    p.setInteger("dim", coord.getWorld().provider.getDimension());
-                    p.setLong("pos", coord.getPos().toLong());
-                    list.appendTag(p);
+                int n = poss == null ? 0 : poss.length;
+                buf.writeInt(n);
+                for (int i = 0; i < n; i++) {
+                    buf.writeInt(dims[i]);
+                    buf.writeLong(poss[i].toLong());
                 }
-                nbt.setTag("poss", list);
-                ByteBufUtils.writeTag(buf, nbt);
             }
         } catch (IOException ignored) {
 
@@ -99,33 +94,34 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
         switch (ctx.side) {
             case SERVER -> {
                 val player = ctx.getServerHandler().player;
-                if (player.openContainer instanceof AccessorContainerCraftingCPU container) {
-                    val cpu = (AccessorCraftingCPUCluster) (Object) container.invokerGetMonitor();
-                    if (cpu == null) return null;
-                    val grid = container.invokerGetNetwork();
-                    final CraftingGridCache c = grid.getCache(ICraftingGrid.class);
-                    val list = new ObjectArrayList<ICraftingMedium>();
-                    for (var detail : cpu.getTasks().keySet()) {
-                        var outputs = detail.getCondensedOutputs();
-                        for (IAEItemStack output : outputs) {
-                            if (message.item.equals(output)) {
-                                list.addAll(c.getMediums(detail));
-                                break;
-                            }
+                if (!(player.openContainer instanceof AccessorContainerCraftingCPU container)) return null;
+                Object monitor = container.invokerGetMonitor();
+                if (!(monitor instanceof AccessorCraftingCPUCluster cpu)) return null;
+                val grid = container.invokerGetNetwork();
+                final CraftingGridCache c = grid.getCache(ICraftingGrid.class);
+                val list = new ObjectArrayList<ICraftingMedium>();
+                for (var detail : cpu.getTasks().keySet()) {
+                    var outputs = detail.getCondensedOutputs();
+                    for (IAEItemStack output : outputs) {
+                        if (message.item.equals(output)) {
+                            var mediums = c.getMediums(detail);
+                            if (mediums != null) list.addAll(mediums);
+                            break;
                         }
                     }
-                    if (list.isEmpty()) return null;
-                    val poss = new ObjectArrayList<DimensionalCoord>();
-                    for (var icm : list) {
-                        Object obj = icm;
-                        if (icm instanceof IUpgradeableHost iuh) obj = iuh.getTile();
-                        if (obj instanceof IGridProxyable igp) {
-                            poss.add(igp.getLocation());
-                        }
-                    }
-                    RandomComplement.NET_CHANNEL.sendTo(new InterfaceTracing(poss), player);
-                    player.closeScreen();
                 }
+                if (list.isEmpty()) return null;
+                val coords = new ObjectArrayList<DimensionalCoord>();
+                for (var icm : list) {
+                    Object obj = icm;
+                    if (icm instanceof IUpgradeableHost iuh) obj = iuh.getTile();
+                    if (obj instanceof IGridProxyable igp) {
+                        coords.add(igp.getLocation());
+                    }
+                }
+                if (coords.isEmpty()) return null;
+                RandomComplement.NET_CHANNEL.sendTo(new InterfaceTracing(coords), player);
+                player.closeScreen();
             }
             case CLIENT -> onClient(message);
         }
@@ -134,29 +130,30 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
 
     @SideOnly(Side.CLIENT)
     public void onClient(InterfaceTracing message) {
-        var positions = message.positions;
-        if (positions == null || positions.isEmpty()) return;
+        if (message.poss == null || message.poss.length == 0) return;
         var mc = Minecraft.getMinecraft();
         int playerDim = mc.world.provider.getDimension();
-        BlockPos[] poss = new BlockPos[positions.size()];
-        boolean b = false;
-        for (var i = 0; i < positions.size(); i++) {
-            var coord = positions.get(i);
-            BlockPos blockPos = coord.getPos();
-            int interfaceDim = coord.getWorld().provider.getDimension();
+        BlockPos[] highlight = new BlockPos[message.poss.length];
+        boolean any = false;
+        for (int i = 0; i < message.poss.length; i++) {
+            BlockPos blockPos = message.poss[i];
+            int interfaceDim = message.dims[i];
             if (playerDim != interfaceDim) {
                 try {
-                    mc.player.sendStatusMessage(PlayerMessages.InterfaceInOtherDimParam.get(interfaceDim, DimensionManager.getWorld(interfaceDim).provider.getDimensionType().getName()), false);
-                } catch (Exception var8) {
+                    var w = DimensionManager.getWorld(interfaceDim);
+                    String name = w != null
+                        ? w.provider.getDimensionType().getName()
+                        : DimensionType.getById(interfaceDim).getName();
+                    mc.player.sendStatusMessage(PlayerMessages.InterfaceInOtherDimParam.get(interfaceDim, name), false);
+                } catch (Exception ex) {
                     mc.player.sendStatusMessage(PlayerMessages.InterfaceInOtherDim.get(), false);
                 }
             } else {
-                poss[i] = blockPos;
+                highlight[i] = blockPos;
                 mc.player.sendStatusMessage(PlayerMessages.InterfaceHighlighted.get(blockPos.getX(), blockPos.getY(), blockPos.getZ()), false);
-                b = true;
+                any = true;
             }
         }
-        if (b)
-            HighlighterHandler.INSTANCE.hilightBlock(poss, System.currentTimeMillis() + 20000L, playerDim);
+        if (any) HighlighterHandler.INSTANCE.hilightBlock(highlight, System.currentTimeMillis() + 20000L, playerDim);
     }
 }

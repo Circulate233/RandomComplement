@@ -87,18 +87,16 @@ public class RCInputHandler {
                         return false;
                     }
 
+                    int hovered = gui.getTooltip();
+                    if (hovered < 0) return false;
                     int viewStart = gui.invokerGetScrollBar().getCurrentScroll() * 3;
-                    int viewEnd = viewStart + 18;
-
-                    int idx = gui.getTooltip() + viewStart;
-                    if (idx < Math.min(viewEnd, gui.getVisual().size())) {
-                        int idx2 = gui.getTooltip() + gui.invokerGetScrollBar().getCurrentScroll() * 3;
-                        if (idx2 >= 0 && idx2 < gui.getVisual().size()) {
-                            val item = gui.getVisual().get(idx2);
-                            if (item != null) {
-                                RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
-                                return true;
-                            }
+                    int idx = hovered + viewStart;
+                    int viewEnd = Math.min(viewStart + 18, gui.getVisual().size());
+                    if (idx < viewEnd) {
+                        val item = gui.getVisual().get(idx);
+                        if (item != null) {
+                            RandomComplement.NET_CHANNEL.sendToServer(new InterfaceTracing(item));
+                            return true;
                         }
                     }
 

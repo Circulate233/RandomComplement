@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEItemStack;
-import appeng.container.slot.SlotFake;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.RCGuiButton;
@@ -9,7 +8,6 @@ import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
 import com.circulation.random_complement.common.network.RCConfigButton;
-import com.circulation.random_complement.common.util.MEHandler;
 import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
@@ -18,8 +16,6 @@ import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -70,20 +66,6 @@ public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements 
             var option = this.randomComplement$AutoFillPattern.getRCSetting();
             RandomComplement.NET_CHANNEL.sendToServer(new RCConfigButton(option, backwards));
         }
-    }
-
-    @Override
-    public void drawSlot(@NotNull Slot slot) {
-        if (!this.randomComplement$craftableCache.isEmpty() && slot instanceof SlotFake slotFake) {
-            if (!slotFake.shouldDisplay()) return;
-            var item = slotFake.getDisplayStack();
-            if (!item.isEmpty()) {
-                if (this.randomComplement$craftableCache.contains(MEHandler.packAEItem(item))) {
-                    r$getPlusSlot().add(slotFake);
-                }
-            }
-        }
-        super.drawSlot(slot);
     }
 
     @Unique
