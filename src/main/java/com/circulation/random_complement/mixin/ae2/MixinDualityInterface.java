@@ -53,20 +53,12 @@ public abstract class MixinDualityInterface implements RCIConfigurableObject, RC
     private UpgradeInventory upgrades;
     @Unique
     private int r$lastInputHash;
-
-    @Shadow
-    protected abstract void cancelCrafting();
-
-    @Shadow
-    private IMEInventory<IAEItemStack> destination;
-
-    @Shadow
-    @Final
-    private IActionSource mySource;
-
     @Shadow
     @Final
     private AENetworkProxy gridProxy;
+
+    @Shadow
+    protected abstract void cancelCrafting();
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(CallbackInfo ci) {

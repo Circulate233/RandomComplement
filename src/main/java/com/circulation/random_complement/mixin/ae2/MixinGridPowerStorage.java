@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = EnergyGridCache.GridPowerStorage.class, remap = false)
 public abstract class MixinGridPowerStorage {
 
-    @Shadow @Final
+    @Shadow
+    @Final
     EnergyGridCache this$0;
 
     @Unique

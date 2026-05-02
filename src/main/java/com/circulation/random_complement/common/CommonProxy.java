@@ -2,15 +2,18 @@ package com.circulation.random_complement.common;
 
 import com.circulation.random_complement.common.handler.CraftingUnitHandler;
 import com.circulation.random_complement.common.interfaces.Packet;
-import com.circulation.random_complement.common.network.InterfaceTracing;
 import com.circulation.random_complement.common.network.ContainerRollBACK;
+import com.circulation.random_complement.common.network.InterfaceTracing;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.network.RCActionButton;
 import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.network.SyncConfig;
 import com.circulation.random_complement.common.network.WirelessPickBlock;
 import com.circulation.random_complement.common.util.Functions;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
@@ -24,6 +27,7 @@ public class CommonProxy {
     }
 
     public void preInit() {
+        MinecraftForge.EVENT_BUS.register(this);
         if (Functions.modLoaded("appliedenergistics2")) {
             registerMessage(ContainerRollBACK.class, Side.CLIENT);
             registerMessage(SyncConfig.class, Side.CLIENT);
@@ -53,6 +57,11 @@ public class CommonProxy {
 
     public <T extends Packet<T>> void registerMessage(Class<T> aClass, Side side) {
         NET_CHANNEL.registerMessage(aClass, aClass, id++, side);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        WirelessPickBlock.onPlayerLoggedOut(event.player.getUniqueID());
     }
 
 }

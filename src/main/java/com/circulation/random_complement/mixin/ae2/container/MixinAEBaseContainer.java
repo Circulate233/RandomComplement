@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(value = AEBaseContainer.class, remap = false)
 public abstract class MixinAEBaseContainer extends Container implements RCAEBaseContainer {
 
-    @Shadow
-    public abstract InventoryPlayer getPlayerInv();
-
     @Unique
     private Container rc$oldContainer;
+
+    @Shadow
+    public abstract InventoryPlayer getPlayerInv();
 
     @Unique
     @Override

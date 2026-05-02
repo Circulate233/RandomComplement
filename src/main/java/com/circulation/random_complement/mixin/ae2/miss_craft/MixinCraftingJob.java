@@ -30,6 +30,26 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
 
     @Unique
     private boolean rc$lock = false;
+    @Shadow
+    @Final
+    private IAEItemStack output;
+    @Shadow
+    private CraftingTreeNode tree;
+    @Shadow
+    @Final
+    private ICraftingGrid cc;
+    @Shadow
+    @Final
+    private World world;
+    @Shadow
+    @Final
+    private IActionSource actionSrc;
+    @Unique
+    private IAEItemStack r$wait;
+    @Unique
+    private boolean r$specialDeficiency;
+    @Unique
+    private boolean rc$miss = false;
 
     @Intrinsic
     public boolean isLock() {
@@ -40,29 +60,6 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
     public void setLock(boolean lock) {
         this.rc$lock = lock;
     }
-
-    @Shadow
-    @Final
-    private IAEItemStack output;
-
-    @Shadow
-    private CraftingTreeNode tree;
-
-    @Shadow
-    @Final
-    private ICraftingGrid cc;
-
-    @Shadow
-    @Final
-    private World world;
-
-    @Shadow
-    @Final
-    private IActionSource actionSrc;
-    @Unique
-    private IAEItemStack r$wait;
-    @Unique
-    private boolean r$specialDeficiency;
 
     @SuppressWarnings("DiscouragedShift")
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/MECraftingInventory;ignore(Lappeng/api/storage/data/IAEItemStack;)V", ordinal = 0, shift = At.Shift.BEFORE))
@@ -87,9 +84,6 @@ public abstract class MixinCraftingJob implements RCCraftingJob {
             return a.r$isIgnored();
         else return this.actionSrc.player().isPresent();
     }
-
-    @Unique
-    private boolean rc$miss = false;
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lappeng/crafting/CraftingTreeNode;request(Lappeng/crafting/MECraftingInventory;JLappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;", shift = At.Shift.AFTER, ordinal = 0))
     public void supplementaryOutput(CallbackInfo ci, @Share("rcOutput") LocalLongRef stackLocalRef) {

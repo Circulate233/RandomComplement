@@ -65,8 +65,14 @@ public class MixinBlockCraftingUnit extends AEBaseTileBlock {
                     var tile = this.getTileEntity(w, pos);
                     var proxy = ((IGridProxyable) tile).getProxy();
                     var node = proxy.getNode();
-                    Object cache;
-                    if (RCConfig.AE2.SecurityCache || ((cache = node.getGrid().getCache(ISecurityGrid.class)) instanceof ISecurityGrid isg && isg.hasPermission(p, SecurityPermissions.BUILD))) {
+                    boolean allow;
+                    if (RCConfig.AE2.SecurityCache || node == null) {
+                        allow = true;
+                    } else {
+                        var grid = node.getGrid();
+                        allow = grid != null && grid.getCache(ISecurityGrid.class) instanceof ISecurityGrid isg && isg.hasPermission(p, SecurityPermissions.BUILD);
+                    }
+                    if (allow) {
                         w.setBlockState(pos, block.getBlockState().getBaseState(), 1);
                         tile = this.getTileEntity(w, pos);
                         proxy = ((IGridProxyable) tile).getProxy();

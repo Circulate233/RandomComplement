@@ -63,11 +63,9 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
             ByteBuf uncompressed = Unpooled.buffer(stream.readableBytes());
             byte[] tmp = new byte[TEMP_BUFFER_SIZE];
 
-            while (gzReader.available() != 0) {
-                int bytes = gzReader.read(tmp);
-                if (bytes > 0) {
-                    uncompressed.writeBytes(tmp, 0, bytes);
-                }
+            int bytes;
+            while ((bytes = gzReader.read(tmp)) > 0) {
+                uncompressed.writeBytes(tmp, 0, bytes);
             }
 
             while (uncompressed.readableBytes() > 0) {
@@ -140,17 +138,20 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     @Override
     @SideOnly(Side.CLIENT)
     public void clientPacketData(INetworkInfo network, AppEngPacket packet, EntityPlayer player) {
+        if (this.list == null) return;
         if (id != 0) {
-            switch (id) {
-                case 1 -> {
-                    if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
-                        gui.r$addCpuCache(this.list);
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                switch (id) {
+                    case 1 -> {
+                        if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                            gui.r$addCpuCache(this.list);
+                        }
                     }
+                    case 2 -> MEHandler.getCraftableCacheS().addAll(this.list);
+                    case 3 -> ae2fcClientPacketData();
+                    case 4, 5 -> tcClientPacketData();
                 }
-                case 2 -> MEHandler.getCraftableCacheS().addAll(this.list);
-                case 3 -> ae2fcClientPacketData();
-                case 4, 5 -> tcClientPacketData();
-            }
+            });
         }
     }
 
@@ -167,6 +168,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
 
     @Optional.Method(modid = "thermalfoundation")
     public void tcClientPacketData() {
+        if (this.list == null) return;
         switch (id) {
             case 4 -> {
                 if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {

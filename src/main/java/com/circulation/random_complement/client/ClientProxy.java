@@ -1,6 +1,5 @@
 package com.circulation.random_complement.client;
 
-import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.handler.GuiMouseHelper;
 import com.circulation.random_complement.client.handler.HighlighterHandler;
 import com.circulation.random_complement.client.handler.ItemTooltipHandler;
@@ -20,11 +19,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = RandomComplement.MOD_ID)
 public class ClientProxy extends CommonProxy {
     public static final String categoryJEI = "RandomComplement(JEI)";
     public static final String categoryAE2 = "RandomComplement(AE2)";

@@ -6,9 +6,10 @@ import appeng.core.sync.network.AppEngClientPacketHandler;
 import com.circulation.random_complement.common.network.RCPacketMEInventoryUpdate;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import io.netty.buffer.ByteBuf;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.io.IOException;
@@ -18,15 +19,11 @@ import static appeng.core.sync.AppEngPacketHandlerBase.PacketTypes.PACKET_ME_INV
 @Mixin(value = AppEngClientPacketHandler.class, remap = false)
 public class MixinAppEngClientPacketHandler {
 
-    @Unique
-    private int randomComplement$id;
-
     @WrapOperation(method = "onPacketData", at = @At(value = "INVOKE", target = "Lappeng/core/sync/AppEngPacketHandlerBase$PacketTypes;getPacket(I)Lappeng/core/sync/AppEngPacketHandlerBase$PacketTypes;"))
-    public AppEngPacketHandlerBase.PacketTypes getPacketR(int id, Operation<AppEngPacketHandlerBase.PacketTypes> original) {
-        randomComplement$id = 0;
+    public AppEngPacketHandlerBase.PacketTypes getPacketR(int id, Operation<AppEngPacketHandlerBase.PacketTypes> original, @Share("r$id") LocalIntRef r$id) {
         return switch (id) {
             case 1000 -> {
-                this.randomComplement$id = id;
+                r$id.set(id);
                 yield PACKET_ME_INVENTORY_UPDATE;
             }
             default -> original.call(id);
@@ -34,10 +31,11 @@ public class MixinAppEngClientPacketHandler {
     }
 
     @WrapOperation(method = "onPacketData", at = @At(value = "INVOKE", target = "Lappeng/core/sync/AppEngPacketHandlerBase$PacketTypes;parsePacket(Lio/netty/buffer/ByteBuf;)Lappeng/core/sync/AppEngPacket;"))
-    public AppEngPacket getPacketR(AppEngPacketHandlerBase.PacketTypes instance, ByteBuf in, Operation<AppEngPacket> original) throws IOException {
-        return switch (randomComplement$id) {
+    public AppEngPacket getPacketR(AppEngPacketHandlerBase.PacketTypes instance, ByteBuf in, Operation<AppEngPacket> original, @Share("r$id") LocalIntRef r$id) throws IOException {
+        return switch (r$id.get()) {
             case 1000 -> new RCPacketMEInventoryUpdate(in);
             default -> original.call(instance, in);
         };
     }
+
 }

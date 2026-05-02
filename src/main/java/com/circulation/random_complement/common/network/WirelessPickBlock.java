@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,6 +49,10 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         this.slot = slot;
     }
 
+    public static void onPlayerLoggedOut(UUID uuid) {
+        map.remove(uuid);
+    }
+
     @Override
     public void fromBytes(ByteBuf buf) {
         this.stack = ByteBufUtils.readItemStack(buf);
@@ -64,16 +69,12 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
     public IMessage onMessage(WirelessPickBlock message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().player;
         UUID playUUID = player.getUniqueID();
-        Long worldTime = Instant.now().getEpochSecond();
-        if (map.containsKey(playUUID)) {
-            if (map.get(playUUID) < worldTime) {
-                map.put(playUUID, worldTime);
-            } else {
-                player.sendMessage(new TextComponentTranslation("text.rc.warn"));
-                return null;
-            }
-        } else {
-            map.put(playUUID, worldTime);
+        long worldTime = Instant.now().getEpochSecond();
+        Long previous = map.put(playUUID, worldTime);
+        if (previous != null && previous >= worldTime) {
+            map.put(playUUID, previous);
+            player.sendMessage(new TextComponentTranslation("text.rc.warn"));
+            return null;
         }
         final ItemStack handItem = player.inventory.getStackInSlot(message.slot);
         final ItemStack needItem = message.stack;
@@ -82,10 +83,10 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
         }
 
-        player.getServer().addScheduledTask(() -> readPlayer(player, needItem, message));
+        ctx.getServerHandler().server.addScheduledTask(() -> readPlayer(player, needItem, message));
 
         if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
-            player.getServer().addScheduledTask(() -> readBaubles(player, needItem, message.slot));
+            ctx.getServerHandler().server.addScheduledTask(() -> readBaubles(player, needItem, message.slot));
         }
 
         return null;
@@ -120,7 +121,9 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
         int handItemConnt = 0;
         if (!player.inventory.getStackInSlot(slot).isEmpty()) {
             ItemStack vitem = player.inventory.getStackInSlot(slot);
-            if (exItem.getItem() != vitem.getItem() || exItem.getItemDamage() != vitem.getItemDamage() || exItem.getTagCompound() != vitem.getTagCompound())
+            if (exItem.getItem() != vitem.getItem()
+                || exItem.getItemDamage() != vitem.getItemDamage()
+                || !ItemStack.areItemStackTagsEqual(exItem, vitem))
                 return true;
             handItemConnt = player.inventory.getStackInSlot(slot).getCount();
         }
@@ -139,7 +142,7 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             IGrid grid = gridNode.getGrid();
             if (securityCheck(player, grid, SecurityPermissions.EXTRACT)) {
                 var items = grid.<IStorageGrid>getCache(IStorageGrid.class).getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-                var aeitem = items.extractItems(AEItemStack.fromItemStack(exItem).setStackSize(exItem.getCount()), Actionable.MODULATE, new PlayerSource(player, obj));
+                var aeitem = items.extractItems(Objects.requireNonNull(AEItemStack.fromItemStack(exItem)).setStackSize(exItem.getCount()), Actionable.MODULATE, new PlayerSource(player, obj));
                 if (aeitem != null) {
                     player.inventory.setInventorySlotContents(slot, aeitem.setStackSize(aeitem.getStackSize() + handItemConnt).createItemStack());
                     return true;

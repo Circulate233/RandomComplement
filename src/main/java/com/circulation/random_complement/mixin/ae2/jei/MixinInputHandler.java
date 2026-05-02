@@ -48,15 +48,15 @@ import java.util.List;
 @Mixin(value = InputHandler.class, remap = false)
 public abstract class MixinInputHandler {
 
-    @Shadow
-    @Nullable
-    protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
-
     @Unique
     private final KeyBindings[] rc$keys = new KeyBindings[]{KeyBindings.StartCraft, KeyBindings.RetrieveItem};
     @Unique
     @Getter(lazy = true)
     private final List<String> rc$keyTooltips = Functions.asList(KeyBindings.RetrieveItem.getTooltip(), KeyBindings.StartCraft.getTooltip());
+
+    @Shadow
+    @Nullable
+    protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
 
     @Unique
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -17,36 +17,27 @@ import static com.circulation.random_complement.RandomComplement.NET_CHANNEL;
 @Mod.EventBusSubscriber(modid = RandomComplement.MOD_ID)
 public class RCConfig {
 
+    @Config.Name("AE2")
+    public static final ae2 AE2 = new ae2();
+    @Config.Name("IC2")
+    public static final IC2 IC2 = new IC2();
+    @Config.Name("LazyAE")
+    public static final LazyAE LazyAE = new LazyAE();
+    @Config.Name("TE5")
+    public static final TE5 TE5 = new TE5();
+    @Config.Name("FTBU")
+    public static final FTBU FTBU = new FTBU();
+    @Config.Name("TF5")
+    public static final TF5 TF5 = new TF5();
+    @Config.Name("Botania")
+    public static final Botania Botania = new Botania();
+    @Config.Name("COFHCOHE")
+    public static final COFHCORE COFHCORE = new COFHCORE();
+    @Config.Name("NEE")
+    public static final NEE NEE = new NEE();
     @Config.Comment({"Enable additional item information prompts"})
     @Config.Name("ExTooltip")
     public static boolean ExTooltip = true;
-
-    @Config.Name("AE2")
-    public static final ae2 AE2 = new ae2();
-
-    @Config.Name("IC2")
-    public static final IC2 IC2 = new IC2();
-
-    @Config.Name("LazyAE")
-    public static final LazyAE LazyAE = new LazyAE();
-
-    @Config.Name("TE5")
-    public static final TE5 TE5 = new TE5();
-
-    @Config.Name("FTBU")
-    public static final FTBU FTBU = new FTBU();
-
-    @Config.Name("TF5")
-    public static final TF5 TF5 = new TF5();
-
-    @Config.Name("Botania")
-    public static final Botania Botania = new Botania();
-
-    @Config.Name("COFHCOHE")
-    public static final COFHCORE COFHCORE = new COFHCORE();
-
-    @Config.Name("NEE")
-    public static final NEE NEE = new NEE();
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -61,7 +52,7 @@ public class RCConfig {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP mp) {
             NET_CHANNEL.sendTo(new SyncConfig(), mp);
         }
@@ -95,7 +86,7 @@ public class RCConfig {
         })
         @Config.Name("newPattenGui")
         public boolean newPattenGui = true;
-        
+
         @Config.Comment({"Enable miss craft feature"})
         @Config.Name("enableMissCraft")
         public boolean enableMissCraft = true;

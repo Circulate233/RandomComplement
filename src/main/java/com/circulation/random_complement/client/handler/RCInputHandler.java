@@ -50,15 +50,6 @@ public class RCInputHandler {
 
     }
 
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) return;
-        if (tick > 0) {
-            tick--;
-        }
-        counter = (counter + ((++counter1 & 1) == 0 ? 1 : 0)) % 14;
-    }
-
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public static boolean work(boolean isMouse) {
         if (mc.player == null) return false;
@@ -109,124 +100,81 @@ public class RCInputHandler {
         return false;
     }
 
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) return;
+        if (tick > 0) {
+            tick--;
+        }
+        counter = (counter + ((++counter1 & 1) == 0 ? 1 : 0)) % 14;
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.KeyInputEvent event) {
-        if (mc.player == null) return;
-        if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
-            ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
-
-            EntityPlayer player = mc.player;
-            World world = player.world;
-            RayTraceResult target = mc.objectMouseOver;
-
-            ItemStack result = ItemStack.EMPTY;
-            boolean isCreative = mc.player.isCreative();
-            TileEntity te = null;
-
-            if (target.typeOfHit == RayTraceResult.Type.BLOCK) {
-                IBlockState state = world.getBlockState(target.getBlockPos());
-
-                if (state.getBlock().isAir(state, world, target.getBlockPos())) return;
-
-                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
-                    te = world.getTileEntity(target.getBlockPos());
-
-                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player).copy();
-            }
-
-            if (result.isEmpty()) {
-                return;
-            }
-
-            if (te != null) {
-                Minecraft.getMinecraft().storeTEInStack(result, te);
-            }
-
-            if (player.isSneaking()) {
-                result.setCount(1);
-            } else {
-                result.setCount(result.getItem().getItemStackLimit(result));
-            }
-
-            int slot = player.inventory.getSlotFor(result);
-            if (InventoryPlayer.isHotbar(slot)) {
-                player.inventory.currentItem = slot;
-            } else if (slot != -1) {
-                return;
-            }
-
-            if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
-                for (int i = 0; i < 9; i++) {
-                    if (player.inventory.getStackInSlot(i).isEmpty()) {
-                        player.inventory.currentItem = i;
-                        break;
-                    }
-                }
-            }
-
-            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
-            tick = 20;
-        }
+        doPickBlock();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInputEvent(final InputEvent.MouseInputEvent event) {
-        if (mc.player == null) return;
-        if (!mc.player.isCreative() && tick == 0 && mc.gameSettings.keyBindPickBlock.isPressed()) {
-            ForgeHooks.onPickBlock(mc.objectMouseOver, mc.player, mc.world);
+        doPickBlock();
+    }
 
-            EntityPlayer player = mc.player;
-            World world = player.world;
-            RayTraceResult target = mc.objectMouseOver;
+    private void doPickBlock() {
+        if (mc.player == null || mc.world == null) return;
+        if (mc.player.isCreative() || tick != 0 || !mc.gameSettings.keyBindPickBlock.isPressed()) return;
 
-            ItemStack result = ItemStack.EMPTY;
-            boolean isCreative = mc.player.isCreative();
-            TileEntity te = null;
+        EntityPlayer player = mc.player;
+        World world = player.world;
+        RayTraceResult target = mc.objectMouseOver;
+        if (target == null) return;
 
-            if (target.typeOfHit == RayTraceResult.Type.BLOCK) {
-                IBlockState state = world.getBlockState(target.getBlockPos());
+        ForgeHooks.onPickBlock(target, player, world);
 
-                if (state.getBlock().isAir(state, world, target.getBlockPos())) return;
+        ItemStack result = ItemStack.EMPTY;
+        boolean isCreative = player.isCreative();
+        TileEntity te = null;
 
-                if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
-                    te = world.getTileEntity(target.getBlockPos());
+        if (target.typeOfHit == RayTraceResult.Type.BLOCK) {
+            IBlockState state = world.getBlockState(target.getBlockPos());
 
-                result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player).copy();
-            }
+            if (state.getBlock().isAir(state, world, target.getBlockPos())) return;
 
-            if (result.isEmpty()) {
-                return;
-            }
+            if (isCreative && GuiScreen.isCtrlKeyDown() && state.getBlock().hasTileEntity(state))
+                te = world.getTileEntity(target.getBlockPos());
 
-            if (te != null) {
-                Minecraft.getMinecraft().storeTEInStack(result, te);
-            }
+            result = state.getBlock().getPickBlock(state, target, world, target.getBlockPos(), player).copy();
+        }
 
-            if (player.isSneaking()) {
-                result.setCount(1);
-            } else {
-                result.setCount(result.getItem().getItemStackLimit(result));
-            }
+        if (result.isEmpty()) return;
 
-            int slot = player.inventory.getSlotFor(result);
-            if (InventoryPlayer.isHotbar(slot)) {
-                player.inventory.currentItem = slot;
-            } else if (slot != -1) {
-                return;
-            }
+        if (te != null) {
+            Minecraft.getMinecraft().storeTEInStack(result, te);
+        }
 
-            if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
-                for (int i = 0; i < 9; i++) {
-                    if (player.inventory.getStackInSlot(i).isEmpty()) {
-                        player.inventory.currentItem = i;
-                        break;
-                    }
+        if (player.isSneaking()) {
+            result.setCount(1);
+        } else {
+            result.setCount(result.getItem().getItemStackLimit(result));
+        }
+
+        int slot = player.inventory.getSlotFor(result);
+        if (InventoryPlayer.isHotbar(slot)) {
+            player.inventory.currentItem = slot;
+        } else if (slot != -1) {
+            return;
+        }
+
+        if (slot == -1 && !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
+            for (int i = 0; i < 9; i++) {
+                if (player.inventory.getStackInSlot(i).isEmpty()) {
+                    player.inventory.currentItem = i;
+                    break;
                 }
             }
-
-            RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
-            tick = 20;
         }
+
+        RandomComplement.NET_CHANNEL.sendToServer(new WirelessPickBlock(result, player.inventory.currentItem));
+        tick = 20;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

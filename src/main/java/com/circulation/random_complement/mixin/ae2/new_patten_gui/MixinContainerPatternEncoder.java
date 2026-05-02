@@ -1,7 +1,6 @@
 package com.circulation.random_complement.mixin.ae2.new_patten_gui;
 
 import appeng.api.storage.ITerminalHost;
-import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.slot.IOptionalSlotHost;
@@ -42,18 +41,8 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
     @Unique
     protected RCSlotPatternOutputs[][] r$outputSlotGroup;
 
-    @Unique
-    protected GuiScrollbar r$guiScrollbar;
-
     public MixinContainerPatternEncoder(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
-    }
-
-    @Intrinsic
-    public void setScrollbar(GuiScrollbar scrollbar) {
-        if (!isRCPatternEncoder()) return;
-        r$guiScrollbar = scrollbar;
-        setRCSlot();
     }
 
     @Intrinsic
@@ -85,20 +74,11 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         }
     }
 
-    @Intrinsic
-    public void setRCSlot() {
-        if (!isRCPatternEncoder()) return;
-        if (r$guiScrollbar == null) return;
-        setRCSlot(r$guiScrollbar.getCurrentScroll());
-    }
-
     @Inject(method = "updateOrderOfOutputSlots", at = @At("HEAD"), remap = false)
     protected void updateOrderOfOutputSlots(CallbackInfo ci) {
         if (!isRCPatternEncoder()) return;
         if (this.isCraftingMode()) {
             setRCSlot(0);
-        } else {
-            setRCSlot();
         }
     }
 

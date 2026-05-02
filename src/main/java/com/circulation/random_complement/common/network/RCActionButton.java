@@ -1,12 +1,10 @@
 package com.circulation.random_complement.common.network;
 
-import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.items.misc.ItemEncodedPattern;
 import appeng.tile.inventory.AppEngInternalInventory;
 import com.circulation.random_complement.client.buttonsetting.Action;
 import com.circulation.random_complement.common.interfaces.Packet;
-import com.circulation.random_complement.common.interfaces.RCCraftingGridCache;
 import com.circulation.random_complement.common.interfaces.RCIInterfaceHostHelper;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -52,14 +50,14 @@ public class RCActionButton implements Packet<RCActionButton> {
                     val tile = ci.r$getTarget();
                     val duality = tile.getInterfaceDuality();
                     val gridNode = tile.getActionableNode();
-                    val cgc = (RCCraftingGridCache) gridNode.getGrid().getCache(ICraftingGrid.class);
+                    if (gridNode == null) return null;
                     val patterns = (AppEngInternalInventory) duality.getPatterns();
                     for (byte i = 0; i < patterns.getSlots(); i++) {
                         val oldPattern = patterns.getStackInSlot(i);
                         val pattern = oldPattern.copy();
                         NBTTagCompound pNbt;
                         if (!pattern.isEmpty()
-                            && pattern.getItem() instanceof ItemEncodedPattern ep
+                            && pattern.getItem() instanceof ItemEncodedPattern
                             && pattern.hasTagCompound()
                             && !(pNbt = pattern.getTagCompound()).getBoolean("crafting")
                         ) {
@@ -87,10 +85,13 @@ public class RCActionButton implements Packet<RCActionButton> {
                                             success = false;
                                             break;
                                         }
-                                        if (success)
-                                            nbt.setInteger("Cnt", r$quantityProcessing(oldSize, action));
-                                    }
-                                    if (newSize > 127) nbt.setInteger("stackSize", newSize);
+                                        if (success) {
+                                            int newCnt = r$quantityProcessing(oldSize, action);
+                                            nbt.setInteger("Cnt", newCnt);
+                                            if (newCnt > 127) nbt.setInteger("stackSize", newCnt);
+                                            else nbt.removeTag("stackSize");
+                                        }
+                                    } else if (newSize > 127) nbt.setInteger("stackSize", newSize);
                                     else nbt.removeTag("stackSize");
                                 }
                             }
@@ -115,7 +116,6 @@ public class RCActionButton implements Packet<RCActionButton> {
             case MULTIPLY_3 -> size * 3;
             case DIVIDE_2 -> size / 2;
             case DIVIDE_3 -> size / 3;
-            default -> throw new RuntimeException("Unreasonable calls");
         };
     }
 
@@ -126,7 +126,6 @@ public class RCActionButton implements Packet<RCActionButton> {
             case MULTIPLY_3 -> oldSize <= (Integer.MAX_VALUE / 3);
             case DIVIDE_2 -> oldSize % 2 == 0;
             case DIVIDE_3 -> oldSize % 3 == 0;
-            default -> throw new RuntimeException("Unreasonable calls");
         };
     }
 }

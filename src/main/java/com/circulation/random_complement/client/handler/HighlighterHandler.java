@@ -42,7 +42,8 @@ public class HighlighterHandler {
         long time = System.currentTimeMillis();
 
         if (time > expireHilight || dimension != this.dimension) {
-            hilightBlock(null, -1, this.dimension);
+            this.hilightedBlock = null;
+            this.expireHilight = -1L;
             return;
         }
 
@@ -71,7 +72,7 @@ public class HighlighterHandler {
         //noinspection ForLoopReplaceableByForEach
         for (var i = 0; i < hilightedBlock.length; i++) {
             var pos = hilightedBlock[i];
-            if (pos == null) return;
+            if (pos == null) continue;
             float mx = pos.getX();
             float my = pos.getY();
             float mz = pos.getZ();

@@ -57,7 +57,7 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
 
     @Intrinsic
     public void onCurrentScrollChance(int currentScroll) {
-        ((RCPatternEncoder) container).setRCSlot();
+        ((RCPatternEncoder) container).setRCSlot(r$scrollbar.getCurrentScroll());
     }
 
     @Inject(method = "initGui", at = @At("TAIL"))
@@ -78,7 +78,7 @@ public abstract class MixinGuiPatternTerm extends MixinGuiMEMonitorableTwo imple
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.drawTexturedModalRect(r$slotLeft - 13 + guiLeft - 2, r$slotTop + guiTop - 1, 174, 17, 14, 3 * 18);
         });
-        ((RCPatternEncoder) container).setScrollbar(r$scrollbar);
+        ((RCPatternEncoder) container).setRCSlot(r$scrollbar.getCurrentScroll());
     }
 
     @Override

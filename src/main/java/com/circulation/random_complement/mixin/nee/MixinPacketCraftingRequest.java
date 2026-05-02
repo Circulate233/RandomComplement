@@ -49,9 +49,11 @@ public abstract class MixinPacketCraftingRequest implements IMessageHandler<Pack
                 Object target = baseContainer.getTarget();
                 if (target instanceof IActionHost ah) {
                     IGridNode gn = ah.getActionableNode();
+                    if (gn == null) return;
                     IGrid grid = gn.getGrid();
+                    if (grid == null) return;
                     ISecurityGrid security = grid.getCache(ISecurityGrid.class);
-                    if (security.hasPermission(player, SecurityPermissions.CRAFT)) {
+                    if (security != null && security.hasPermission(player, SecurityPermissions.CRAFT)) {
                         if (baseContainer instanceof ContainerMEMonitorable) {
                             this.handlerCraftingTermRequest(baseContainer, message, grid, ah, player);
                         }

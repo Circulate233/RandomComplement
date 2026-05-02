@@ -84,8 +84,8 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
                     buf.writeLong(poss[i].toLong());
                 }
             }
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            RandomComplement.LOGGER.warn("InterfaceTracing.toBytes failed", e);
         }
     }
 
@@ -93,12 +93,15 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
     public IMessage onMessage(InterfaceTracing message, MessageContext ctx) {
         switch (ctx.side) {
             case SERVER -> {
+                if (message.item == null) return null;
                 val player = ctx.getServerHandler().player;
                 if (!(player.openContainer instanceof AccessorContainerCraftingCPU container)) return null;
                 Object monitor = container.invokerGetMonitor();
                 if (!(monitor instanceof AccessorCraftingCPUCluster cpu)) return null;
                 val grid = container.invokerGetNetwork();
+                if (grid == null) return null;
                 final CraftingGridCache c = grid.getCache(ICraftingGrid.class);
+                if (c == null) return null;
                 val list = new ObjectArrayList<ICraftingMedium>();
                 for (var detail : cpu.getTasks().keySet()) {
                     var outputs = detail.getCondensedOutputs();
@@ -116,7 +119,10 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
                     Object obj = icm;
                     if (icm instanceof IUpgradeableHost iuh) obj = iuh.getTile();
                     if (obj instanceof IGridProxyable igp) {
-                        coords.add(igp.getLocation());
+                        DimensionalCoord loc = igp.getLocation();
+                        if (loc != null && loc.getWorld() != null) {
+                            coords.add(loc);
+                        }
                     }
                 }
                 if (coords.isEmpty()) return null;
@@ -132,6 +138,7 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
     public void onClient(InterfaceTracing message) {
         if (message.poss == null || message.poss.length == 0) return;
         var mc = Minecraft.getMinecraft();
+        if (mc.player == null || mc.world == null) return;
         int playerDim = mc.world.provider.getDimension();
         BlockPos[] highlight = new BlockPos[message.poss.length];
         boolean any = false;

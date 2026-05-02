@@ -155,7 +155,8 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
         return targetCount;
     }
 
-    private void startCraft(EntityPlayerMP player, Container container, ItemStack item, boolean isAE) {
+    private void startCraft(EntityPlayerMP player, Container container, ItemStack itemIn, boolean isAE) {
+        ItemStack item = itemIn.copy();
         item.setCount(1);
         if (!isAE) {
             if (player.openContainer instanceof ContainerCraftAmount

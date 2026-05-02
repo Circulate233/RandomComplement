@@ -10,7 +10,6 @@ import appeng.core.sync.GuiBridge;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketValueConfig;
 import appeng.tile.misc.TileSecurityStation;
-import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.handler.RCInputHandler;
@@ -52,13 +51,12 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     @Shadow(remap = false)
     @Final
     private IItemList<IAEItemStack> missing;
+    @Shadow(remap = false)
+    private GuiBridge OriginalGui;
 
     public MixinGuiCraftConfirm(Container container) {
         super(container);
     }
-
-    @Shadow(remap = false)
-    private GuiBridge OriginalGui;
 
     @Unique
     private static String randomComplement$getItemInformation(final Object o) {
@@ -155,17 +153,13 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     }
 
     @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"), remap = false)
-    public String addItemInformation(Object n, Operation<String> original) {
+    public String addItemInformation(Object o, Operation<String> original) {
         String out;
-        if (!(out = randomComplement$getItemInformation(n)).isEmpty()) {
-            return original.call(n) + out;
+        if (!(out = randomComplement$getItemInformation(o)).isEmpty()) {
+            return original.call(o) + out;
         } else {
-            return original.call(n);
+            return original.call(o);
         }
     }
 
-    @Unique
-    private String randomComplement$getItemDisplayName(Object n) {
-        return Platform.getItemDisplayName(n);
-    }
 }

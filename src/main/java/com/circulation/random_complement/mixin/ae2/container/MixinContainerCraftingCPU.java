@@ -21,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ContainerCraftingCPU.class, remap = false)
 public abstract class MixinContainerCraftingCPU extends AEBaseContainer implements IMEMonitorHandlerReceiver<IAEItemStack>, ICustomNameObject, getCraftingCPUCluster {
 
-    @Shadow abstract CraftingCPUCluster getMonitor();
-
     @GuiSync(1)
     @Unique
     public long randomComplement$eta2 = -1L;
@@ -30,6 +28,9 @@ public abstract class MixinContainerCraftingCPU extends AEBaseContainer implemen
     public MixinContainerCraftingCPU(InventoryPlayer ip, TileEntity myTile, IPart myPart) {
         super(ip, myTile, myPart);
     }
+
+    @Shadow
+    abstract CraftingCPUCluster getMonitor();
 
     /**
      * @author sddsd2332

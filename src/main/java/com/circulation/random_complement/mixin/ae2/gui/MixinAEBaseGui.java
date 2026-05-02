@@ -131,7 +131,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
         }
     }
 
-    @WrapOperation(method = "handleMouseClick",at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;isAltKeyDown()Z"))
+    @WrapOperation(method = "handleMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;isAltKeyDown()Z"))
     protected boolean fixNoCraftable(Operation<Boolean> original, @Local(name = "stack") IAEItemStack stack) {
         return original.call() && stack.isCraftable();
     }

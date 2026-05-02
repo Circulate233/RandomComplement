@@ -22,6 +22,9 @@ public class ItemTooltipHandler {
     public static final ItemTooltipHandler INSTANCE = new ItemTooltipHandler();
     private static final Map<Class<? extends GuiScreen>, List<Supplier<List<String>>>> map = new Reference2ObjectLinkedOpenHashMap<>();
 
+    private ItemTooltipHandler() {
+    }
+
     public static void regItemTooltip(Class<? extends GuiScreen> aClass, ItemTooltipAdd tooltip) {
         synchronized (map) {
             map.computeIfAbsent(aClass, c -> new ObjectArrayList<>())
@@ -34,9 +37,6 @@ public class ItemTooltipHandler {
             map.computeIfAbsent(aClass, c -> new ObjectArrayList<>())
                .add(tooltip);
         }
-    }
-
-    private ItemTooltipHandler() {
     }
 
     @SubscribeEvent
