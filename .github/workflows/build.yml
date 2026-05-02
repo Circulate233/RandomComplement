@@ -9,20 +9,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 17
+    - name: Set up JDKs
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '17'
-    - name: Set up JDK 25
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '25'
+        java-version: |
+          8
+          17
+          25
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew -Pnet.minecraftforge.gradle.disableUpdateChecker=true build
+      run: ./gradlew -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64 -Dorg.gradle.java.installations.auto-download=false -Pnet.minecraftforge.gradle.disableUpdateChecker=true build
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
