@@ -27,7 +27,7 @@ public record SimpleItem(@NotNull String str) {
 
     public static SimpleItem getInstance(@NotNull ItemStack itemStack) {
         try {
-            if (itemStack.isEmpty()) return empty;
+            if (itemStack == null || itemStack.isEmpty()) return empty;
             var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
             if (itemStack.hasTagCompound()) {
                 key.append(itemStack.getTagCompound().hashCode());

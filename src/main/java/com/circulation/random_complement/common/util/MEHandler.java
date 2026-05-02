@@ -182,7 +182,7 @@ public class MEHandler {
             }
             long parsedKey = Long.parseLong(unparsedKey);
             ILocatable securityStation = AEApi.instance().registries().locatable().getLocatableBy(parsedKey);
-            if (securityStation instanceof TileSecurityStation t) {
+            if (securityStation instanceof TileSecurityStation) {
                 if (!handler.hasPower(player, 1000F, item)) {
                     player.sendMessage(PlayerMessages.DeviceNotPowered.get());
                     return null;
