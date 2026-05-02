@@ -1,63 +1,132 @@
 package com.circulation.random_complement.common.util;
 
-import appeng.api.storage.data.IAEItemStack;
-import com.github.bsideup.jabel.Desugar;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import lombok.Getter;
+import lombok.ToString;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Desugar
-public record SimpleItem(@NotNull String str) {
-    public static final SimpleItem empty = new SimpleItem("e");
+@ToString
+public final class SimpleItem {
 
-    private static final LoadingCache<String, SimpleItem> CRAFTABLE_ITEM_POOL =
-        CacheBuilder.newBuilder()
-                    .maximumSize(10000)
-                    .weakValues()
-                    .build(new CacheLoader<>() {
-                        @Override
-                        public SimpleItem load(@NotNull String str) {
-                            return new SimpleItem(str);
-                        }
-                    });
+    public static final SimpleItem empty = new SimpleItem(ItemStack.EMPTY);
+    private static final Map<ResourceLocation, CachedMetaItems> noNbtCache = new ConcurrentHashMap<>();
+    private final ResourceLocation item;
+    @Getter
+    private final int meta;
+    private final int hashCode;
+    private final NBTTagCompound nbt;
 
-    public static SimpleItem getInstance(@NotNull ItemStack itemStack) {
-        try {
-            if (itemStack == null || itemStack.isEmpty()) return empty;
-            var key = new StringBuilder(itemStack.getItem().getRegistryName().toString()).append(itemStack.getItemDamage());
-            if (itemStack.hasTagCompound()) {
-                key.append(itemStack.getTagCompound().hashCode());
-            }
-            return CRAFTABLE_ITEM_POOL.get(key.toString());
-        } catch (ExecutionException e) {
-            return empty;
-        }
+    private SimpleItem(ResourceLocation item, int meta, NBTTagCompound nbt) {
+        this.item = item;
+        this.meta = meta;
+        this.nbt = nbt;
+        this.hashCode = computeHash(item, meta, nbt);
     }
 
-    public static SimpleItem getInstance(@NotNull IAEItemStack itemStack) {
-        return getInstance(itemStack.getDefinition());
+    private SimpleItem(ItemStack stack) {
+        this(stack.getItem().getRegistryName(), stack.getItemDamage(), copyNBT(stack.getTagCompound()));
+    }
+
+    public static SimpleItem getInstance(final String rl, final int meta) {
+        return getInstance(new ResourceLocation(rl), meta);
+    }
+
+    public static SimpleItem getInstance(final ResourceLocation rl, final int meta) {
+        return noNbtCache.computeIfAbsent(rl, CachedMetaItems::new)
+                         .computeIfAbsent(meta);
+    }
+
+    public static SimpleItem getInstance(final ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return empty;
+        var nbt = stack.getTagCompound();
+        if (nbt == null || nbt.isEmpty()) {
+            return getNoNBTInstance(stack);
+        }
+        return new SimpleItem(stack);
+    }
+
+    public static SimpleItem getNoNBTInstance(final ItemStack stack) {
+        if (stack.isEmpty()) return empty;
+        return getInstance(stack.getItem().getRegistryName(), stack.getItemDamage());
+    }
+
+    private static NBTTagCompound copyNBT(NBTTagCompound nbt) {
+        if (nbt == null || nbt.isEmpty()) {
+            return null;
+        }
+        return nbt.copy();
+    }
+
+    private static int computeHash(ResourceLocation item, int meta, NBTTagCompound nbt) {
+        int result = item == null ? 0 : item.hashCode();
+        result = 31 * result + meta;
+        result = 31 * result + (nbt == null ? 0 : nbt.hashCode());
+        return result;
+    }
+
+    public Item getItem() {
+        return Item.REGISTRY.getObject(item);
+    }
+
+    public ResourceLocation getRegistryName() {
+        return item;
+    }
+
+    public String getItemID() {
+        return item.toString();
+    }
+
+    public ItemStack getItemStack(int amount) {
+        var i = new ItemStack(getItem(), amount, meta);
+        if (nbt != null && !nbt.isEmpty()) {
+            i.setTagCompound(nbt.copy());
+        }
+        return i;
     }
 
     public boolean isEmpty() {
-        return empty.equals(this);
+        return this == empty;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj instanceof SimpleItem si) {
-            return this.str.equals(si.str);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleItem that = (SimpleItem) o;
+        return meta == that.meta && Objects.equals(item, that.item) && Objects.equals(nbt, that.nbt);
+    }
+
+    @Override
+    public int hashCode() {
+        return hashCode;
+    }
+
+    private static class CachedMetaItems extends Int2ObjectOpenHashMap<SimpleItem> {
+        private final ResourceLocation item;
+
+        private CachedMetaItems(ResourceLocation item) {
+            this.item = item;
         }
-        return false;
-    }
 
-    @Override
-    public @NotNull String toString() {
-        return this.str;
-    }
+        public SimpleItem computeIfAbsent(int key) {
+            SimpleItem v;
+            if ((v = get(key)) == null) {
+                synchronized (this) {
+                    if ((v = get(key)) == null) {
+                        v = new SimpleItem(item, key, null);
+                        put(key, v);
+                    }
+                }
+            }
 
+            return v;
+        }
+
+    }
 }
