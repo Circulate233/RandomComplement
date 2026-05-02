@@ -20,7 +20,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64 -Dorg.gradle.java.installations.auto-download=false -Pnet.minecraftforge.gradle.disableUpdateChecker=true build
+      run: ./gradlew -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64,JAVA_HOME_17_X64,JAVA_HOME_25_X64 -Dorg.gradle.java.installations.auto-download=false -Pnet.minecraftforge.gradle.disableUpdateChecker=true build
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
