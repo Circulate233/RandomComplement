@@ -32,6 +32,8 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
     public PatternTermAutoFillPattern randomComplement$AutoFillPattern;
     @Shadow
     protected SlotRestrictedInput patternSlotIN;
+    @Unique
+    private boolean randomComplement$refillBlankPatterns = true;
 
     public MixinContainerPatternEncoder(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
@@ -61,11 +63,15 @@ public abstract class MixinContainerPatternEncoder extends ContainerMEMonitorabl
         MEHandler.refillBlankPatterns(this, patternSlotIN);
     }
 
-    @Inject(method = "detectAndSendChanges", at = @At("TAIL"), remap = true)
+    @Inject(method = "detectAndSendChanges", at = @At("HEAD"), remap = true)
     public void detectAndSendChangesMixin(CallbackInfo ci) {
         if (Platform.isServer()) {
             var d = ((RCIConfigurableObject) this.getTarget());
             this.randomComplement$loadSettingsFromHost(d.r$getConfigManager());
+            if (randomComplement$refillBlankPatterns) {
+                MEHandler.refillBlankPatterns(this, patternSlotIN);
+                randomComplement$refillBlankPatterns = false;
+            }
         }
     }
 
