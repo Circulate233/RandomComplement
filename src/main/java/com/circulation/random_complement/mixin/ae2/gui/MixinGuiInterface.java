@@ -70,6 +70,7 @@ public abstract class MixinGuiInterface extends GuiUpgradeable {
 
     @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY, CallbackInfo ci) {
+        if (r$IntelligentBlocking == null || cvb == null) return;
         this.r$IntelligentBlocking.set(((InterfaceConfigs) this.cvb).r$getIntelligentBlocking());
     }
 
