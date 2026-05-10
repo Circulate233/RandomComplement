@@ -4,6 +4,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.client.me.ItemRepo;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.container.implementations.ContainerPatternEncoder;
@@ -17,8 +18,11 @@ import com.circulation.random_complement.common.network.RCConfigButton;
 import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,8 +50,12 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RC
     @Final
     @Shadow(remap = false)
     private ContainerMEMonitorable monitorableContainer;
+    @Shadow(remap = false)
+    private MEGuiTextField searchField;
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;
+    @Shadow(remap = false)
+    protected abstract void setScrollBar();
 
     public MixinGuiMEMonitorable(Container container) {
         super(container);
@@ -137,4 +145,15 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RC
         randomComplement$cpuCache.addAll(list);
     }
 
+    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseMEGui;mouseClicked(III)V"))
+    private void r$handleItemOnMouse(int xCoord, int yCoord, int btn, CallbackInfo ci) {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        ItemStack mouseItem = player.inventory.getItemStack();
+        if(btn == 0 && this.searchField.isMouseIn(xCoord, yCoord) && !mouseItem.isEmpty()) {
+            String name = mouseItem.getDisplayName();
+            this.searchField.setText(name);
+            this.repo.setSearchString(name);
+            this.setScrollBar();
+        }
+    }
 }
