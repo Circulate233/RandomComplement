@@ -4,7 +4,7 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -33,7 +33,7 @@ import java.util.Set;
 import static com.circulation.random_complement.RCConfig.AE2;
 
 @Mixin(GuiArcaneTerminal.class)
-public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements RCAECraftablesGui {
+public abstract class MixinGuiArcaneTerminal extends MixinGuiAbstractTerminal<IAEItemStack, IItemStorageChannel> implements RCGuiMEMonitorable {
 
     @Unique
     private final int randomComplement$textureIndex = AE2.craftingSlotTextureIndex;

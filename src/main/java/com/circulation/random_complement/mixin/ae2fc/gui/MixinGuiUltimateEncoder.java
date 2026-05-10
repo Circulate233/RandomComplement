@@ -2,8 +2,8 @@ package com.circulation.random_complement.mixin.ae2fc.gui;
 
 import appeng.api.storage.data.IAEItemStack;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.RCGuiButton;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiUltimateEncoder.class, remap = false, priority = 1001)
-public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements RCAECraftablesGui {
+public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements RCGuiMEMonitorable {
 
     @Unique
     public Set<IAEItemStack> randomComplement$craftableCache = new ObjectOpenHashSet<>();

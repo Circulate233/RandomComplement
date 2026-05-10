@@ -4,7 +4,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.util.MEHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -73,7 +73,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
     @Inject(method = "drawSlot", at = @At(value = "HEAD"))
     private void drawSlotFake(Slot slot, CallbackInfo ci) {
         if (slot.xPos < 0 || slot.yPos < 0) return;
-        if (this instanceof RCAECraftablesGui) {
+        if (this instanceof RCGuiMEMonitorable) {
             if (slot instanceof SlotFake slotFake) {
                 if (!slotFake.shouldDisplay()) return;
                 var item = slotFake.getDisplayStack();
@@ -96,7 +96,7 @@ public abstract class MixinAEBaseGui extends GuiContainer {
 
     @Inject(method = "drawGuiContainerBackgroundLayer", at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", remap = false, shift = At.Shift.AFTER))
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
-        if (this instanceof RCAECraftablesGui monitorable) {
+        if (this instanceof RCGuiMEMonitorable monitorable) {
             var items = monitorable.r$getCpuCache();
             if (!items.isEmpty()) {
                 List<SlotME> slots = new ObjectArrayList<>();

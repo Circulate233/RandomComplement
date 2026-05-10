@@ -5,7 +5,7 @@ import appeng.core.AELog;
 import appeng.core.sync.AppEngPacket;
 import appeng.core.sync.network.INetworkInfo;
 import appeng.util.item.AEItemStack;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.common.util.MEHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -143,7 +143,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 switch (id) {
                     case 1 -> {
-                        if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                        if (Minecraft.getMinecraft().currentScreen instanceof RCGuiMEMonitorable gui) {
                             gui.r$addCpuCache(this.list);
                         }
                     }
@@ -159,7 +159,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
     public void ae2fcClientPacketData() {
         switch (id) {
             case 3 -> {
-                if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                if (Minecraft.getMinecraft().currentScreen instanceof RCGuiMEMonitorable gui) {
                     gui.r$addCraftablesCache(this.list);
                 }
             }
@@ -171,7 +171,7 @@ public class RCPacketMEInventoryUpdate extends AppEngPacket {
         if (this.list == null) return;
         switch (id) {
             case 4 -> {
-                if (Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui gui) {
+                if (Minecraft.getMinecraft().currentScreen instanceof RCGuiMEMonitorable gui) {
                     gui.r$addCpuCache(this.list);
                 }
             }

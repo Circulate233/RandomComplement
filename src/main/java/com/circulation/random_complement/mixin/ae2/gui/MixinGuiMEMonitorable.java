@@ -9,8 +9,8 @@ import appeng.client.me.ItemRepo;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.container.implementations.ContainerPatternEncoder;
 import com.circulation.random_complement.RandomComplement;
-import com.circulation.random_complement.client.RCAECraftablesGui;
 import com.circulation.random_complement.client.RCGuiButton;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.PatternTermAutoFillPattern;
 import com.circulation.random_complement.common.interfaces.PatternTermConfigs;
@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiMEMonitorable.class)
-public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RCAECraftablesGui {
+public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RCGuiMEMonitorable {
 
     @Unique
     protected final Set<IAEItemStack> randomComplement$cpuCache = new ObjectOpenHashSet<>();
@@ -54,8 +54,6 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RC
     private MEGuiTextField searchField;
     @Unique
     private RCGuiButton randomComplement$AutoFillPattern;
-    @Shadow(remap = false)
-    protected abstract void setScrollBar();
 
     public MixinGuiMEMonitorable(Container container) {
         super(container);
@@ -153,7 +151,6 @@ public abstract class MixinGuiMEMonitorable extends MixinAEBaseGui implements RC
             String name = mouseItem.getDisplayName();
             this.searchField.setText(name);
             this.repo.setSearchString(name);
-            this.setScrollBar();
         }
     }
 }

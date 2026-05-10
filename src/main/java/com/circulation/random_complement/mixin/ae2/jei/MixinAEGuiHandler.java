@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2.jei;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.AEGuiHandler;
+import com.circulation.random_complement.common.interfaces.RCGuiMEMonitorableJei;
 import mezz.jei.api.gui.IGhostIngredientHandler;
 import mezz.jei.bookmarks.BookmarkItem;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,6 +26,15 @@ public abstract class MixinAEGuiHandler {
     public void getTargets(AEBaseGui gui, Object ingredient, boolean doStart, CallbackInfoReturnable<List<IGhostIngredientHandler.Target<?>>> cir) {
         if (ingredient instanceof BookmarkItem<?> i) {
             cir.setReturnValue(this.getTargets(gui, i.ingredient, doStart));
+        }
+    }
+
+    @Inject(method = "getTargets(Lappeng/client/gui/AEBaseGui;Ljava/lang/Object;Z)Ljava/util/List;", at = @At("RETURN"))
+    public void addTextField(AEBaseGui gui, Object ingredient, boolean doStart, CallbackInfoReturnable<List<IGhostIngredientHandler.Target<?>>> cir) {
+        if (gui instanceof RCGuiMEMonitorableJei guiMEMonitorable) {
+            var i = guiMEMonitorable.r$getMEGuiTextFieldTarget();
+            if (i == null) return;
+            cir.getReturnValue().add(i);
         }
     }
 

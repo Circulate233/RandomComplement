@@ -4,7 +4,7 @@ import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.util.Platform;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,7 +47,7 @@ public class MixinMERepo<T extends IAEStack<T>> {
 
     @Unique
     private boolean randomComplement$isPriorityItem(IAEStack<?> stack) {
-        if (Platform.isClient() && stack instanceof IAEItemStack s && Minecraft.getMinecraft().currentScreen instanceof RCAECraftablesGui g) {
+        if (Platform.isClient() && stack instanceof IAEItemStack s && Minecraft.getMinecraft().currentScreen instanceof RCGuiMEMonitorable g) {
             var list = g.r$getCpuCache();
             return list.contains(s);
         }

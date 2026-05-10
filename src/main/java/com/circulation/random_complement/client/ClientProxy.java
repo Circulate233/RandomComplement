@@ -7,46 +7,63 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.util.Functions;
+import com.circulation.random_complement.mixin.jei.AccessorGhostIngredientDragManager;
 import com.circulation.random_complement.mixin.jei.AccessorInputHandler;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
 import lombok.val;
 import mezz.jei.Internal;
 import mezz.jei.bookmarks.BookmarkItem;
-import mezz.jei.input.IClickedIngredient;
-import mezz.jei.input.MouseHelper;
+import mezz.jei.gui.ghost.GhostIngredientDrag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import org.jetbrains.annotations.NotNull;
 
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     public static final String categoryJEI = "RandomComplement(JEI)";
     public static final String categoryAE2 = "RandomComplement(AE2)";
+    @NotNull
+    private static ItemStack mouseItemStack = ItemStack.EMPTY;
+
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        val player = Minecraft.getMinecraft().player;
+        if (player == null) {
+            mouseItemStack = ItemStack.EMPTY;
+            return;
+        }
+        var inv = player.inventory.getItemStack();
+        if (!inv.isEmpty()) {
+            mouseItemStack = inv;
+            return;
+        }
+        if (Loader.isModLoaded("jei")) mouseItemStack = getJEIMouseItem();
+        else mouseItemStack = ItemStack.EMPTY;
+    }
 
     public static ItemStack getMouseItem() {
-        val player = Minecraft.getMinecraft().player;
-        if (player == null) return ItemStack.EMPTY;
-        val i = player.inventory.getItemStack();
-        if (!i.isEmpty()) return i;
-
-        if (Loader.isModLoaded("jei")) return getJEIMouseItem();
-
-        return ItemStack.EMPTY;
+        return mouseItemStack;
     }
 
     @Optional.Method(modid = "jei")
     public static ItemStack getJEIMouseItem() {
-        IClickedIngredient<?> ii = null;
+        GhostIngredientDrag<?> ii = null;
         if (Internal.getInputHandler() != null) {
-            ii = ((AccessorInputHandler) Internal.getInputHandler()).invokeGetIngredientUnderMouseForKey(MouseHelper.getX(), MouseHelper.getY());
+            ii = ((AccessorGhostIngredientDragManager) ((AccessorInputHandler) Internal.getInputHandler()).getGhostIngredientDragManager()).getGhostIngredientDrag();
         }
         if (ii != null) {
-            if (ii.getValue() instanceof ItemStack stack) {
+            if (ii.getIngredient() instanceof ItemStack stack) {
                 return stack;
             }
-            if (ii.getValue() instanceof BookmarkItem<?> book && book.ingredient instanceof ItemStack stack) {
+            if (ii.getIngredient() instanceof BookmarkItem<?> book && book.ingredient instanceof ItemStack stack) {
                 return stack;
             }
         }

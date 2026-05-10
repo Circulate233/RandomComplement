@@ -1,6 +1,6 @@
 package com.circulation.random_complement.mixin.ae2.jei;
 
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.common.util.MEHandler;
 import com.circulation.random_complement.common.util.XYPair;
 import com.circulation.random_complement.mixin.jei.AccessorGuiIngredient;
@@ -38,7 +38,7 @@ public class MixinRecipesGui extends GuiScreen {
 
     @Inject(method = "updateLayout", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/recipes/RecipeCatalysts;updateLayout(Ljava/util/List;Lmezz/jei/gui/recipes/RecipesGui;)V", shift = At.Shift.AFTER))
     private void updateLayout(CallbackInfo ci) {
-        if (this.parentScreen instanceof RCAECraftablesGui gui) {
+        if (this.parentScreen instanceof RCGuiMEMonitorable gui) {
             r$isCraftablesGui = true;
             r$slots.clear();
             for (RecipeLayout r : this.recipeLayouts) {

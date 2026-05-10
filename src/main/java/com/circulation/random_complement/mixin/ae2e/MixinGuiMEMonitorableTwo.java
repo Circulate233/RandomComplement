@@ -6,7 +6,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.me.ItemRepo;
 import com._0xc4de.ae2exttable.client.gui.GuiMEMonitorableTwo;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.common.util.MEHandler;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Mixin(value = GuiMEMonitorableTwo.class)
-public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements RCAECraftablesGui {
+public abstract class MixinGuiMEMonitorableTwo extends AEBaseMEGui implements RCGuiMEMonitorable {
 
     @Unique
     public final Set<IAEItemStack> randomComplement$cpuCache = new ObjectOpenHashSet<>();

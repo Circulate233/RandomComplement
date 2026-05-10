@@ -1,7 +1,7 @@
 package com.circulation.random_complement.mixin.ae2fc.old;
 
 import appeng.container.slot.SlotFake;
-import com.circulation.random_complement.client.RCAECraftablesGui;
+import com.circulation.random_complement.client.RCGuiMEMonitorable;
 import com.circulation.random_complement.common.util.MEHandler;
 import com.circulation.random_complement.mixin.ae2.gui.MixinAEBaseGui;
 import com.glodblock.github.client.GuiUltimateEncoder;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = GuiUltimateEncoder.class, remap = false)
-public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements RCAECraftablesGui {
+public abstract class MixinGuiUltimateEncoder extends MixinAEBaseGui implements RCGuiMEMonitorable {
 
     public MixinGuiUltimateEncoder(Container inventorySlotsIn) {
         super(inventorySlotsIn);

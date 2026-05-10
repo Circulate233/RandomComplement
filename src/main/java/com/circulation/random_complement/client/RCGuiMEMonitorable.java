@@ -5,7 +5,7 @@ import appeng.api.storage.data.IAEItemStack;
 import java.util.Collection;
 import java.util.Set;
 
-public interface RCAECraftablesGui {
+public interface RCGuiMEMonitorable {
 
     Set<IAEItemStack> r$getCpuCache();
 
