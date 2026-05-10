@@ -27,21 +27,21 @@ public abstract class MixinTileMachineBase extends TilePowered implements IAccel
 
     @Redirect(method = "installAugmentToSlot", at = @At(value = "INVOKE", target = "Lcofh/thermalexpansion/block/machine/TileMachineBase;getBasePower(I)I"))
     public int setBasePower(TileMachineBase instance, int level, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return getBasePower(level) * this.augments[slot].getCount();
+        return getBasePower(level) * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount());
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 10, ordinal = 0))
     private int setMachinePowerEnergyMod(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * this.augments[slot].getCount() : constant;
+        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount()) : constant;
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15))
     private int setSecondaryChance(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return constant * this.augments[slot].getCount();
+        return constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount());
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 10, ordinal = 1))
     private int setMachineSecondaryEnergyMod(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * this.augments[slot].getCount() : constant;
+        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount()) : constant;
     }
 }

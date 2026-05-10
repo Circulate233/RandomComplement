@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class MixinTileInsolator extends TileMachineBase {
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 20))
-    private int setMachineInsolatorFertilizerReuseChance(int constant, @Local(ordinal = 0) int slot) {
-        return constant * this.augments[slot].getCount();
+    private int setMachineInsolatorFertilizerReuseChance(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
+        return constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount());
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15))
-    private int setMachineInsolatorFertilizerEnergyMod(int constant, @Local(ordinal = 0) int slot) {
-        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * this.augments[slot].getCount() : constant;
+    private int setMachineInsolatorFertilizerEnergyMod(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
+        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount()) : constant;
     }
 }

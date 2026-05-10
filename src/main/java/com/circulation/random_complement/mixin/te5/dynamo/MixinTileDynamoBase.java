@@ -26,7 +26,7 @@ public abstract class MixinTileDynamoBase extends TileInventory implements ITick
 
     @Redirect(method = "installAugmentToSlot", at = @At(value = "INVOKE", target = "Lcofh/thermalexpansion/block/dynamo/TileDynamoBase;getBasePower(I)I"))
     public int setBasePower(TileDynamoBase instance, int level, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return getBasePower(level) * this.augments[slot].getCount();
+        return getBasePower(level) * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount());
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 0))

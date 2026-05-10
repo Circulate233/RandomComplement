@@ -13,11 +13,11 @@ public abstract class MixinTileSmelter extends TileMachineBase {
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 0))
     private int setMachineSmelterReuseChance(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return constant * this.augments[slot].getCount();
+        return constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount());
     }
 
     @ModifyConstant(method = "installAugmentToSlot", constant = @Constant(intValue = 15, ordinal = 1))
     private int setMachineSmelterEnergyMod(int constant, @Local(ordinal = 0, argsOnly = true) int slot) {
-        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * this.augments[slot].getCount() : constant;
+        return RCConfig.TE5.IncreasedEnergyConsumption ? constant * Math.min(RCConfig.COFHCORE.SocketLimitModified, this.augments[slot].getCount()) : constant;
     }
 }
