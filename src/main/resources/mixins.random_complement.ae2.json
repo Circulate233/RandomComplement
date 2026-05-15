@@ -71,7 +71,7 @@
     "gui.MixinGuiInterface",
     "gui.MixinGuiMEMonitorable",
     "gui.MixinItemRepo",
-		"gui.MixinMathExpressionParser",
+	"gui.MixinMathExpressionParser",
     "miss_craft.MixinGuiCraftConfirm",
     "new_patten_gui.MixinGuiMEMonitorableTwo",
     "new_patten_gui.MixinGuiPatternTerm"
