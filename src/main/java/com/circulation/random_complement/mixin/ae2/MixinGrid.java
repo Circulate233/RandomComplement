@@ -4,8 +4,6 @@ import appeng.me.Grid;
 import appeng.me.GridNode;
 import appeng.tile.networking.TileCreativeEnergyCell;
 import com.circulation.random_complement.common.interfaces.RCGrid;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,24 +14,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinGrid implements RCGrid {
 
     @Unique
-    private ObjectSet<TileCreativeEnergyCell> rc$ce = new ObjectOpenHashSet<>();
+    private int rc$ce = 0;
 
     @Inject(method = "add", at = @At("HEAD"))
     public void add(GridNode gridNode, CallbackInfo ci) {
-        if (gridNode.getMachine() instanceof TileCreativeEnergyCell t) {
-            rc$ce.add(t);
+        if (gridNode.getMachine() instanceof TileCreativeEnergyCell) {
+            ++rc$ce;
         }
     }
 
     @Inject(method = "remove", at = @At("HEAD"))
     public void remove(GridNode gridNode, CallbackInfo ci) {
-        if (gridNode.getMachine() instanceof TileCreativeEnergyCell t) {
-            rc$ce.remove(t);
+        if (gridNode.getMachine() instanceof TileCreativeEnergyCell) {
+            --rc$ce;
         }
     }
 
     @Override
     public boolean r$hasCreativeEnergyCell() {
-        return !rc$ce.isEmpty();
+        return rc$ce > 0;
     }
 }
