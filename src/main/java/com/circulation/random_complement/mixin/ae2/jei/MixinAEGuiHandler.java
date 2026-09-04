@@ -2,6 +2,7 @@ package com.circulation.random_complement.mixin.ae2.jei;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.AEGuiHandler;
+import com.circulation.random_complement.RCConfig;
 import com.circulation.random_complement.common.interfaces.RCGuiMEMonitorableJei;
 import com.circulation.random_complement.mixin.jei.AccessorBookmarkItem;
 import mezz.jei.api.gui.IGhostIngredientHandler;
@@ -31,7 +32,7 @@ public abstract class MixinAEGuiHandler {
 
     @Inject(method = "getTargets(Lappeng/client/gui/AEBaseGui;Ljava/lang/Object;Z)Ljava/util/List;", at = @At("RETURN"))
     public void addTextField(AEBaseGui gui, Object ingredient, boolean doStart, CallbackInfoReturnable<List<IGhostIngredientHandler.Target<?>>> cir) {
-        if (gui instanceof RCGuiMEMonitorableJei guiMEMonitorable) {
+        if (RCConfig.AE2.dragJeiItemToSearchBox && gui instanceof RCGuiMEMonitorableJei guiMEMonitorable) {
             var i = guiMEMonitorable.r$getMEGuiTextFieldTarget();
             if (i == null) return;
             cir.getReturnValue().add(i);

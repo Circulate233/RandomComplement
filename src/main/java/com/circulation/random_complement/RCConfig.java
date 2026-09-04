@@ -102,6 +102,10 @@ public class RCConfig {
         })
         @Config.Name("enableBranchCraft")
         public boolean enableBranchCraft = true;
+
+        @Config.Comment({"Drag item from JEI into the search box to automatically enter the name"})
+        @Config.Name("dragJeiItemToSearchBox")
+        public boolean dragJeiItemToSearchBox = true;
     }
 
     public static class IC2 {
