@@ -22,8 +22,12 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: temurin
+          distribution: 'zulu'
+          java-version: |
+            8
+            17
+            21
+            25
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
