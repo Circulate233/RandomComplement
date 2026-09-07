@@ -50,6 +50,8 @@ jobs:
 
       - name: Publish to CurseForge
         if: env.CURSEFORGE_TOKEN != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           changelog_file="${RUNNER_TEMP}/curseforge-changelog.md"
           : > "${changelog_file}"
