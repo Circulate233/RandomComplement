@@ -8,7 +8,6 @@ import org.jetbrains.changelog.Changelog
 plugins {
     id 'java'
     id 'java-library'
-    id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
     id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
     id 'org.jetbrains.changelog' version '2.2.1'
@@ -347,5 +346,5 @@ idea.project.settings {
     }
 }
 
-apply from: 'gradle/scripts/publishing.gradle'
 apply from: 'gradle/scripts/extra.gradle'
+apply from: 'gradle/scripts/curseforge.gradle'

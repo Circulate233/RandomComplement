@@ -1,0 +1,66 @@
+def curseforgeProjectId = '1198138'
+def curseforgeRequiredDependencies = ['mixin-booter']
+def curseforgeOptionalDependencies = [
+    'ae2-fluid-crafting-rework',
+    'ae2-extended-life',
+    'botania',
+    'draconic-evolution',
+    'extended-crafting-terminals-for-applied',
+    'lazy-ae2',
+    'modularmachinery-community-edition',
+    'not-enough-energistics',
+    'packagedastral',
+    'packagedavaritia',
+    'packageddraconic',
+    'packagedexcrafting',
+    'thaumic-energistics-extended-life'
+]
+def curseforgeIncompatibleDependencies = ['applied-energistics-2']
+
+def releaseType = findProperty('release_type')?.toString()?.trim()?.toLowerCase()
+if (!releaseType) {
+    def version = propertyString('mod_version').toLowerCase()
+    releaseType = version.contains('alpha') ? 'alpha' :
+            (version.contains('beta') || version.contains('pre') || version.contains('rc') ? 'beta' : 'release')
+}
+if (!['alpha', 'beta', 'release'].contains(releaseType)) {
+    throw new GradleException("release_type must be one of alpha, beta, release: ${releaseType}")
+}
+
+def changelogProperty = findProperty('curseforge_changelog_file')?.toString()?.trim()
+def changelogFile = changelogProperty ? file(changelogProperty) : file('CHANGELOG.md')
+if (!changelogFile.isFile()) {
+    changelogFile = null
+}
+
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    dependsOn tasks.named('build')
+    group = 'publishing'
+    description = "Publishes RandomComplement ${propertyString('mod_version')} to CurseForge project ${curseforgeProjectId}."
+    apiToken = providers.environmentVariable('CURSEFORGE_TOKEN')
+    debugMode = propertyString('curseforge_debug').toBoolean()
+
+    def artifact = upload(curseforgeProjectId, tasks.named('reobfJar').get())
+    artifact.releaseType = releaseType
+    artifact.changelogType = 'markdown'
+    if (changelogFile != null) {
+        artifact.changelog = changelogFile
+    }
+    artifact.addGameVersion('1.12.2')
+    artifact.addModLoader('Forge')
+    artifact.addJavaVersion('Java 8')
+    artifact.addRequirement(*curseforgeRequiredDependencies)
+    artifact.addOptional(*curseforgeOptionalDependencies)
+    artifact.addIncompatibility(*curseforgeIncompatibleDependencies)
+}
+
+tasks.matching { it.name == 'publishCurseForge' }.configureEach {
+    doFirst {
+        if (!providers.environmentVariable('CURSEFORGE_TOKEN').isPresent()) {
+            throw new GradleException('CURSEFORGE_TOKEN is required to publish to CurseForge.')
+        }
+        uploadArtifacts.each { artifact ->
+            artifact.addEnvironment('Client', 'Server')
+        }
+    }
+}
