@@ -8,7 +8,6 @@
   ],
   "server": [],
   "client": [
-    "JEIPluginMixin",
     "MixinEncoderGhostIngredientHandler"
   ]
 }

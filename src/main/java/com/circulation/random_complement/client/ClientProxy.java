@@ -4,14 +4,11 @@ import com.circulation.random_complement.client.handler.GuiMouseHelper;
 import com.circulation.random_complement.client.handler.HighlighterHandler;
 import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
-import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.CommonProxy;
 import com.circulation.random_complement.common.integration.ae2.AEIntegrations;
 import com.circulation.random_complement.mixin.jei.AccessorBookmarkItem;
 import com.circulation.random_complement.mixin.jei.AccessorGhostIngredientDragManager;
 import com.circulation.random_complement.mixin.jei.AccessorInputHandler;
-import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
-import it.unimi.dsi.fastutil.objects.ReferenceList;
 import lombok.val;
 import mezz.jei.Internal;
 import mezz.jei.gui.ghost.GhostIngredientDrag;
@@ -96,27 +93,6 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(HighlighterHandler.INSTANCE);
         if (AEIntegrations.INSTANCE.isEnabled()) {
             MinecraftForge.EVENT_BUS.register(RCInputHandler.INSTANCE);
-        }
-        if (Loader.isModLoaded("jei")) {
-            ReferenceList<Class<?>> classes = new ReferenceArrayList<>();
-            if (AEIntegrations.INSTANCE.isEnabled()) {
-                try {
-                    classes.add(Class.forName("appeng.client.gui.AEBaseGui"));
-                } catch (ClassNotFoundException ignored) {
-
-                }
-            }
-            if (Loader.isModLoaded("packagedauto")) {
-                try {
-                    classes.add(Class.forName("thelm.packagedauto.client.gui.GuiEncoder"));
-                } catch (ClassNotFoundException ignored) {
-
-                }
-            }
-            if (!classes.isEmpty()) {
-                RCJEIInputHandler.setJeiGui(classes.toArray(new Class[0]));
-                MinecraftForge.EVENT_BUS.register(RCJEIInputHandler.INSTANCE);
-            }
         }
         RegItemTooltip.regAll();
     }

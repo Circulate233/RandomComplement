@@ -1,15 +1,12 @@
 package com.circulation.random_complement.mixin.ae2.jei;
 
-import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
-import appeng.integration.modules.jei.JEIPlugin;
 import com.circulation.random_complement.RandomComplement;
 import com.circulation.random_complement.client.KeyBindings;
 import com.circulation.random_complement.client.handler.ItemTooltipHandler;
 import com.circulation.random_complement.client.handler.RCInputHandler;
-import com.circulation.random_complement.client.handler.RCJEIInputHandler;
 import com.circulation.random_complement.common.network.KeyBindingHandler;
 import com.circulation.random_complement.common.util.Functions;
 import com.circulation.random_complement.common.util.MEHandler;
@@ -57,22 +54,6 @@ public abstract class MixinInputHandler {
     @Shadow
     @Nullable
     protected abstract IClickedIngredient<?> getFocusUnderMouseForClick(int mouseX, int mouseY);
-
-    @Unique
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void r$onClickEvent(GuiScreenEvent.MouseInputEvent.Pre event) {
-        if (Minecraft.getMinecraft().currentScreen instanceof AEBaseGui gui) {
-            int eventButton = Mouse.getEventButton();
-            if (eventButton > -1) {
-                if (Mouse.isButtonDown(eventButton)) {
-                    var ing = getFocusUnderMouseForClick(MouseHelper.getX(), MouseHelper.getY());
-                    if (ing == null) return;
-                    RCJEIInputHandler.setShiftClickCache(() ->
-                        JEIPlugin.aeGuiHandler.getTargets(gui, ing.getValue(), true));
-                }
-            }
-        }
-    }
 
     @Unique
     @SubscribeEvent(priority = EventPriority.HIGH)

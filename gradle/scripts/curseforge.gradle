@@ -39,6 +39,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     description = "Publishes RandomComplement ${propertyString('mod_version')} to CurseForge project ${curseforgeProjectId}."
     apiToken = providers.environmentVariable('CURSEFORGE_TOKEN')
     debugMode = propertyString('curseforge_debug').toBoolean()
+    disableVersionDetection()
 
     def artifact = upload(curseforgeProjectId, tasks.named('reobfJar').get())
     artifact.releaseType = releaseType
@@ -49,6 +50,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     artifact.addGameVersion('1.12.2')
     artifact.addModLoader('Forge')
     artifact.addJavaVersion('Java 8')
+    artifact.addJavaVersion('Java 25')
     artifact.addRequirement(*curseforgeRequiredDependencies)
     artifact.addOptional(*curseforgeOptionalDependencies)
     artifact.addIncompatibility(*curseforgeIncompatibleDependencies)
