@@ -7,7 +7,8 @@
   "mixins": [
     "MixinAEGuiHandler",
     "MixinBookmarkGroupOrganizer",
-    "MixinIngredientListBatchRenderer"
+    "MixinIngredientListBatchRenderer",
+    "MixinInputHandler"
   ],
   "server": [],
   "client": [
