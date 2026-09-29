@@ -1,6 +1,5 @@
 package com.circulation.random_complement.mixin.ae2.miss_craft;
 
-import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.crafting.CraftingJob;
@@ -114,20 +113,6 @@ public class MixinCraftingTreeNode {
         if (this.what.equals(this.job.getOutput())) return 0;
         if (this.nodes.isEmpty()) return original.call(instance);
         return 0;
-    }
-
-    @Inject(method = "notRecursive", at = @At("RETURN"), cancellable = true)
-    public void notRecursive(ICraftingPatternDetails details, CallbackInfoReturnable<Boolean> cir) {
-        if (!canIgnoredInput()) return;
-        if (canEmit) return;
-        if (cir.getReturnValueZ()) {
-            for (var input : details.getCondensedInputs()) {
-                if (this.what.equals(input)) {
-                    cir.setReturnValue(Boolean.FALSE);
-                    break;
-                }
-            }
-        }
     }
 
     @Intrinsic

@@ -29,4 +29,10 @@ public interface AccessorCraftingTreeNode {
 
     @Accessor
     CraftingJob getJob();
+
+    @Accessor
+    IAEItemStack getWhat();
+
+    @Accessor
+    CraftingTreeProcess getParent();
 }

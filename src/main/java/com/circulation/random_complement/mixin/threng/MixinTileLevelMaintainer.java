@@ -18,6 +18,7 @@ import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
 import appeng.util.item.AEItemStack;
 import com.circulation.random_complement.common.interfaces.AEIgnoredInputMachine;
+import com.circulation.random_complement.common.interfaces.RCAutoCraftingSource;
 import com.circulation.random_complement.common.util.MEHandler;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
@@ -41,7 +42,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = TileLevelMaintainer.class, remap = false, priority = 999)
-public abstract class MixinTileLevelMaintainer extends TileNetworkDevice implements IStackWatcherHost, ICraftingRequester, AEIgnoredInputMachine {
+public abstract class MixinTileLevelMaintainer extends TileNetworkDevice implements IStackWatcherHost, ICraftingRequester, AEIgnoredInputMachine, RCAutoCraftingSource {
 
     @Shadow
     @AutoSerialize

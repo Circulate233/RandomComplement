@@ -69,6 +69,9 @@ public abstract class MixinConfigPlugin implements IMixinConfigPlugin {
             if (mixinClassName.startsWith("miss_craft")) {
                 return RCConfig.AE2.enableMissCraft;
             }
+            if (mixinClassName.startsWith("recursive")) {
+                return RCConfig.AE2.recursiveCraftingOptimization;
+            }
             if (mixinClassName.startsWith("branch_craft")) {
                 return RCConfig.AE2.enableBranchCraft;
             }

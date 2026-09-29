@@ -2,13 +2,14 @@ package com.circulation.random_complement.mixin.ae2.part;
 
 import appeng.helpers.DualityInterface;
 import appeng.parts.misc.PartInterface;
+import com.circulation.random_complement.common.interfaces.RCAutoCraftingSource;
 import com.circulation.random_complement.common.interfaces.RCIConfigManager;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = PartInterface.class, remap = false)
-public abstract class MixinPartInterface implements RCIConfigurableObject {
+public abstract class MixinPartInterface implements RCIConfigurableObject, RCAutoCraftingSource {
     @Shadow
     public abstract DualityInterface getInterfaceDuality();
 

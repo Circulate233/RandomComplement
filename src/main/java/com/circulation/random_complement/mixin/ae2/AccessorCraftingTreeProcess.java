@@ -15,4 +15,7 @@ public interface AccessorCraftingTreeProcess {
 
     @Accessor
     Object2LongArrayMap<CraftingTreeNode> getNodes();
+
+    @Accessor
+    CraftingTreeNode getParent();
 }

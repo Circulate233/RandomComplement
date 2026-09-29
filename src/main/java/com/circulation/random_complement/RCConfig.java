@@ -97,6 +97,13 @@ public class RCConfig {
         public boolean enableMissCraft = true;
 
         @Config.Comment({
+            "Supplementary handling for recursive patterns (patterns consuming their own output)",
+            "when calculating a crafting job."
+        })
+        @Config.Name("recursiveCraftingOptimization")
+        public boolean recursiveCraftingOptimization = true;
+
+        @Config.Comment({
             "Allow multiple pattern to synthesize the same product",
             "May have potential performance implications; consider disabling if not needed."
         })
@@ -106,6 +113,22 @@ public class RCConfig {
         @Config.Comment({"Drag item from JEI into the search box to automatically enter the name"})
         @Config.Name("dragJeiItemToSearchBox")
         public boolean dragJeiItemToSearchBox = true;
+
+        @Config.Comment({
+            "Trim the crafting inventory snapshot down to the items the plan can actually touch.",
+            "Only used for crafting machines that repeatedly request the same item",
+            "(AE2 crafting card devices, LazyAE / AE2FC level maintainers)."
+        })
+        @Config.Name("trimCraftingInventorySnapshot")
+        public boolean trimCraftingInventorySnapshot = true;
+
+        @Config.Comment({"Log every crafting snapshot trim decision. Testing only."})
+        @Config.Name("debugTrimCraftingSnapshot")
+        public boolean debugTrimCraftingSnapshot = false;
+
+        @Config.Comment({"Also trim player initiated crafting jobs. Testing only."})
+        @Config.Name("debugTrimPlayerSources")
+        public boolean debugTrimPlayerSources = false;
     }
 
     public static class IC2 {

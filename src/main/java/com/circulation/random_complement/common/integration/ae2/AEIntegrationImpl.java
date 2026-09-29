@@ -22,7 +22,7 @@ public class AEIntegrationImpl implements AEIntegration {
 
     public AEIntegrationImpl(Predicate<String> modLoaded, boolean enableConfig) {
         Predicate<String> loadedPredicate = Objects.requireNonNull(modLoaded, "modLoaded");
-        boolean ae2Loaded = loadedPredicate.test("appliedenergistics2");
+        boolean ae2Loaded = loadedPredicate.test("appliedenergistics2") && !loadedPredicate.test("ae2");
         this.enabled = ae2Loaded && enableConfig;
         this.ae2fcEnabled = this.enabled && loadedPredicate.test("ae2fc");
         this.ae2ExtTableEnabled = this.enabled && loadedPredicate.test("ae2exttable");

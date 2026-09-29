@@ -10,6 +10,7 @@
     "MixinPartDualInterface",
     "container.MixinContainerUltimateEncoder",
     "new_patten_gui.MixinPartFluidPatternTerminal",
+    "part.MixinPartFluidExportBus",
     "tile.MixinTileDualInterface",
     "tile.MixinTileUltimateEncoder"
   ],

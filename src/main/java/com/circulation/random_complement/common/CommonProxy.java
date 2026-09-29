@@ -30,6 +30,12 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(this);
         registerMessage(SyncConfig.class, Side.CLIENT);
         if (AEIntegrations.INSTANCE.isEnabled()) {
+            MinecraftForge.EVENT_BUS.register(new Object() {
+                @SubscribeEvent
+                public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+                    WirelessPickBlock.onPlayerLoggedOut(event.player.getUniqueID());
+                }
+            });
             registerMessage(ContainerRollBACK.class, Side.CLIENT);
             registerMessage(InterfaceTracing.class, Side.CLIENT);
 
@@ -59,11 +65,6 @@ public class CommonProxy {
 
     public <T extends Packet<T>> void registerMessage(Class<T> aClass, Side side) {
         NET_CHANNEL.registerMessage(aClass, aClass, id++, side);
-    }
-
-    @SubscribeEvent
-    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        WirelessPickBlock.onPlayerLoggedOut(event.player.getUniqueID());
     }
 
 }

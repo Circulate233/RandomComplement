@@ -1,22 +1,10 @@
 package com.circulation.random_complement.common.interfaces;
 
-import appeng.api.storage.data.IAEItemStack;
-
-public interface RCCraftingJob {
-
-    IAEItemStack getWaitingItem();
-
-    boolean isSpecialDeficiency();
-
-    void setSpecialDeficiency(boolean b);
+public interface RCCraftingJob extends RCRecursiveCraftingJob {
 
     boolean canIgnoredInput();
 
-    boolean isMiss();
-
-    void setMiss(boolean miss);
-
     boolean isLock();
 
-    void setLock(boolean miss);
+    void setLock(boolean lock);
 }
