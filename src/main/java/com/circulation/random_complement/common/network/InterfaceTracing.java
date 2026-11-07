@@ -91,6 +91,7 @@ public class InterfaceTracing implements Packet<InterfaceTracing> {
 
     @Override
     public IMessage onMessage(InterfaceTracing message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
         switch (ctx.side) {
             case SERVER -> {
                 if (message.item == null) return null;

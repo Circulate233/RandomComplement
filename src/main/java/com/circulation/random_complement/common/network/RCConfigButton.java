@@ -39,6 +39,7 @@ public class RCConfigButton implements Packet<RCConfigButton> {
 
     @Override
     public IMessage onMessage(RCConfigButton message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
         EntityPlayerMP sender = ctx.getServerHandler().player;
         if (sender.openContainer instanceof AEBaseContainer baseContainer) {
             if (baseContainer.getTarget() instanceof RCIConfigurableObject obj) {

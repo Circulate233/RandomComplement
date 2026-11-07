@@ -57,8 +57,10 @@ public class RCInputHandler {
         int m;
         if (isMouse) {
             m = Mouse.getEventButton();
+            if (m < 0 || !Mouse.getEventButtonState()) return false;
             eventKey = m - 100;
         } else {
+            if (!Keyboard.getEventKeyState() || Keyboard.isRepeatEvent()) return false;
             eventKey = Keyboard.getEventKey();
         }
         for (var kb : KeyBindings.values()) {
@@ -66,11 +68,6 @@ public class RCInputHandler {
                 case QueryInterface -> {
                     if (!kb.getKeyBinding().isActiveAndMatches(eventKey)) {
                         break;
-                    }
-
-                    // IMPORTANT: don't cancel mouse releases (prevents stuck dragging)
-                    if (isMouse && !Mouse.getEventButtonState()) {
-                        return false;
                     }
 
                     // Only do anything inside the Crafting CPU GUI

@@ -45,7 +45,7 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
     }
 
     public WirelessPickBlock(ItemStack stack, int slot) {
-        this.stack = stack;
+        this.stack = stack.copy();
         this.slot = slot;
     }
 
@@ -67,6 +67,8 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
 
     @Override
     public IMessage onMessage(WirelessPickBlock message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
+        if (message.stack.isEmpty() || !net.minecraft.entity.player.InventoryPlayer.isHotbar(message.slot)) return null;
         EntityPlayerMP player = ctx.getServerHandler().player;
         UUID playUUID = player.getUniqueID();
         long worldTime = Instant.now().getEpochSecond();
@@ -83,10 +85,10 @@ public class WirelessPickBlock implements Packet<WirelessPickBlock> {
             else needItem.setCount(handItem.getItem().getItemStackLimit(handItem) - handItem.getCount());
         }
 
-        Objects.requireNonNull(player.getServer()).addScheduledTask(() -> readPlayer(player, needItem, message));
+        readPlayer(player, needItem, message);
 
         if (!needItem.isEmpty() && Loader.isModLoaded("baubles")) {
-            player.getServer().addScheduledTask(() -> readBaubles(player, needItem, message.slot));
+            readBaubles(player, needItem, message.slot);
         }
 
         return null;

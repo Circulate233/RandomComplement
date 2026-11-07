@@ -5,6 +5,7 @@ import com.circulation.random_complement.client.handler.RCInputHandler;
 import com.circulation.random_complement.common.interfaces.Packet;
 import com.circulation.random_complement.common.interfaces.RCAEBaseContainer;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -23,6 +24,7 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
 
     @Override
     public IMessage onMessage(ContainerRollBACK message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
         switch (ctx.side) {
             case SERVER -> {
                 var entityPlayerMP = ctx.getServerHandler().player;
@@ -50,10 +52,12 @@ public class ContainerRollBACK implements Packet<ContainerRollBACK> {
 
     @SideOnly(Side.CLIENT)
     public void clientRun() {
-        if (RCInputHandler.getDelayMethod() != null) {
-            RCInputHandler.getDelayMethod().run();
-            RCInputHandler.setDelayMethod(null);
-            RCInputHandler.setOldGui(null);
-        }
+        Minecraft minecraft = Minecraft.getMinecraft();
+        if (PacketThreading.enqueueIfNeeded(minecraft, this::clientRun)) return;
+        // Consume before opening the GUI: its callbacks can install a new pending action.
+        Runnable action = RCInputHandler.getDelayMethod();
+        RCInputHandler.setDelayMethod(null);
+        RCInputHandler.setOldGui(null);
+        if (action != null && minecraft.player != null && minecraft.world != null) action.run();
     }
 }

@@ -61,7 +61,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
 
     public KeyBindingHandler(String key, ItemStack item, boolean isAE) {
         this.key = key;
-        this.stack = item;
+        this.stack = item.copy();
         this.isAE = isAE;
     }
 
@@ -81,17 +81,15 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
 
     @Override
     public IMessage onMessage(KeyBindingHandler message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
+        if (message.stack.isEmpty() || message.key == null) return null;
         EntityPlayerMP player = ctx.getServerHandler().player;
         var container = player.openContainer;
         var item = message.stack;
-        player.getServer().addScheduledTask(() -> {
-            switch (message.key) {
-                case "RetrieveItem" ->
-                    retrieveItem(player, container, item, message.isAE);
-                case "StartCraft" ->
-                    startCraft(player, container, item, message.isAE);
-            }
-        });
+        switch (message.key) {
+            case "RetrieveItem" -> retrieveItem(player, container, item, message.isAE);
+            case "StartCraft" -> startCraft(player, container, item, message.isAE);
+        }
         return null;
     }
 
@@ -160,11 +158,10 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
     }
 
     private void startCraft(EntityPlayerMP player, Container container, ItemStack itemIn, boolean isAE) {
+        if (container instanceof ContainerCraftAmount || container instanceof ContainerCraftConfirm) return;
         ItemStack item = itemIn.copy();
         item.setCount(1);
         if (!isAE) {
-            if (player.openContainer instanceof ContainerCraftAmount
-                || player.openContainer instanceof ContainerCraftConfirm) return;
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 ItemStack ii = player.inventory.getStackInSlot(i);
                 WirelessTerminalGuiObject obj = MEHandler.getTerminalGuiObject(ii, player, i, 0);
@@ -257,7 +254,7 @@ public class KeyBindingHandler implements Packet<KeyBindingHandler> {
             || (host instanceof WirelessTerminalGuiObject w &&
             (w.getItemStack().getItem() instanceof ItemWirelessFluidPatternTerminal || (w.getItemStack().hasTagCompound() && w.getItemStack().getTagCompound().getByte("mode") == 4)))) {
             var context = c.getOpenContext();
-            player.getServerWorld().addScheduledTask(() -> InventoryHandler.openGui(player, Ae2Reflect.getContextWorld(context), new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)), context.getSide().getFacing(), GuiType.FLUID_CRAFT_AMOUNT));
+            InventoryHandler.openGui(player, Ae2Reflect.getContextWorld(context), new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)), context.getSide().getFacing(), GuiType.FLUID_CRAFT_AMOUNT);
             return;
         }
         Platform.openGUI(player, c.getOpenContext().getTile(), c.getOpenContext().getSide(), GuiBridge.GUI_CRAFTING_AMOUNT);

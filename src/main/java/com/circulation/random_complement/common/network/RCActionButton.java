@@ -42,6 +42,7 @@ public class RCActionButton implements Packet<RCActionButton> {
 
     @Override
     public IMessage onMessage(RCActionButton message, MessageContext ctx) {
+        if (PacketThreading.enqueueIfNeeded(ctx, () -> onMessage(message, ctx))) return null;
         val player = ctx.getServerHandler().player;
         val action = Action.values()[message.ordinal];
         switch (action) {
