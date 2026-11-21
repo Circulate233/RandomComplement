@@ -3,14 +3,15 @@ package com.circulation.random_complement.mixin.ae2;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.crafting.MECraftingInventory;
-import com.circulation.random_complement.common.interfaces.RCItemList;
+import appeng.util.item.RCCraftingInventorySnapshot;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(value = MECraftingInventory.class, remap = false)
@@ -20,22 +21,12 @@ public class MixinMECraftingInventory {
     @Final
     private IItemList<IAEItemStack> localCache;
 
-    @Unique
-    private static void rc$reserve(IItemList<IAEItemStack> list, IItemList<IAEItemStack> source) {
-        if (list instanceof RCItemList rc && source != null) {
-            rc.rc$reserveCapacity(source.size());
-        }
-    }
-
-    @Redirect(
+    @WrapOperation(
         method = "<init>(Lappeng/api/storage/data/IItemList;)V",
         at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IItemList;iterator()Ljava/util/Iterator;")
     )
-    private Iterator<IAEItemStack> rc$reserveForCopy(IItemList<IAEItemStack> instance) {
-        if (instance == null) {
-            throw new NullPointerException("itemList");
-        }
-        rc$reserve(this.localCache, instance);
-        return instance.iterator();
+    private Iterator<IAEItemStack> rc$importSnapshot(IItemList<IAEItemStack> source, Operation<Iterator<IAEItemStack>> original) {
+        if (RCCraftingInventorySnapshot.tryCopyInto(source, localCache)) return Collections.emptyIterator();
+        return original.call(source);
     }
 }

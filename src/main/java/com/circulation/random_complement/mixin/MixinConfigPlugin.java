@@ -66,6 +66,11 @@ public abstract class MixinConfigPlugin implements IMixinConfigPlugin {
                 return false;
             }
             mixinClassName = erasePacketPrefix(mixinClassName);
+            if (mixinClassName.equals("MixinMECraftingInventory")
+                || mixinClassName.equals("AccessorItemList")
+                || mixinClassName.equals("AccessorItemListIgnoreCrafting")) {
+                return RCConfig.AE2.optimizeCraftingInventoryCopy;
+            }
             if (mixinClassName.startsWith("miss_craft")) {
                 return RCConfig.AE2.enableMissCraft;
             }

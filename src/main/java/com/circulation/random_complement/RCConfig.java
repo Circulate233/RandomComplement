@@ -114,6 +114,11 @@ public class RCConfig {
         @Config.Name("dragJeiItemToSearchBox")
         public boolean dragJeiItemToSearchBox = true;
 
+        @Config.Comment("Copy native AE2 item buckets in bulk when constructing a crafting inventory snapshot.")
+        @Config.Name("optimizeCraftingInventoryCopy")
+        @Config.RequiresMcRestart
+        public boolean optimizeCraftingInventoryCopy = true;
+
         @Config.Comment({
             "Trim the crafting inventory snapshot down to the items the plan can actually touch.",
             "Only used for crafting machines that repeatedly request the same item",
